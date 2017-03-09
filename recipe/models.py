@@ -15,3 +15,6 @@ class Recipe(models.Model):
     ingredients = models.TextField()
     directions = models.TextField()
     date_created = models.DateField(auto_now_add=True)
+
+    def __repr__(self):
+        return '<Recipe "{}">'.format(self.title)
