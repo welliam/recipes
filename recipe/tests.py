@@ -25,3 +25,15 @@ class CreateRecipeViewTest(TestCase):
     def testRecipeShowsTitle(self):
         """Test response has title."""
         self.assertContains(self.response, self.recipe.title)
+
+    def testRecipeShowsDescription(self):
+        """Test response has description."""
+        self.assertContains(self.response, self.recipe.description)
+
+    def testRecipeShowsIngredients(self):
+        """Test response has ingredients."""
+        self.assertContains(self.response, self.recipe.ingredients)
+
+    def testRecipeShowsDirections(self):
+        """Test response has directions."""
+        self.assertContains(self.response, self.recipe.directions)
