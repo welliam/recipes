@@ -1,0 +1,15 @@
+body {
+    margin: auto;
+    max-width: 30em;
+}
+
+.siteheader {
+    text-align: center;
+    margin-bottom: 1.5em;
+    padding-bottom: 1.5em;
+    border-bottom: solid thin;
+}
+
+.recipe > * {
+    margin-bottom: 1em;
+}

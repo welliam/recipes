@@ -1,5 +1,17 @@
-{{ object.title }}
-{{ object.description }}
-{{ object.ingredients }}
-{{ object.directions }}
-{{ object.date_created }}
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+<div class="recipe">
+  <header>
+    <h2>{{ object.title }}</h2>
+    <div><i>Published {{ object.date_created }}</i></div>
+    {{ object.description }}
+  </header>
+  <div class="ingredients">
+    {{ object.ingredients }}
+  </div>
+  <div class="directions">
+    {{ object.directions }}
+  </div>
+</div>
+{% endblock %}

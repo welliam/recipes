@@ -1,19 +1,24 @@
+
 <!DOCTYPE html>
 
 <html>
   <head>
     <title>Recipes</title>
+    {% load static %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/base.css' %}">
     <meta charset="utf-8">
   </head>
  <body>
-    <header>
-      <h1>Recipes</h1>
-      <a href="">Search</a>
-      <a href="">New recipe</a>
-      <a href="">About</a>
-      <a href="">Log in</a>
-      <a href="">Log out</a>
-    </header>
+   <header class="siteheader">
+     <h1>Recipes</h1>
+     <nav>
+       <a href="">Search</a>
+       <a href="">New recipe</a>
+       <a href="">About</a>
+       <a href="">Log in</a>
+       <a href="">Log out</a>
+     </nav>
+   </header>
     {% block content %}
     {% endblock %}
   </body>
