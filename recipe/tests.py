@@ -3,7 +3,8 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Recipe
 
-class CreateRecipeViewTest(TestCase):
+
+class RecipeDetailTestCase(TestCase):
     """Test viewing a recipe."""
 
     def setUp(self):
@@ -37,3 +38,23 @@ class CreateRecipeViewTest(TestCase):
     def testRecipeShowsDirections(self):
         """Test response has directions."""
         self.assertContains(self.response, self.recipe.directions)
+
+
+class RecipeCreateTestCase(TestCase):
+    """Test creating a recipe."""
+
+    def setUp(self):
+        user = User()
+        user.save()
+        self.client.force_login(user)
+        self.data = dict(
+            title="test recipe",
+            description="this is a test recipe",
+            ingredients="food",
+            directions="make it"
+        )
+
+    def testPostRecipe(self):
+        """Posts a recipe using the create view."""
+        response = self.client.post(reverse('create_recipe'), self.data)
+        self.assertEquals(response.status_code, 302)

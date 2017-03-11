@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
+from django.urls import reverse
 
 
 @python_2_unicode_compatible
@@ -18,3 +19,6 @@ class Recipe(models.Model):
 
     def __repr__(self):
         return '<Recipe "{}">'.format(self.title)
+
+    def get_absolute_url(self):
+        return reverse('view_recipe', args=[str(self.id)])
