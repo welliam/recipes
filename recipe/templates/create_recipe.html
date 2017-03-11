@@ -1,0 +1,9 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+<form method="POST">
+  {{ form.as_p }}
+  {% csrf_token %}
+  <input type="submit" value="Create recipe">
+</form>
+{% endblock %}
