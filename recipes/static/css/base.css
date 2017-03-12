@@ -1,6 +1,20 @@
 body {
     margin: auto;
-    max-width: 30em;
+    max-width: 50em;
+    color: #555;
+}
+
+h1, h2, h3, h4, h5 {
+    text-align: center;
+}
+
+input[type="button"], input[type="submit"] {
+    background-color: #ccc;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    border: none;
+    border-bottom: solid thin;
 }
 
 .siteheader {
@@ -12,4 +26,19 @@ body {
 
 .recipe > * {
     margin-bottom: 1em;
+}
+
+.helptext {
+    font-style: italic;
+    color: #aaa;
+    display: block;
+}
+
+form {
+    text-align: center;
+}
+
+label {
+    display: inline-block;
+    min-width: 30%;
 }

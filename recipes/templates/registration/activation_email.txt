@@ -1,0 +1,2 @@
+Follow this link to activate your new account:
+{{ site }}{% url 'registration_activate' activation_key=activation_key %}

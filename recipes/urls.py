@@ -19,6 +19,7 @@ from .views import HomePage
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^account/', include('registration.backends.hmac.urls')),
     url(r'^$', HomePage.as_view(), name='homepage'),
     url(r'^recipe/', include('recipe.urls')),
 ]

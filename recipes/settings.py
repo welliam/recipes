@@ -127,3 +127,26 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_URL = '/static/'
+
+
+# Registration (django-registration)
+
+ACCOUNT_ACTIVATION_DAYS = 7
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+EMAIL_HOST = None
+
+EMAIL_HOST_USER = None
+
+EMAIL_HOST_PASSWORD = None
+
+DEFAULT_FROM_EMAIL = None
+
+EMAIL_PORT = 587
+
+EMAIL_USE_TLS = True
+
+LOGOUT_REDIRECT_URL = '/'
+
+LOGIN_REDIRECT_URL = '/'

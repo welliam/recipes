@@ -12,9 +12,7 @@ class RecipeCreateView(CreateView):
     """View that renders a recipe."""
     model = Recipe
     template_name = 'create_recipe.html'
-    fields = [
-        'title', 'description', 'ingredients', 'directions'
-    ]
+    fields = ['title', 'description', 'ingredients', 'directions']
 
     def form_valid(self, form):
         """Attach user to form."""
