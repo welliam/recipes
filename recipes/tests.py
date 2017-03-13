@@ -2,13 +2,14 @@ from django.test import TestCase
 from django.urls import reverse
 
 
-class HomePageTest(TestCase):
-    """Tests for the home page."""
+class StaticPageTests(TestCase):
+    """Tests for static pages."""
 
     def setUp(self):
         """Initialize a response to be tested."""
-        self.response = self.client.get(reverse('homepage'))
+        self.home = self.client.get(reverse('home'))
+        self.about = self.client.get(reverse('about'))
 
     def testHomePageHasSearch(self):
         """Home page has search form."""
-        self.assertContains(self.response, 'input')
+        self.assertContains(self.home, 'input')

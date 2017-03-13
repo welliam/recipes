@@ -53,29 +53,32 @@ class RecipeCreateTestCase(TestCase):
             ingredients="food",
             directions="make it"
         )
+        self.get = self.client.get(reverse('new_recipe'))
+        self.post = self.client.post(reverse('new_recipe'), self.data)
 
     def testGetCreateRecipe(self):
         """Get the create recipe page."""
-        response = self.client.get(reverse('create_recipe'))
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(self.get.status_code, 200)
 
     def testGetCreateRecipeHasForm(self):
         """Test the create recipe page has a form."""
-        response = self.client.get(reverse('create_recipe'))
-        self.assertContains(response, '</form>')
+        self.assertContains(self.get, '</form>')
 
     def testFormMethodPost(self):
         """Test the create recipe page has a form with method=POST."""
-        response = self.client.get(reverse('create_recipe'))
-        self.assertContains(response, 'method="POST"')
+        self.assertContains(self.get, 'method="POST"')
 
     def testFormHasInputs(self):
         """Test the create recipe page has a form with method=POST."""
-        response = self.client.get(reverse('create_recipe'))
         for name in ['title', 'description', 'ingredients', 'directions']:
-            self.assertContains(response, 'name="{}"'.format(name))
+            self.assertContains(self.get, 'name="{}"'.format(name))
+
+    def testPostCreateRecipeRedirects(self):
+        """Posts a recipe using the create view."""
+        self.assertEquals(self.post.status_code, 302)
 
     def testPostCreateRecipe(self):
         """Posts a recipe using the create view."""
-        response = self.client.post(reverse('create_recipe'), self.data)
-        self.assertEquals(response.status_code, 302)
+        count = Recipe.objects.count()
+        self.client.post(reverse('new_recipe'), self.data)
+        self.assertEquals(Recipe.objects.count(), count + 1)
