@@ -4,14 +4,19 @@
 <div class="recipe">
   <header>
     <h2>{{ object.title }}</h2>
-    <div><i>Published {{ object.date_created }}</i></div>
-    {{ object.description }}
+    <div class="recipe-by">By {{ object.user }} on {{ object.date_created }}</div>
   </header>
-  <div class="ingredients">
-    {{ object.ingredients }}
-  </div>
-  <div class="directions">
-    {{ object.directions }}
-  </div>
+  <section class="recipe-description">
+    <h3>Description</h3>
+    <div>{{ object.description }}</div>
+  </section>
+  <section class="recipe-ingredients">
+    <h3>Ingredients</h3>
+    <div>{{ object.ingredients }}</div>
+  </section>
+  <section class="recipe-directions">
+    <h3>Directions</h3>
+    <div>{{ object.directions }}</div>
+  </section>
 </div>
 {% endblock %}

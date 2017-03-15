@@ -9,12 +9,26 @@ h1, h2, h3, h4, h5 {
 }
 
 input[type="button"], input[type="submit"] {
-    background-color: #ccc;
+    background-color: #aaa;
+    padding: 0.3em;
 }
 
 input[type="text"], input[type="email"], input[type="password"] {
-    border: none;
-    border-bottom: solid thin;
+    padding: 0.3em;
+    border: solid thin;
+}
+
+form {
+    text-align: center;
+}
+
+label + textarea {
+    display: block;
+    min-width: 30%;
+}
+
+textarea {
+    margin: auto;
 }
 
 .siteheader {
@@ -34,11 +48,27 @@ input[type="text"], input[type="email"], input[type="password"] {
     display: block;
 }
 
-form {
+.recipe-published {
+    font-style: italic;
+}
+
+.recipe-by {
+    font-style: italic;
     text-align: center;
 }
 
-label {
-    display: inline-block;
-    min-width: 30%;
+.recipe-description h3,
+.recipe-ingredients h3,
+.recipe-directions h3 {
+    border-bottom: solid thin;
+    max-width: 10em;
+    margin: auto;
+}
+
+.recipe-description, .recipe-ingredients, .recipe-directions {
+    white-space: pre-line;
+}
+
+.recipe header {
+    margin-bottom: 3em;
 }
