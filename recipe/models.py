@@ -1,11 +1,26 @@
+from random import randint
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
 from django.urls import reverse
 
 
+def create_unique_urlindex(lower_bound=100000000):
+    """Creates a unique urlindex.
+
+    Ensures the generated value is not already a urlindex."""
+    while True:
+        i = randint(lower_bound, lower_bound*10-1)
+        if not Recipe.objects.filter(id=i).exists():
+            return i
+
+
 @python_2_unicode_compatible
 class Recipe(models.Model):
+    id = models.PositiveIntegerField(
+        primary_key=True,
+        default=create_unique_urlindex
+    )
     user = models.ForeignKey(
         User,
         related_name='recipes',
