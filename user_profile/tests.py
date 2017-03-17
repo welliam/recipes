@@ -10,8 +10,7 @@ class ProfileViewTestCase(TestCase):
         self.username = 'friend'
         user = User(username=self.username)
         user.save()
-        self.client.force_login(user)
-        self.response = self.client.get(reverse('profile'))
+        self.response = self.client.get(reverse('profile', args=[user.username]))
 
     def testProfileHasUsername(self):
         self.assertContains(self.response, self.username)
