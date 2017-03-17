@@ -43,3 +43,5 @@
 
 ### front page
 - favorites?
+
+### pretty ajax js frontend
