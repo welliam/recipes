@@ -1,3 +1,11 @@
+a {
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
 body {
     margin: auto;
     max-width: 50em;
@@ -13,9 +21,15 @@ input[type="button"], input[type="submit"] {
     padding: 0.3em;
 }
 
-input[type="text"], input[type="email"], input[type="password"] {
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    font-family: sans-serif;
     padding: 0.3em;
     border: solid thin;
+    outline: none;
+    resize: none;
 }
 
 form {
