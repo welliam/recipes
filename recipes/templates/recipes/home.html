@@ -5,4 +5,16 @@
   <input name="q" type="text" autofocus>
   <input type="submit" value="Search for recipes">
 </form>
+
+<h2>Most recent recipes</h2>
+<ul>
+{% for recipe in recipes %}
+  <li>
+    <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
+  </li>
+  </li>
+{% empty %}
+No recipes yet...
+{% endfor %}
+</ul>
 {% endblock %}
