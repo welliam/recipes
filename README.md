@@ -45,3 +45,8 @@
 - favorites?
 
 ### pretty ajax js frontend
+
+### shopping lists
+- export direct from ingredients list
+- checkboxes that POST state whenever changed (can be revisted on different devices etc)
+- only accessible/editable by creator
