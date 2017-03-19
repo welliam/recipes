@@ -4,7 +4,9 @@
 <div class="recipe">
   <header>
     <h2>{{ object.title }}</h2>
-    <div class="recipe-by">By {{ object.user }} on {{ object.date_created }}</div>
+    <div class="recipe-by">
+      By <a href="{% url 'profile' object.user %}">{{ object.user }}</a> on {{ object.date_created }}
+    </div>
   </header>
   <section class="recipe-description">
     <h3>Description</h3>
@@ -12,11 +14,22 @@
   </section>
   <section class="recipe-ingredients">
     <h3>Ingredients</h3>
-    <div>{{ object.ingredients }}</div>
+    <ul>
+      {% for ingredient in object.ingredients %}
+      <li>{{ ingredient }}</li>
+      {% endfor %}
+    </ul>
   </section>
   <section class="recipe-directions">
     <h3>Directions</h3>
-    <div>{{ object.directions }}</div>
+    <ul>
+      {% for direction in object.directions %}
+      <li>
+        <b>{{ direction.title }}{% if direction.direction %}:{% endif %}</b>
+        {{ direction.direction }}
+      </li>
+      {% endfor %}
+    </ul>
   </section>
 </div>
 {% endblock %}

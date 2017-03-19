@@ -79,7 +79,7 @@ textarea {
     margin: auto;
 }
 
-.recipe-description, .recipe-ingredients, .recipe-directions {
+.recipe-description {
     white-space: pre-line;
 }
 

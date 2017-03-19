@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from .models import Recipe
+from . import views
 
 
 RECIPE_FIELDS = ['title', 'description', 'ingredients', 'directions']
@@ -12,7 +13,7 @@ class RecipeDetailTestCase(TestCase):
 
     def setUp(self):
         """Initialize a recipe to be tested."""
-        user = User()
+        user = User(username='lydia')
         user.save()
         self.recipe = Recipe(
             user=user,
@@ -94,3 +95,25 @@ class RecipeCreateTestCase(TestCase):
             del data[field]
             self.client.post(reverse('new_recipe'), data)
             self.assertEquals(Recipe.objects.count(), count)
+
+
+class ViewLogicTests(TestCase):
+    """Test helper functions behind view."""
+
+    def testStructureDirections(self):
+        structured = list(views.structureDirections("""Season
+        Mix cubed tofu with lime juice, turmeric, salt, and black pepper.
+
+        Fry
+        Combine tofu and chopped onions in frying pan.
+
+        Simmer
+        Bring tofu, onions, coconut milk, and curry paste to simmer.
+        """))
+        self.assertEquals(structured[0]['title'], 'Season')
+        self.assertEquals(structured[1]['title'], 'Fry')
+        self.assertEquals(
+            structured[1]['direction'],
+            'Combine tofu and chopped onions in frying pan.'
+        )
+        self.assertEquals(structured[2]['title'], 'Simmer')
