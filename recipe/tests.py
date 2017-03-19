@@ -110,10 +110,10 @@ class ViewLogicTests(TestCase):
         Simmer
         Bring tofu, onions, coconut milk, and curry paste to simmer.
         """))
-        self.assertEquals(structured[0]['title'], 'Season')
-        self.assertEquals(structured[1]['title'], 'Fry')
+        self.assertEquals(structured[0]['summary'], 'Season')
+        self.assertEquals(structured[1]['summary'], 'Fry')
         self.assertEquals(
-            structured[1]['direction'],
+            structured[1]['details'],
             'Combine tofu and chopped onions in frying pan.'
         )
-        self.assertEquals(structured[2]['title'], 'Simmer')
+        self.assertEquals(structured[2]['summary'], 'Simmer')

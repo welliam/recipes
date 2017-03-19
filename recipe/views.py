@@ -9,7 +9,7 @@ def splitDirectionLine(direction):
         t, d = direction.split('\n', 1)
     except ValueError:
         t, d = direction, ''
-    return dict(title=t.strip(), direction=d.strip())
+    return dict(summary=t.strip(), details=d.strip())
 
 
 def removeNewlineWhitespace(s):

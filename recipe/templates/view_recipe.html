@@ -25,8 +25,8 @@
     <ul>
       {% for direction in object.directions %}
       <li>
-        <b>{{ direction.title }}{% if direction.direction %}:{% endif %}</b>
-        {{ direction.direction }}
+        <b>{{ direction.summary }}{% if direction.details %}:{% endif %}</b>
+        {{ direction.details }}
       </li>
       {% endfor %}
     </ul>
