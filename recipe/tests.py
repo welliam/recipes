@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from .models import Recipe
 
 
+RECIPE_FIELDS = ['title', 'description', 'ingredients', 'directions']
+
+
 class RecipeDetailTestCase(TestCase):
     """Test viewing a recipe."""
 
@@ -44,14 +47,14 @@ class RecipeCreateTestCase(TestCase):
     """Test creating a recipe."""
 
     def setUp(self):
-        user = User()
+        user = User(username='lydia')
         user.save()
         self.client.force_login(user)
         self.data = dict(
-            title="test recipe",
-            description="this is a test recipe",
-            ingredients="food",
-            directions="make it"
+            title='test recipe',
+            description='this is a test recipe',
+            ingredients='food',
+            directions='make it'
         )
         self.get = self.client.get(reverse('new_recipe'))
         self.post = self.client.post(reverse('new_recipe'), self.data)
@@ -70,7 +73,7 @@ class RecipeCreateTestCase(TestCase):
 
     def testFormHasInputs(self):
         """Test the create recipe page has a form with method=POST."""
-        for name in ['title', 'description', 'ingredients', 'directions']:
+        for name in RECIPE_FIELDS:
             self.assertContains(self.get, 'name="{}"'.format(name))
 
     def testPostCreateRecipeRedirects(self):
@@ -82,3 +85,12 @@ class RecipeCreateTestCase(TestCase):
         count = Recipe.objects.count()
         self.client.post(reverse('new_recipe'), self.data)
         self.assertEquals(Recipe.objects.count(), count + 1)
+
+    def testCreateRecipeWithoutFieldDoesNothing(self):
+        """Test POSTing a recipe without fields doesn't update DB."""
+        count = Recipe.objects.count()
+        for field in RECIPE_FIELDS:
+            data = self.data.copy()
+            del data[field]
+            self.client.post(reverse('new_recipe'), data)
+            self.assertEquals(Recipe.objects.count(), count)
