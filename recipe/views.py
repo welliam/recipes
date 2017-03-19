@@ -4,6 +4,7 @@ from .models import Recipe
 
 
 def splitDirectionLine(direction):
+    """Split a direction line into its summary and details."""
     try:
         t, d = direction.split('\n', 1)
     except ValueError:
@@ -19,6 +20,11 @@ def removeNewlineWhitespace(s):
 
 
 def structureDirections(directions):
+    """Structure directions.
+
+    Directions are entered like:
+    <direction summary>\n<direction details>...
+    """
     directionLines = removeNewlineWhitespace(directions).split('\n\n')
     return map(splitDirectionLine, directionLines)
 
