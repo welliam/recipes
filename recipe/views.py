@@ -1,5 +1,6 @@
 import re
-from django.views.generic import DetailView, CreateView
+from functools import reduce
+from django.views.generic import DetailView, CreateView, TemplateView
 from .models import Recipe
 
 
@@ -51,3 +52,18 @@ class RecipeCreateView(CreateView):
         """Attach user to form."""
         form.instance.user = self.request.user
         return super(RecipeCreateView, self).form_valid(form)
+
+
+class RecipeSearchView(TemplateView):
+    """View which renders search results."""
+    template_name = "search_results.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeSearchView, self).get_context_data(**kwargs)
+        query = self.request.GET['q']
+        context['recipes'] = reduce(
+            lambda o, w: o.filter(title__contains=w),
+            query,
+            Recipe.objects.all()
+        )
+        return context

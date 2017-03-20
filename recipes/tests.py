@@ -30,6 +30,9 @@ class HomePageTests(TestCase):
         for recipe in Recipe.objects.reverse()[:5]:
             self.assertContains(self.response, recipe.title)
 
+    def testHomePageSearchGoesToSearchResults(self):
+        self.assertContains(self.response, reverse('recipe_search'))
+
 
 class AboutPageTests(TestCase):
     """Tests for about page."""

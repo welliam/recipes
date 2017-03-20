@@ -1,7 +1,7 @@
 {% extends "recipes/base.html" %}
 
 {% block content %}
-<form>
+<form action="{% url 'recipe_search' %}">
   <input name="q" type="text" autofocus>
   <input type="submit" value="Search for recipes">
 </form>

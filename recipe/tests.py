@@ -117,3 +117,31 @@ class ViewLogicTests(TestCase):
             'Combine tofu and chopped onions in frying pan.'
         )
         self.assertEquals(structured[2]['summary'], 'Simmer')
+
+
+class SearchViewTests(TestCase):
+    """Test search functionality."""
+
+    def setUp(self):
+        """Insert some recipes into the db"""
+        self.title = 'good recipe'
+        user = User()
+        user.save()
+        Recipe(
+            user=user,
+            title=self.title,
+            description='test',
+            ingredients='test',
+            directions='test'
+        ).save()
+        Recipe(
+            user=user,
+            title='bad recipe',
+            description='test',
+            ingredients='test',
+            directions='test'
+        ).save()
+
+    def testSearchForGoodRecipe(self):
+        response = self.client.get(reverse('recipe_search') + '?q=good')
+        self.assertContains(response, 'self.title')
