@@ -4,9 +4,9 @@
 <ul>
   {% for recipe in recipes %}
   <li>
-    <a href="{% url 'view_recipe' recipe.id %}">
-      {{ recipe.title }} by {{ recipe.user }}
-    </a>
+    <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
+    by
+    <a href="{% url 'profile' recipe.user.username %}">{{ recipe.user }}</a>
   </li>
   {% endfor %}
 </ul>
