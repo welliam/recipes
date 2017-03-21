@@ -77,8 +77,3 @@ class RecipeUpdateView(UpdateView):
     model = Recipe
     template_name = 'create_recipe.html'
     fields = ['title', 'description', 'ingredients', 'directions']
-
-    def form_valid(self, form):
-        """Attach user to form."""
-        form.instance.user = self.request.user
-        return super(RecipeUpdateView, self).form_valid(form)
