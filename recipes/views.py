@@ -8,7 +8,7 @@ class HomePage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomePage, self).get_context_data(**kwargs)
-        context['recipes'] = Recipe.objects.all()[:5]
+        context['recipes'] = Recipe.objects.order_by('-date_created')[:5]
         return context
 
 
