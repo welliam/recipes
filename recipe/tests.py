@@ -8,21 +8,26 @@ from . import views
 RECIPE_FIELDS = ['title', 'description', 'ingredients', 'directions']
 
 
+def createRecipeAndUser():
+    user = User(username='lydia')
+    user.save()
+    recipe = Recipe(
+        user=user,
+        title="test recipe",
+        description="this is a test recipe",
+        ingredients="food",
+        directions="make it"
+    )
+    recipe.save()
+    return user, recipe
+
+
 class RecipeDetailTestCase(TestCase):
     """Test viewing a recipe."""
 
     def setUp(self):
         """Initialize a recipe to be tested."""
-        user = User(username='lydia')
-        user.save()
-        self.recipe = Recipe(
-            user=user,
-            title="test recipe",
-            description="this is a test recipe",
-            ingredients="food",
-            directions="make it"
-        )
-        self.recipe.save()
+        user, self.recipe = createRecipeAndUser()
         self.response = self.client.get(
             reverse('view_recipe', args=[self.recipe.id])
         )
@@ -156,16 +161,7 @@ class EditViewTests(TestCase):
 
     def setUp(self):
         """Create recipe to be edited."""
-        self.user = User(username="friend")
-        self.user.save()
-        self.recipe = Recipe(
-            user=self.user,
-            title='test',
-            description='test',
-            ingredients='test',
-            directions='test'
-        )
-        self.recipe.save()
+        self.user, self.recipe = createRecipeAndUser()
         self.client.force_login(self.user)
 
     def editRecipeTitle(self, to):
