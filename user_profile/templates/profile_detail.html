@@ -2,7 +2,16 @@
 
 {% block content %}
 <h2>{{ object.username }}</h2>
-<ul>
+<section>
+  <h3>Bio</h3>
+  {% if object.profile.bio %}
+  {{ object.profile.bio }}
+  {% else %}
+  This user has no bio yet.
+  {% endif %}
+</section>
+<section>
+  <ul>
     {% for recipe in recipes %}
     <li>
       <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
@@ -10,5 +19,6 @@
     {% empty %}
     No recipes yet...
     {% endfor %}
-</ul>
+  </ul>
+</section>
 {% endblock %}

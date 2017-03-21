@@ -18,6 +18,4 @@ class UserProfile(models.Model):
 @receiver(post_save, sender=User)
 def update_tracker_profile(sender, **kwargs):
     if not UserProfile.objects.filter(user=kwargs['instance']):
-        UserProfile(
-            user=kwargs['instance']
-        ).save()
+        UserProfile(user=kwargs['instance']).save()

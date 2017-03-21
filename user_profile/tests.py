@@ -25,6 +25,9 @@ class ProfileViewTestCase(TestCase):
         self.username = 'friend'
         user = User(username=self.username)
         user.save()
+        self.bio = 'this is a bio'
+        user.profile.bio = self.bio
+        user.profile.save()
         self.recipe = Recipe(
             user = user,
             title='food',
@@ -40,3 +43,6 @@ class ProfileViewTestCase(TestCase):
 
     def testProfileHasRecipeTitle(self):
         self.assertContains(self.response, self.recipe.title)
+
+    def testProfileShowsBio(self):
+        self.assertContains(self.response, self.bio)
