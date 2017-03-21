@@ -149,3 +149,46 @@ class SearchViewTests(TestCase):
     def testSearchForGoodRecipeRetainsSearch(self):
         """Test that search bar contains query."""
         self.assertContains(self.response, 'value="good"')
+
+
+class EditViewTests(TestCase):
+    """Test editing recipes."""
+
+    def setUp(self):
+        """Create recipe to be edited."""
+        self.user = User(username="friend")
+        self.user.save()
+        self.recipe = Recipe(
+            user=self.user,
+            title='test',
+            description='test',
+            ingredients='test',
+            directions='test'
+        )
+        self.recipe.save()
+        self.client.force_login(self.user)
+
+    def editRecipeTitle(self, to):
+        """Edit posted recipe's title."""
+        data = dict(
+            title=to,
+            description='test',
+            ingredients='test',
+            directions='test'
+        )
+        url = reverse('edit_recipe', args=[self.recipe.id])
+        self.client.post(url, data)
+
+    def testEditTitle(self):
+        """Test editing title."""
+        new_title = 'new title'
+        self.editRecipeTitle(new_title)
+        recipe = Recipe.objects.filter(id=self.recipe.id)[0]
+        self.assertEqual(recipe.title, new_title)
+
+    def testEditingRecipeMaintainsCount(self):
+        """Test editing title."""
+        new_title = 'new title'
+        count = Recipe.objects.count()
+        self.editRecipeTitle(new_title)
+        self.assertEqual(count, Recipe.objects.count())

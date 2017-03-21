@@ -1,6 +1,8 @@
 import re
 from functools import reduce
-from django.views.generic import DetailView, CreateView, TemplateView
+from django.views.generic import (
+    DetailView, CreateView, UpdateView, TemplateView
+)
 from .models import Recipe
 
 
@@ -68,3 +70,15 @@ class RecipeSearchView(TemplateView):
         )
         context['query'] = query
         return context
+
+
+class RecipeUpdateView(UpdateView):
+    """Update recipe."""
+    model = Recipe
+    template_name = 'create_recipe.html'
+    fields = ['title', 'description', 'ingredients', 'directions']
+
+    def form_valid(self, form):
+        """Attach user to form."""
+        form.instance.user = self.request.user
+        return super(RecipeUpdateView, self).form_valid(form)
