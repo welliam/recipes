@@ -125,7 +125,7 @@ class SearchViewTests(TestCase):
     def setUp(self):
         """Insert some recipes into the db"""
         self.title = 'good recipe'
-        user = User()
+        user = User(username="friend")
         user.save()
         Recipe(
             user=user,
@@ -141,7 +141,11 @@ class SearchViewTests(TestCase):
             ingredients='test',
             directions='test'
         ).save()
+        self.response = self.client.get(reverse('recipe_search') + '?q=good')
 
     def testSearchForGoodRecipe(self):
-        response = self.client.get(reverse('recipe_search') + '?q=good')
-        self.assertContains(response, 'self.title')
+        self.assertContains(self.response, self.title)
+
+    def testSearchForGoodRecipeRetainsSearch(self):
+        """Test that search bar contains query."""
+        self.assertContains(self.response, 'value="good"')

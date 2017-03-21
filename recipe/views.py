@@ -66,4 +66,5 @@ class RecipeSearchView(TemplateView):
             query,
             Recipe.objects.all()
         )
+        context['query'] = query
         return context

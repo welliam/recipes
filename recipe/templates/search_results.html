@@ -1,6 +1,9 @@
 {% extends "recipes/base.html" %}
 
 {% block content %}
+<form action="{% url 'recipe_search' %}">
+  <input name="q" type="text" placeholder="Search" value="{{ query }}" autofocus>
+</form>
 <ul>
   {% for recipe in recipes %}
   <li>
