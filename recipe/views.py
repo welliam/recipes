@@ -42,6 +42,7 @@ class RecipeDetailView(DetailView):
         context = super(RecipeDetailView, self).get_context_data(**kwargs)
         context['ingredients'] = self.object.ingredients.split('\n')
         context['directions'] = structureDirections(self.object.directions)
+        context['own_recipe'] = self.object.user == self.request.user
         return context
 
 

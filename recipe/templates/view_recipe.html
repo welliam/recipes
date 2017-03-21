@@ -7,7 +7,9 @@
     <div class="recipe-by">
       By <a href="{% url 'profile' object.user %}">{{ object.user }}</a> on {{ object.date_created }}
     </div>
+    {% if own_recipe %}
     <a href="{% url 'edit_recipe' object.id %}">Edit</a>
+    {% endif %}
   </header>
   <section class="recipe-description">
     <h3>Description</h3>

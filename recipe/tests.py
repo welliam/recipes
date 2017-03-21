@@ -52,8 +52,15 @@ class RecipeDetailTestCase(TestCase):
     def testShowsEdit(self):
         """Test response has link to edit when logged in."""
         self.client.force_login(self.user)
+        view_url = reverse('view_recipe', args=[self.recipe.id])
+        response = self.client.get(view_url)
+        edit_url = reverse('edit_recipe', args=[self.recipe.id])
+        self.assertContains(response, edit_url)
+
+    def testShowsEditOnlyAuthenticated(self):
+        """Test response has link to edit only when logged in."""
         url = reverse('edit_recipe', args=[self.recipe.id])
-        self.assertContains(self.response, url)
+        self.assertNotContains(self.response, url)
 
 
 class RecipeCreateTestCase(TestCase):
