@@ -33,7 +33,7 @@ class Recipe(models.Model):
     date_created = models.DateField(auto_now_add=True)
 
     def __repr__(self):
-        return '<Recipe "{}">'.format(self.title)
+        return '<Recipe {} "{}">'.format(self.id, self.title)
 
     def get_absolute_url(self):
         return reverse('view_recipe', args=[str(self.id)])
