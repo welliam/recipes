@@ -1,22 +1,30 @@
 body {
-    background-color: #eee;
+    background-color: #eee0e0;
     color: #555;
+    font-family: arial;
 }
 
 main {
     border-radius: 0.3em;
     max-width: 50em;
     background-color: #fff;
-    padding: 0.3em;
+    padding: 1em;
     margin: auto;
+    box-shadow: 0.1em 0.1em 0.1em #aaa;
 }
 
 a {
-    color: #555;
+    color: #d799b5;
+    text-decoration: none;
 }
 
 a:hover {
-    text-decoration: none;
+    text-decoration: underline;
+}
+
+ul {
+    list-style: square;
+    padding: 1em;
 }
 
 .siteheader h1 {
@@ -28,13 +36,18 @@ a:hover {
     min-width: 30em;
 }
 
+.siteheader a {
+    color: #555;
+}
+
 h1, h2, h3, h4, h5 {
     text-align: center;
 }
 
 input[type="button"], input[type="submit"] {
-    background-color: #aaa;
+    background-color: #fff;
     padding: 0.3em;
+    border-radius: 0.3em;
 }
 
 input[type="text"],
@@ -97,6 +110,10 @@ textarea {
 
 .recipe header {
     margin-bottom: 3em;
+}
+
+#id_title {
+    font-size: 1.3em;
 }
 
 #id_description {
