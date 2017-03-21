@@ -29,14 +29,15 @@ class ProfileViewTestCase(TestCase):
         user.profile.bio = self.bio
         user.profile.save()
         self.recipe = Recipe(
-            user = user,
+            user=user,
             title='food',
             description='meal',
             ingredients='food',
             directions='prepare food'
         )
         self.recipe.save()
-        self.response = self.client.get(reverse('profile', args=[user.username]))
+        url = reverse('profile', args=[user.username])
+        self.response = self.client.get(url)
 
     def testProfileHasUsername(self):
         self.assertContains(self.response, self.username)
@@ -46,7 +47,6 @@ class ProfileViewTestCase(TestCase):
 
     def testProfileShowsBio(self):
         self.assertContains(self.response, self.bio)
-
 
 
 class ProfileEditTestCase(TestCase):
@@ -62,4 +62,3 @@ class ProfileEditTestCase(TestCase):
         bio = 'chef'
         self.client.post(reverse('edit_profile'), dict(bio=bio))
         self.assertEqual(User.objects.last().profile.bio, bio)
-
