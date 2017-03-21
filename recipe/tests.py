@@ -232,3 +232,12 @@ class DeleteViewTests(TestCase):
         url = reverse('delete_recipe', args=[self.recipe.id])
         self.client.post(url)
         self.assertEqual(count - 1, Recipe.objects.count())
+
+    def testWrongUserCannotDelete(self):
+        """Test that a user who does not own a recipe cannot delete it."""
+        count = Recipe.objects.count()
+        evil_user = User(username="evil")
+        evil_user.save()
+        self.client.force_login(evil_user)
+        self.client.post(reverse('delete_recipe', args=[self.recipe.id]))
+        self.assertEqual(count, Recipe.objects.count())

@@ -98,3 +98,14 @@ class RecipeDeleteView(DeleteView):
     model = Recipe
     template_name = 'delete_recipe.html'
     success_url = reverse_lazy('home')
+
+    def dispatch(self, request, *args, **kwargs):
+        """Check if the recipe to delete is owned by user."""
+        pk = kwargs.get('pk')
+        device = request.user.recipes.filter(pk=pk).first()
+        if device:
+            return super(RecipeDeleteView, self).dispatch(
+                request, *args, **kwargs
+            )
+        else:
+            return HttpResponseForbidden()
