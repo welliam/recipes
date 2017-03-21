@@ -27,23 +27,6 @@ ul {
     padding: 1em;
 }
 
-.siteheader h1 {
-    display: inline-block;
-}
-
-.siteheader nav {
-    display: inline-block;
-    min-width: 30em;
-}
-
-.siteheader nav a {
-    margin: 0.3em;
-}
-
-.siteheader a {
-    color: #555;
-}
-
 h1, h2, h3, h4, h5 {
     text-align: center;
 }
@@ -80,6 +63,24 @@ textarea {
 .siteheader {
     text-align: center;
 }
+
+.siteheader h1 {
+    display: inline-block;
+}
+
+.siteheader nav {
+    display: inline-block;
+    min-width: 30em;
+}
+
+.siteheader nav a {
+    margin: 0.3em;
+}
+
+.siteheader a {
+    color: #555;
+}
+
 
 .recipe > * {
     margin-bottom: 1em;
