@@ -1,7 +1,7 @@
 import re
 from functools import reduce
-from django.urls import reverse_lazy
-from django.http import HttpResponseForbidden
+from django.urls import reverse, reverse_lazy
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.views.generic import (
      TemplateView, DetailView, CreateView, UpdateView, DeleteView
 )
@@ -84,7 +84,10 @@ class RecipeUpdateView(UpdateView):
     def dispatch(self, request, *args, **kwargs):
         """Check if the recipe to edit is owned by user."""
         pk = kwargs.get('pk')
-        device = request.user.recipes.filter(pk=pk).first()
+        try:
+            device = request.user.recipes.filter(pk=pk).first()
+        except AttributeError:  # user not logged in
+            return HttpResponseRedirect(reverse('auth_login'))
         if device:
             return super(RecipeUpdateView, self).dispatch(
                 request, *args, **kwargs
@@ -102,7 +105,10 @@ class RecipeDeleteView(DeleteView):
     def dispatch(self, request, *args, **kwargs):
         """Check if the recipe to delete is owned by user."""
         pk = kwargs.get('pk')
-        device = request.user.recipes.filter(pk=pk).first()
+        try:
+            device = request.user.recipes.filter(pk=pk).first()
+        except AttributeError:  # user not logged in
+            return HttpResponseRedirect(reverse('auth_login'))
         if device:
             return super(RecipeDeleteView, self).dispatch(
                 request, *args, **kwargs

@@ -62,6 +62,19 @@ class RecipeDetailTestCase(TestCase):
         url = reverse('edit_recipe', args=[self.recipe.id])
         self.assertNotContains(self.response, url)
 
+    def testShowsDelete(self):
+        """Test response has link to delete when logged in."""
+        self.client.force_login(self.user)
+        view_url = reverse('view_recipe', args=[self.recipe.id])
+        response = self.client.get(view_url)
+        delete_url = reverse('delete_recipe', args=[self.recipe.id])
+        self.assertContains(response, delete_url)
+
+    def testShowsDeleteOnlyAuthenticated(self):
+        """Test response has link to delete only when logged in."""
+        url = reverse('delete_recipe', args=[self.recipe.id])
+        self.assertNotContains(self.response, url)
+
 
 class RecipeCreateTestCase(TestCase):
     """Test creating a recipe."""
@@ -241,3 +254,9 @@ class DeleteViewTests(TestCase):
         self.client.force_login(evil_user)
         self.client.post(reverse('delete_recipe', args=[self.recipe.id]))
         self.assertEqual(count, Recipe.objects.count())
+
+    def testUnauthorizedUser302(self):
+        """Test an unauthorized user gets redirected to login."""
+        self.client.logout()
+        url = reverse('delete_recipe', args=[self.recipe.id])
+        self.assertEqual(self.client.get(url).status_code, 302)

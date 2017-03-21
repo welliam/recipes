@@ -9,6 +9,7 @@
     </div>
     {% if own_recipe %}
     <a href="{% url 'edit_recipe' object.id %}">Edit</a>
+    <a href="{% url 'delete_recipe' object.id %}">Delete</a>
     {% endif %}
   </header>
   <section class="recipe-description">

@@ -2,7 +2,8 @@
 
 {% block content %}
 <form method="POST">
-  Are you sure you want to delete {{ object.title }}?
+  {% csrf_token %}
+  Are you sure you want to delete "{{ object.title }}"?
   <input type="submit" value="Delete">
 </form>
 {% endblock %}
