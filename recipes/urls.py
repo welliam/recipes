@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^about/', AboutPage.as_view(), name='about'),
     url(r'^profile/', include('user_profile.urls')),
     url(r'^recipe/', include('recipe.urls')),
+    url(r'^recipebook/', include('recipebook.urls')),
 ]
