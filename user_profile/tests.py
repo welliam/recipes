@@ -23,20 +23,20 @@ class ProfileViewTestCase(TestCase):
 
     def setUp(self):
         self.username = 'friend'
-        user = User(username=self.username)
-        user.save()
+        self.user = User(username=self.username)
+        self.user.save()
         self.bio = 'this is a bio'
-        user.profile.bio = self.bio
-        user.profile.save()
+        self.user.profile.bio = self.bio
+        self.user.profile.save()
         self.recipe = Recipe(
-            user=user,
+            user=self.user,
             title='food',
             description='meal',
             ingredients='food',
             directions='prepare food'
         )
         self.recipe.save()
-        url = reverse('profile', args=[user.username])
+        url = reverse('profile', args=[self.user.username])
         self.response = self.client.get(url)
 
     def testProfileHasUsername(self):
@@ -47,6 +47,21 @@ class ProfileViewTestCase(TestCase):
 
     def testProfileShowsBio(self):
         self.assertContains(self.response, self.bio)
+
+    def testProfileHasEditLoggedIn(self):
+        self.client.force_login(self.user)
+        url = reverse('profile', args=[self.user.username])
+        self.assertContains(self.client.get(url), reverse('edit_profile'))
+
+    def testProfileHasNoEditLoggedOut(self):
+        self.assertNotContains(self.response, reverse('edit_profile'))
+
+    def testProfileHasNoEditWrongUser(self):
+        user = User(username='someone_else')
+        user.save()
+        self.client.force_login(user)
+        url = reverse('profile', args=[self.user.username])
+        self.assertNotContains(self.client.get(url), reverse('edit_profile'))
 
 
 class ProfileEditTestCase(TestCase):
