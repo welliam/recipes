@@ -7,7 +7,7 @@ from .models import RecipeBook
 class RecipeBookCreateView(LoginRequiredMixin, CreateView):
     """View that creates a recipe."""
     model = RecipeBook
-    template_name = 'create_recipe.html'
+    template_name = 'create_recipebook.html'
     fields = ['title', 'description']
 
     def form_valid(self, form):
