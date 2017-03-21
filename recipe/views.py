@@ -48,7 +48,7 @@ class RecipeDetailView(DetailView):
 
 
 class RecipeCreateView(CreateView):
-    """View that renders a recipe."""
+    """View that creates a recipe."""
     model = Recipe
     template_name = 'create_recipe.html'
     fields = ['title', 'description', 'ingredients', 'directions']
