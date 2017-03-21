@@ -1,8 +1,9 @@
 import re
 from functools import reduce
+from django.urls import reverse_lazy
 from django.http import HttpResponseForbidden
 from django.views.generic import (
-    DetailView, CreateView, UpdateView, TemplateView
+     TemplateView, DetailView, CreateView, UpdateView, DeleteView
 )
 from .models import Recipe
 
@@ -90,3 +91,10 @@ class RecipeUpdateView(UpdateView):
             )
         else:
             return HttpResponseForbidden()
+
+
+class RecipeDeleteView(DeleteView):
+    """Delete recipe."""
+    model = Recipe
+    template_name = 'delete_recipe.html'
+    success_url = reverse_lazy('home')

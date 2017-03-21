@@ -211,3 +211,24 @@ class EditViewTests(TestCase):
         self.editRecipeTitle('bad')
         recipe = Recipe.objects.filter(id=self.recipe.id).first()
         self.assertEqual(recipe.title, self.recipe.title)
+
+
+class DeleteViewTests(TestCase):
+    """Test deleting recipes."""
+
+    def setUp(self):
+        """Create recipe to be deleted."""
+        self.user, self.recipe = createRecipeAndUser()
+        self.client.force_login(self.user)
+
+    def testDeleteViewHasMethodPOST(self):
+        """Test delete view has method="POST"."""
+        url = reverse('delete_recipe', args=[self.recipe.id])
+        self.assertContains(self.client.get(url), 'method="POST"')
+
+    def testDeletingRecipeDecrementsCount(self):
+        """Test deleting a recipe decrements the number of recipes."""
+        count = Recipe.objects.count()
+        url = reverse('delete_recipe', args=[self.recipe.id])
+        self.client.post(url)
+        self.assertEqual(count - 1, Recipe.objects.count())
