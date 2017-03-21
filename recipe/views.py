@@ -40,8 +40,8 @@ class RecipeDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(RecipeDetailView, self).get_context_data(**kwargs)
-        self.object.ingredients = self.object.ingredients.split('\n')
-        self.object.directions = structureDirections(self.object.directions)
+        context['ingredients'] = self.object.ingredients.split('\n')
+        context['directions'] = structureDirections(self.object.directions)
         return context
 
 
