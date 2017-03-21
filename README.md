@@ -52,3 +52,7 @@
 - only accessible/editable by creator
 
 ### minify html and css before release
+
+### preview recipe before submitting
+
+### user groups
