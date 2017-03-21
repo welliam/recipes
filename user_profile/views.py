@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
-from django.views.generic import DetailView
+from django.urls import reverse
+from django.views.generic import DetailView, UpdateView
+from .models import UserProfile
 
 
 class ProfileDetailView(DetailView):
@@ -12,3 +14,14 @@ class ProfileDetailView(DetailView):
         context['recipes'] = self.object.recipes.all()[:5]
         return context
 
+
+class ProfileUpdateView(UpdateView):
+    model = UserProfile
+    template_name = 'edit_recipe.html'
+    fields = ['bio']
+
+    def get_object(self):
+        return self.request.user.profile
+
+    def get_success_url(self):
+        return reverse('profile', args=[self.request.user.username])

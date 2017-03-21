@@ -46,3 +46,20 @@ class ProfileViewTestCase(TestCase):
 
     def testProfileShowsBio(self):
         self.assertContains(self.response, self.bio)
+
+
+
+class ProfileEditTestCase(TestCase):
+    """Test case for editing profiles."""
+
+    def setUp(self):
+        self.username = 'friend'
+        self.user = User(username=self.username)
+        self.user.save()
+        self.client.force_login(self.user)
+
+    def testEditProfileBiography(self):
+        bio = 'chef'
+        self.client.post(reverse('edit_profile'), dict(bio=bio))
+        self.assertEqual(User.objects.last().profile.bio, bio)
+

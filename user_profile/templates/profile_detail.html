@@ -3,14 +3,15 @@
 {% block content %}
 <h2>{{ object.username }}</h2>
 <section>
-  <h3>Bio</h3>
+  <h3>Biography</h3>
   {% if object.profile.bio %}
   {{ object.profile.bio }}
   {% else %}
-  This user has no bio yet.
+  No biography yet...
   {% endif %}
 </section>
 <section>
+  <h3>Recipes</h3>
   <ul>
     {% for recipe in recipes %}
     <li>
