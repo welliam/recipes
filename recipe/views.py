@@ -68,7 +68,7 @@ class RecipeSearchView(TemplateView):
         query = self.request.GET['q']
         context['recipes'] = reduce(
             lambda o, w: o.filter(title__contains=w),
-            query,
+            query.split()[:20],
             Recipe.objects.all()
         )
         context['query'] = query
@@ -78,7 +78,7 @@ class RecipeSearchView(TemplateView):
 class RecipeUpdateView(UpdateView):
     """Update recipe."""
     model = Recipe
-    template_name = 'create_recipe.html'
+    template_name = 'edit_recipe.html'
     fields = ['title', 'description', 'ingredients', 'directions']
 
     def dispatch(self, request, *args, **kwargs):
