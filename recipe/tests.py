@@ -27,26 +27,32 @@ class RecipeDetailTestCase(TestCase):
 
     def setUp(self):
         """Initialize a recipe to be tested."""
-        user, self.recipe = createRecipeAndUser()
+        self.user, self.recipe = createRecipeAndUser()
         self.response = self.client.get(
             reverse('view_recipe', args=[self.recipe.id])
         )
 
-    def testRecipeShowsTitle(self):
+    def testShowsTitle(self):
         """Test response has title."""
         self.assertContains(self.response, self.recipe.title)
 
-    def testRecipeShowsDescription(self):
+    def testShowsDescription(self):
         """Test response has description."""
         self.assertContains(self.response, self.recipe.description)
 
-    def testRecipeShowsIngredients(self):
+    def testShowsIngredients(self):
         """Test response has ingredients."""
         self.assertContains(self.response, self.recipe.ingredients)
 
-    def testRecipeShowsDirections(self):
+    def testShowsDirections(self):
         """Test response has directions."""
         self.assertContains(self.response, self.recipe.directions)
+
+    def testShowsEdit(self):
+        """Test response has link to edit when logged in."""
+        self.client.force_login(self.user)
+        url = reverse('edit_recipe', args=[self.recipe.id])
+        self.assertContains(self.response, url)
 
 
 class RecipeCreateTestCase(TestCase):
