@@ -9,6 +9,7 @@ RECIPE_FIELDS = ['title', 'description', 'ingredients', 'directions']
 
 
 def createRecipeAndUser():
+    """Returns a new user and recipe authored by that user."""
     user = User(username='lydia')
     user.save()
     recipe = Recipe(
