@@ -1,6 +1,7 @@
 import re
 from functools import reduce
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.views.generic import (
      TemplateView, DetailView, CreateView, UpdateView, DeleteView
@@ -47,7 +48,7 @@ class RecipeDetailView(DetailView):
         return context
 
 
-class RecipeCreateView(CreateView):
+class RecipeCreateView(LoginRequiredMixin, CreateView):
     """View that creates a recipe."""
     model = Recipe
     template_name = 'create_recipe.html'

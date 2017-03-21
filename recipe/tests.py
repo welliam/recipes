@@ -128,6 +128,13 @@ class RecipeCreateTestCase(TestCase):
             self.client.post(reverse('new_recipe'), data)
             self.assertEquals(Recipe.objects.count(), count)
 
+    def testPostCreateRecipeUnauthenticated(self):
+        """Test POSTing a recipe while not logged in."""
+        self.client.logout()
+        count = Recipe.objects.count()
+        self.client.post(reverse('new_recipe'), self.data)
+        self.assertEquals(Recipe.objects.count(), count)
+
 
 class ViewLogicTests(TestCase):
     """Test helper functions behind view."""
