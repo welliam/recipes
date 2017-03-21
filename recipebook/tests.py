@@ -17,3 +17,12 @@ class CreateRecipeBookTestCase(TestCase):
             description='lotsa bakes',
         ))
         self.assertEqual(RecipeBook.objects.count(), count + 1)
+
+    def testCreateRecipeBookUnauthenticated(self):
+        self.client.logout()
+        count = RecipeBook.objects.count()
+        self.client.post(reverse('new_recipebook'), dict(
+            title='bakes',
+            description='lotsa bakes',
+        ))
+        self.assertEqual(RecipeBook.objects.count(), count)

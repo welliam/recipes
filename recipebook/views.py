@@ -1,9 +1,10 @@
 from django.views.generic import CreateView
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import RecipeBook
 
 
-class RecipeBookCreateView(CreateView):
+class RecipeBookCreateView(LoginRequiredMixin, CreateView):
     """View that creates a recipe."""
     model = RecipeBook
     template_name = 'create_recipe.html'
