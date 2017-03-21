@@ -169,7 +169,7 @@ class EditViewTests(TestCase):
         self.client.force_login(self.user)
 
     def editRecipeTitle(self, to):
-        """Edit posted recipe's title."""
+        """Edit posted recipe's title using self.client."""
         data = dict(
             title=to,
             description='test',
@@ -183,7 +183,7 @@ class EditViewTests(TestCase):
         """Test editing title."""
         new_title = 'new title'
         self.editRecipeTitle(new_title)
-        recipe = Recipe.objects.filter(id=self.recipe.id)[0]
+        recipe = Recipe.objects.filter(id=self.recipe.id).first()
         self.assertEqual(recipe.title, new_title)
 
     def testEditingRecipeMaintainsCount(self):
@@ -192,3 +192,12 @@ class EditViewTests(TestCase):
         count = Recipe.objects.count()
         self.editRecipeTitle(new_title)
         self.assertEqual(count, Recipe.objects.count())
+
+    def testWrongUserCannotEdit(self):
+        """Test that a user who does not own a recipe cannot edit it."""
+        evil_user = User(username="evil")
+        evil_user.save()
+        self.client.force_login(evil_user)
+        self.editRecipeTitle('bad')
+        recipe = Recipe.objects.filter(id=self.recipe.id).first()
+        self.assertEqual(recipe.title, self.recipe.title)

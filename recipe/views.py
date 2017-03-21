@@ -1,5 +1,6 @@
 import re
 from functools import reduce
+from django.http import HttpResponseForbidden
 from django.views.generic import (
     DetailView, CreateView, UpdateView, TemplateView
 )
@@ -77,3 +78,14 @@ class RecipeUpdateView(UpdateView):
     model = Recipe
     template_name = 'create_recipe.html'
     fields = ['title', 'description', 'ingredients', 'directions']
+
+    def dispatch(self, request, *args, **kwargs):
+        """Check if the recipe to edit is owned by user."""
+        pk = kwargs.get('pk')
+        device = request.user.recipes.filter(pk=pk).first()
+        if device:
+            return super(RecipeUpdateView, self).dispatch(
+                request, *args, **kwargs
+            )
+        else:
+            return HttpResponseForbidden()
