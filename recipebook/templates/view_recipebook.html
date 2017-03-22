@@ -3,7 +3,12 @@
 {% block content %}
 <header>
   <h2>{{ object.title }}</h2>
-  {{ object.description }}
+  {% if own_recipebook %}
+  <a href="{% url 'edit_recipebook' object.id %}">Edit</a>
+  {% endif %}
+  <div>
+    {{ object.description }}
+  </div>
 </header>
 <ul>
   {% for recipe in recipes %}

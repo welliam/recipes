@@ -27,6 +27,7 @@ class RecipeBookDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(RecipeBookDetailView, self).get_context_data(**kwargs)
         context['recipes'] = self.object.recipes.all()[:5]
+        context['own_recipebook'] = self.object.user == self.request.user
         return context
 
 
@@ -34,14 +35,6 @@ class RecipeBookUpdateView(UpdateView):
     model = RecipeBook
     template_name = 'edit_recipebook.html'
     fields = ['title', 'description']
-
-    def form_valid(self, form):
-        """Attach user to form."""
-        form.instance.user = self.request.user
-        return super(RecipeBookUpdateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('profile', args=[self.request.user.username])
 
     def dispatch(self, request, *args, **kwargs):
         """Check if the recipebook to edit is owned by user."""

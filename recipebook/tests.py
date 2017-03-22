@@ -64,6 +64,24 @@ class RecipeBookDetailViewTests(TestCase):
         for recipe in self.recipes:
             self.assertContains(self.response, recipe.title)
 
+    def testResponseHasEditLink(self):
+        url = reverse('edit_recipebook', args=[self.recipebook.id])
+        self.assertContains(self.response, url)
+
+    def testResponseFromOtherUserHasNoEditLink(self):
+        user = User(username='other_friend')
+        user.save()
+        self.client.force_login(user)
+        view_url = reverse('view_recipebook', args=[self.recipebook.id])
+        edit_url = reverse('edit_recipebook', args=[self.recipebook.id])
+        self.assertNotContains(self.client.get(view_url), edit_url)
+
+    def testResponseFromLoggedOutHasNoEditLink(self):
+        self.client.logout()
+        view_url = reverse('view_recipebook', args=[self.recipebook.id])
+        edit_url = reverse('edit_recipebook', args=[self.recipebook.id])
+        self.assertNotContains(self.client.get(view_url), edit_url)
+
 
 class RecipeBookUpdateViewTests(TestCase):
     def setUp(self):
