@@ -5,4 +5,13 @@
   <h2>{{ object.title }}</h2>
   {{ object.description }}
 </header>
+<ul>
+  {% for recipe in recipes %}
+  <li>
+    <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
+  </li>
+  {% empty %}
+  No recipes here yet...
+  {% endfor %}
+</ul>
 {% endblock %}

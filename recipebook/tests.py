@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.test import TestCase
+from recipe.models import Recipe
 from .models import RecipeBook
 
 
@@ -33,11 +34,22 @@ class RecipeBookDetailViewTests(TestCase):
         self.user = User(username='h')
         self.user.save()
         self.client.force_login(self.user)
+        self.recipes = [
+            Recipe(title=str(title),
+                   user=self.user,
+                   description='t',
+                   ingredients='t',
+                   directions='t')
+            for title in range(5)
+        ]
         self.recipebook = RecipeBook(
             title='book',
             description='recipes',
             user=self.user
         )
+        for recipe in self.recipes:
+            recipe.save()
+            self.recipebook.recipes.add(recipe)
         self.recipebook.save()
         url = reverse('view_recipebook', args=[self.recipebook.id])
         self.response = self.client.get(url)
@@ -47,3 +59,7 @@ class RecipeBookDetailViewTests(TestCase):
 
     def testResponseHasDescription(self):
         self.assertContains(self.response, self.recipebook.description)
+
+    def testResponseHasContainedRecipes(self):
+        for recipe in self.recipes:
+            self.assertContains(self.response, recipe.title)

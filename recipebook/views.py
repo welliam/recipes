@@ -22,3 +22,8 @@ class RecipeBookCreateView(LoginRequiredMixin, CreateView):
 class RecipeBookDetailView(DetailView):
     model = RecipeBook
     template_name = 'view_recipebook.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeBookDetailView, self).get_context_data(**kwargs)
+        context['recipes'] = self.object.recipes.all()[:5]
+        return context
