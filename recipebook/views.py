@@ -1,4 +1,4 @@
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import RecipeBook
@@ -17,3 +17,8 @@ class RecipeBookCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('profile', args=[self.request.user.username])
+
+
+class RecipeBookDetailView(DetailView):
+    model = RecipeBook
+    template_name = 'view_recipebook.html'

@@ -4,7 +4,7 @@ from django.test import TestCase
 from .models import RecipeBook
 
 
-class CreateRecipeBookTestCase(TestCase):
+class RecipeBookCreateViewTests(TestCase):
     def setUp(self):
         self.user = User(username='h')
         self.user.save()
@@ -26,3 +26,24 @@ class CreateRecipeBookTestCase(TestCase):
             description='lotsa bakes',
         ))
         self.assertEqual(RecipeBook.objects.count(), count)
+
+
+class RecipeBookDetailViewTests(TestCase):
+    def setUp(self):
+        self.user = User(username='h')
+        self.user.save()
+        self.client.force_login(self.user)
+        self.recipebook = RecipeBook(
+            title='book',
+            description='recipes',
+            user=self.user
+        )
+        self.recipebook.save()
+        url = reverse('view_recipebook', args=[self.recipebook.id])
+        self.response = self.client.get(url)
+
+    def testResponseHasTitle(self):
+        self.assertContains(self.response, self.recipebook.title)
+
+    def testResponseHasDescription(self):
+        self.assertContains(self.response, self.recipebook.description)
