@@ -12,7 +12,7 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
         related_name="profile",
     )
-    bio = models.CharField(max_length=1000, blank=True)
+    bio = models.TextField(max_length=1000, blank=True)
 
 
 @receiver(post_save, sender=User)
