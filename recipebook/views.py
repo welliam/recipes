@@ -1,4 +1,9 @@
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    UpdateView,
+    DeleteView
+)
 from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -49,3 +54,11 @@ class RecipeBookUpdateView(UpdateView):
             )
         else:
             return HttpResponseForbidden()
+
+
+class RecipeBookDeleteView(DeleteView):
+    model = RecipeBook
+    template_name = 'delete_recipebook.html'
+
+    def get_success_url(self):
+        return reverse('profile', args=[self.request.user.username])

@@ -129,3 +129,27 @@ class RecipeBookUpdateViewTests(RecipeBookTestCase):
             RecipeBook.objects.last().title,
             self.recipebook.title
         )
+
+
+class RecipeBookDeleteViewTests(RecipeBookTestCase):
+    def testDeleteDecrementsCount(self):
+        count = RecipeBook.objects.count()
+        url = reverse('delete_recipebook', args=[self.recipebook.id])
+        self.client.post(url)
+        self.assertEqual(RecipeBook.objects.count(), count - 1)
+
+    def testDeleteRedirectsToProfile(self):
+        url = reverse('delete_recipebook', args=[self.recipebook.id])
+        response = self.client.post(url)
+        redirect_url = reverse('profile', args=[self.user.username])
+        self.assertEqual(response.url, redirect_url)
+
+    def testGetDeleteViewResponseCode(self):
+        url = reverse('delete_recipebook', args=[self.recipebook.id])
+        self.assertEqual(self.client.get(url).status_code, 200)
+
+    def testGetDeleteViewHasForm(self):
+        url = reverse('delete_recipebook', args=[self.recipebook.id])
+        response = self.client.get(url)
+        self.assertContains(response, 'method="POST"')
+        self.assertContains(response, '</form>')

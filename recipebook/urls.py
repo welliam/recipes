@@ -2,7 +2,8 @@ from django.conf.urls import url
 from .views import (
     RecipeBookCreateView,
     RecipeBookDetailView,
-    RecipeBookUpdateView
+    RecipeBookUpdateView,
+    RecipeBookDeleteView
 )
 
 urlpatterns = [
@@ -13,4 +14,7 @@ urlpatterns = [
     url(r'(?P<pk>[0-9]+)/edit$',
         RecipeBookUpdateView.as_view(),
         name='edit_recipebook'),
+    url(r'(?P<pk>[0-9]+)/delete$',
+        RecipeBookDeleteView.as_view(),
+        name='delete_recipebook'),
 ]
