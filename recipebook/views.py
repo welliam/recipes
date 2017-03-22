@@ -1,5 +1,6 @@
 from django.views.generic import CreateView, DetailView, UpdateView
 from django.urls import reverse
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import RecipeBook
 
@@ -41,3 +42,17 @@ class RecipeBookUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('profile', args=[self.request.user.username])
+
+    def dispatch(self, request, *args, **kwargs):
+        """Check if the recipebook to edit is owned by user."""
+        pk = kwargs.get('pk')
+        try:
+            device = request.user.recipebooks.filter(pk=pk).first()
+        except AttributeError:  # user not logged in
+            return HttpResponseRedirect(reverse('auth_login'))
+        if device:
+            return super(RecipeBookUpdateView, self).dispatch(
+                request, *args, **kwargs
+            )
+        else:
+            return HttpResponseForbidden()

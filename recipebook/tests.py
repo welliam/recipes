@@ -96,3 +96,31 @@ class RecipeBookUpdateViewTests(TestCase):
             description=self.recipebook.description)
         )
         self.assertEqual(RecipeBook.objects.last().title, new_title)
+
+    def testLoggedOutCannotUpdate(self):
+        url = reverse('edit_recipebook', args=[self.recipebook.id])
+        new_title = 'new'
+        self.client.logout()
+        self.client.post(url, dict(
+            title=new_title,
+            description=self.recipebook.description)
+        )
+        self.assertEqual(
+            RecipeBook.objects.last().title,
+            self.recipebook.title
+        )
+
+    def testOtherUserCannotUpdate(self):
+        url = reverse('edit_recipebook', args=[self.recipebook.id])
+        new_title = 'new'
+        other_user = User(username='other_friend')
+        other_user.save()
+        self.client.force_login(other_user)
+        self.client.post(url, dict(
+            title=new_title,
+            description=self.recipebook.description)
+        )
+        self.assertEqual(
+            RecipeBook.objects.last().title,
+            self.recipebook.title
+        )
