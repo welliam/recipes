@@ -13,6 +13,7 @@ class ProfileDetailView(DetailView):
         context = super(ProfileDetailView, self).get_context_data(**kwargs)
         context['recipes'] = self.object.recipes.all()[:5]
         context['own_profile'] = self.object == self.request.user
+        context['recipebooks'] = self.object.recipebooks.all()[:5]
         return context
 
 

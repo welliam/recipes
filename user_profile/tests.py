@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from recipe.models import Recipe
+from recipebook.models import RecipeBook
 
 
 class UserProfileTestCase(TestCase):
@@ -36,6 +37,12 @@ class ProfileViewTestCase(TestCase):
             directions='prepare food'
         )
         self.recipe.save()
+        self.recipebook = RecipeBook(
+            user=self.user,
+            title='foods',
+            description='lots of them'
+        )
+        self.recipebook.save()
         url = reverse('profile', args=[self.user.username])
         self.response = self.client.get(url)
 
@@ -62,6 +69,9 @@ class ProfileViewTestCase(TestCase):
         self.client.force_login(user)
         url = reverse('profile', args=[self.user.username])
         self.assertNotContains(self.client.get(url), reverse('edit_profile'))
+
+    def testProfileShowsRecipebooks(self):
+        self.assertContains(self.response, self.recipebook.title)
 
 
 class ProfileEditTestCase(TestCase):

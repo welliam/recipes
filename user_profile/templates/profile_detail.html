@@ -27,4 +27,16 @@
     {% endfor %}
   </ul>
 </section>
+<section>
+  <h3>Recipebooks</h3>
+  <ul>
+    {% for recipebook in recipebooks %}
+    <li>
+      <a href="#">{{ recipebook.title }}</a>
+    </li>
+    {% empty %}
+    No recipes yet...
+    {% endfor %}
+  </ul>
+</section>
 {% endblock %}
