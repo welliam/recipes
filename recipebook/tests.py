@@ -91,6 +91,24 @@ class RecipeBookDetailViewTests(RecipeBookTestCase):
         edit_url = reverse('edit_recipebook', args=[self.recipebook.id])
         self.assertNotContains(self.client.get(view_url), edit_url)
 
+    def testResponseHasDeleteLink(self):
+        url = reverse('delete_recipebook', args=[self.recipebook.id])
+        self.assertContains(self.response, url)
+
+    def testResponseFromOtherUserHasNoDeleteLink(self):
+        user = User(username='other_friend')
+        user.save()
+        self.client.force_login(user)
+        view_url = reverse('view_recipebook', args=[self.recipebook.id])
+        delete_url = reverse('delete_recipebook', args=[self.recipebook.id])
+        self.assertNotContains(self.client.get(view_url), delete_url)
+
+    def testResponseFromLoggedOutHasNoDeleteLink(self):
+        self.client.logout()
+        view_url = reverse('view_recipebook', args=[self.recipebook.id])
+        delete_url = reverse('delete_recipebook', args=[self.recipebook.id])
+        self.assertNotContains(self.client.get(view_url), delete_url)
+
 
 class RecipeBookUpdateViewTests(RecipeBookTestCase):
     def testUpdateTitle(self):

@@ -5,6 +5,7 @@
   <h2>{{ object.title }}</h2>
   {% if own_recipebook %}
   <a href="{% url 'edit_recipebook' object.id %}">Edit</a>
+  <a href="{% url 'delete_recipebook' object.id %}">Delete</a>
   {% endif %}
   <div>
     {{ object.description }}
