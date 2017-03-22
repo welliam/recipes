@@ -29,9 +29,9 @@ class RecipeBookCreateViewTests(TestCase):
         self.assertEqual(RecipeBook.objects.count(), count)
 
 
-class RecipeBookDetailViewTests(TestCase):
+class RecipeBookTestCase(TestCase):
     def setUp(self):
-        self.user = User(username='h')
+        self.user = User(username='test')
         self.user.save()
         self.client.force_login(self.user)
         self.recipes = [
@@ -54,6 +54,8 @@ class RecipeBookDetailViewTests(TestCase):
         url = reverse('view_recipebook', args=[self.recipebook.id])
         self.response = self.client.get(url)
 
+
+class RecipeBookDetailViewTests(RecipeBookTestCase):
     def testResponseHasTitle(self):
         self.assertContains(self.response, self.recipebook.title)
 
@@ -83,29 +85,7 @@ class RecipeBookDetailViewTests(TestCase):
         self.assertNotContains(self.client.get(view_url), edit_url)
 
 
-class RecipeBookUpdateViewTests(TestCase):
-    def setUp(self):
-        self.user = User(username='h')
-        self.user.save()
-        self.client.force_login(self.user)
-        self.recipes = [
-            Recipe(title='recipe' + str(title),
-                   user=self.user,
-                   description='t',
-                   ingredients='t',
-                   directions='t')
-            for title in range(5)
-        ]
-        self.recipebook = RecipeBook(
-            title='book',
-            description='recipes',
-            user=self.user
-        )
-        for recipe in self.recipes:
-            recipe.save()
-            self.recipebook.recipes.add(recipe)
-        self.recipebook.save()
-
+class RecipeBookUpdateViewTests(RecipeBookTestCase):
     def testUpdateTitle(self):
         url = reverse('edit_recipebook', args=[self.recipebook.id])
         new_title = 'new'
