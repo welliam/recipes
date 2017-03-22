@@ -81,7 +81,7 @@ class RecipeUpdateView(UpdateView):
     model = Recipe
     template_name = 'edit_recipe.html'
     fields = ['title', 'description', 'ingredients', 'directions']
-    dispatch = make_ownership_dispatch(lambda: RecipeUpdateView, 'recipes')
+    dispatch = make_ownership_dispatch(lambda: RecipeUpdateView)
 
 
 class RecipeDeleteView(DeleteView):
@@ -89,4 +89,4 @@ class RecipeDeleteView(DeleteView):
     model = Recipe
     template_name = 'delete_recipe.html'
     success_url = reverse_lazy('home')
-    dispatch = make_ownership_dispatch(lambda: RecipeDeleteView, 'recipes')
+    dispatch = make_ownership_dispatch(lambda: RecipeDeleteView)

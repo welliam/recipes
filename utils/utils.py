@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 
 
-def make_ownership_dispatch(get_class, related_name):
+def make_ownership_dispatch(get_class):
     """Make ownership based dispatch for use in UpdateViews, DeleteViews, etc.
 
     `get_class` is a callable which returns the class the dispatch
@@ -13,13 +13,10 @@ def make_ownership_dispatch(get_class, related_name):
     user is assumed to be an AnonymousUser (i.e. not logged in).
     """
     def f(self, request, *args, **kwargs):
-        pk = kwargs.get('pk')
-        try:
-            owned_objects = getattr(request.user, related_name)
-        except AttributeError:  # user not logged in
+        if self.request.user.is_anonymous():
             return HttpResponseRedirect(reverse('auth_login'))
-        if owned_objects.filter(pk=pk).exists():
-            return super(get_class(), self).dispatch(request, *args, **kwargs)
-        else:
+        elif self.get_object().user != self.request.user:
             return HttpResponseForbidden()
+        else:
+            return super(get_class(), self).dispatch(request, *args, **kwargs)
     return f

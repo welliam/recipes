@@ -40,17 +40,13 @@ class RecipeBookUpdateView(UpdateView):
     model = RecipeBook
     template_name = 'edit_recipebook.html'
     fields = ['title', 'description']
-    dispatch = make_ownership_dispatch(
-        lambda: RecipeBookUpdateView, 'recipebooks'
-    )
+    dispatch = make_ownership_dispatch(lambda: RecipeBookUpdateView)
 
 
 class RecipeBookDeleteView(DeleteView):
     model = RecipeBook
     template_name = 'delete_recipebook.html'
-    dispatch = make_ownership_dispatch(
-        lambda: RecipeBookDeleteView, 'recipebooks'
-    )
+    dispatch = make_ownership_dispatch(lambda: RecipeBookDeleteView)
 
     def get_success_url(self):
         return reverse('profile', args=[self.request.user.username])
