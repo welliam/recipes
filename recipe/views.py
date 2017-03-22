@@ -1,11 +1,11 @@
 import re
 from functools import reduce
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.views.generic import (
      TemplateView, DetailView, CreateView, UpdateView, DeleteView
 )
+from utils.utils import make_ownership_dispatch
 from .models import Recipe
 
 
@@ -81,20 +81,7 @@ class RecipeUpdateView(UpdateView):
     model = Recipe
     template_name = 'edit_recipe.html'
     fields = ['title', 'description', 'ingredients', 'directions']
-
-    def dispatch(self, request, *args, **kwargs):
-        """Check if the recipe to edit is owned by user."""
-        pk = kwargs.get('pk')
-        try:
-            device = request.user.recipes.filter(pk=pk).first()
-        except AttributeError:  # user not logged in
-            return HttpResponseRedirect(reverse('auth_login'))
-        if device:
-            return super(RecipeUpdateView, self).dispatch(
-                request, *args, **kwargs
-            )
-        else:
-            return HttpResponseForbidden()
+    dispatch = make_ownership_dispatch(lambda: RecipeUpdateView, 'recipes')
 
 
 class RecipeDeleteView(DeleteView):
@@ -102,17 +89,4 @@ class RecipeDeleteView(DeleteView):
     model = Recipe
     template_name = 'delete_recipe.html'
     success_url = reverse_lazy('home')
-
-    def dispatch(self, request, *args, **kwargs):
-        """Check if the recipe to delete is owned by user."""
-        pk = kwargs.get('pk')
-        try:
-            device = request.user.recipes.filter(pk=pk).first()
-        except AttributeError:  # user not logged in
-            return HttpResponseRedirect(reverse('auth_login'))
-        if device:
-            return super(RecipeDeleteView, self).dispatch(
-                request, *args, **kwargs
-            )
-        else:
-            return HttpResponseForbidden()
+    dispatch = make_ownership_dispatch(lambda: RecipeDeleteView, 'recipes')

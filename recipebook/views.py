@@ -5,8 +5,8 @@ from django.views.generic import (
     DeleteView
 )
 from django.urls import reverse
-from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth.mixins import LoginRequiredMixin
+from utils.utils import make_ownership_dispatch
 from .models import RecipeBook
 
 
@@ -40,20 +40,9 @@ class RecipeBookUpdateView(UpdateView):
     model = RecipeBook
     template_name = 'edit_recipebook.html'
     fields = ['title', 'description']
-
-    def dispatch(self, request, *args, **kwargs):
-        """Check if the recipebook to edit is owned by user."""
-        pk = kwargs.get('pk')
-        try:
-            device = request.user.recipebooks.filter(pk=pk).first()
-        except AttributeError:  # user not logged in
-            return HttpResponseRedirect(reverse('auth_login'))
-        if device:
-            return super(RecipeBookUpdateView, self).dispatch(
-                request, *args, **kwargs
-            )
-        else:
-            return HttpResponseForbidden()
+    dispatch = make_ownership_dispatch(
+        lambda: RecipeBookUpdateView, 'recipebooks'
+    )
 
 
 class RecipeBookDeleteView(DeleteView):
