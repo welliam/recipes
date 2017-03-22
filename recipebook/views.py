@@ -48,6 +48,9 @@ class RecipeBookUpdateView(UpdateView):
 class RecipeBookDeleteView(DeleteView):
     model = RecipeBook
     template_name = 'delete_recipebook.html'
+    dispatch = make_ownership_dispatch(
+        lambda: RecipeBookDeleteView, 'recipebooks'
+    )
 
     def get_success_url(self):
         return reverse('profile', args=[self.request.user.username])

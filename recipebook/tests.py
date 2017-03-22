@@ -153,3 +153,19 @@ class RecipeBookDeleteViewTests(RecipeBookTestCase):
         response = self.client.get(url)
         self.assertContains(response, 'method="POST"')
         self.assertContains(response, '</form>')
+
+    def testOtherUserDeleteMaintainsCount(self):
+        other_user = User(username='other_friend')
+        other_user.save()
+        self.client.force_login(other_user)
+        count = RecipeBook.objects.count()
+        url = reverse('delete_recipebook', args=[self.recipebook.id])
+        self.client.post(url)
+        self.assertEqual(RecipeBook.objects.count(), count)
+
+    def testLoggedOutDeleteMaintainsCount(self):
+        self.client.logout()
+        count = RecipeBook.objects.count()
+        url = reverse('delete_recipebook', args=[self.recipebook.id])
+        self.client.post(url)
+        self.assertEqual(RecipeBook.objects.count(), count)
