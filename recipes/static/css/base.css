@@ -117,6 +117,10 @@ textarea {
     margin-bottom: 3em;
 }
 
+.bio {
+    white-space: pre-line;
+}
+
 #id_title {
     font-size: 1.3em;
 }

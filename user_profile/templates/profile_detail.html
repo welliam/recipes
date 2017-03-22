@@ -7,11 +7,13 @@
 {% endif %}
 <section>
   <h3>Biography </h3>
-  {% if object.profile.bio %}
-  {{ object.profile.bio }}
-  {% else %}
-  No biography yet...
-  {% endif %}
+  <div class="bio">
+    {% if object.profile.bio %}
+    {{ object.profile.bio }}
+    {% else %}
+    No biography yet...
+    {% endif %}
+  </div>
 </section>
 <section>
   <h3>Recipes</h3>
