@@ -32,7 +32,7 @@
   <ul>
     {% for recipebook in recipebooks %}
     <li>
-      <a href="#">{{ recipebook.title }}</a>
+      <a href="{% url 'view_recipebook' recipebook.id %}">{{ recipebook.title }}</a>
     </li>
     {% empty %}
     No recipes yet...
