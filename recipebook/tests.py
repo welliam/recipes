@@ -30,6 +30,10 @@ class RecipeBookCreateViewTests(TestCase):
 
 
 class RecipeBookTestCase(TestCase):
+    """Test case for RecipeBook tests.
+
+    self.client is logged into a test user `self.user`, who owns five
+    recipes which belong to self.recipebook."""
     def setUp(self):
         self.user = User(username='test')
         self.user.save()
@@ -51,11 +55,14 @@ class RecipeBookTestCase(TestCase):
             recipe.save()
             self.recipebook.recipes.add(recipe)
         self.recipebook.save()
-        url = reverse('view_recipebook', args=[self.recipebook.id])
-        self.response = self.client.get(url)
 
 
 class RecipeBookDetailViewTests(RecipeBookTestCase):
+    def setUp(self):
+        super(RecipeBookDetailViewTests, self).setUp()
+        url = reverse('view_recipebook', args=[self.recipebook.id])
+        self.response = self.client.get(url)
+
     def testResponseHasTitle(self):
         self.assertContains(self.response, self.recipebook.title)
 
