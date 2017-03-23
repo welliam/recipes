@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
      TemplateView, DetailView, CreateView, UpdateView, DeleteView
 )
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from utils.utils import make_ownership_dispatch
 from .models import Recipe
 
@@ -101,5 +101,7 @@ class RecipeDeleteView(DeleteView):
 def update_recipebooks(request, pk):
     if request.method == 'POST':
         recipe = Recipe.objects.filter(pk=pk).first()
+        if recipe.user != request.user:
+            return HttpResponseForbidden()
         recipe.recipebooks.set(request.POST.getlist('books'))
     return HttpResponseRedirect(reverse('view_recipe', args=[pk]))

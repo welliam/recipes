@@ -10,9 +10,9 @@ from . import views
 RECIPE_FIELDS = ['title', 'description', 'ingredients', 'directions']
 
 
-def createRecipeAndUser():
+def createRecipeAndUser(username='lydia'):
     """Returns a new user and recipe authored by that user."""
-    user = User(username='lydia')
+    user = User(username=username)
     user.save()
     recipe = Recipe(
         user=user,
@@ -300,6 +300,7 @@ class AddRecipeBookView(TestCase):
     def setUp(self):
         """Create a recipe and two recipebooks."""
         self.user, self.recipe = createRecipeAndUser()
+        self.client.force_login(self.user)
         self.rb1 = RecipeBook(
             title='one',
             description='one',
@@ -326,3 +327,9 @@ class AddRecipeBookView(TestCase):
         count = self.recipe.recipebooks.count()
         self.client.get(self.url)
         self.assertEqual(self.recipe.recipebooks.count(), count)
+
+    def testWrongUserDoesNotUpdate(self):
+        self.user, _ = createRecipeAndUser('bad')
+        self.client.force_login(self.user)
+        self.postData(dict(books=[self.rb1.id]))
+        self.assertEqual(self.rb1.recipes.count(), 0)
