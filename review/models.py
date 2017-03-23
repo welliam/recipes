@@ -16,4 +16,6 @@ class Review(models.Model):
     )
     title = models.CharField(max_length=50)
     body = models.TextField(max_length=5000)
-    score = models.PositiveSmallIntegerField(choices=((r,r) for r in range(1,6)))
+    score = models.PositiveSmallIntegerField(
+        choices=((r, r) for r in range(1, 6))
+    )
