@@ -312,11 +312,17 @@ class AddRecipeBookView(TestCase):
         )
         self.rb1.save()
         self.rb2.save()
-        url = reverse('recipe_update_recipebooks', args=[self.recipe.id])
-        self.postData = partial(self.client.post, url)
+        self.url = reverse('recipe_update_recipebooks', args=[self.recipe.id])
+        self.postData = partial(self.client.post, self.url)
 
     def testAddRecipeToOneBook(self):
         """Test POSTing to recipe_add_recipebook."""
         self.assertEqual(self.recipe.recipebooks.count(), 0)
         self.postData(dict(books=[self.rb1.id, self.rb2.id]))
         self.assertEqual(self.recipe.recipebooks.count(), 2)
+
+    def testGetDoesNothing(self):
+        self.postData(dict(books=[self.rb1.id, self.rb2.id]))
+        count = self.recipe.recipebooks.count()
+        self.client.get(self.url)
+        self.assertEqual(self.recipe.recipebooks.count(), count)

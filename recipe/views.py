@@ -99,6 +99,7 @@ class RecipeDeleteView(DeleteView):
 
 
 def update_recipebooks(request, pk):
-    recipe = Recipe.objects.filter(pk=pk).first()
-    recipe.recipebooks.set(request.POST.getlist('books'))
+    if request.method == 'POST':
+        recipe = Recipe.objects.filter(pk=pk).first()
+        recipe.recipebooks.set(request.POST.getlist('books'))
     return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
