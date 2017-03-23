@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from recipebook.models import RecipeBook
+from review.models import Review
 from .models import Recipe
 from . import views
 
@@ -31,9 +32,8 @@ class RecipeDetailTests(TestCase):
     def setUp(self):
         """Initialize a recipe to be tested."""
         self.user, self.recipe = createRecipeAndUser()
-        self.response = self.client.get(
-            reverse('view_recipe', args=[self.recipe.id])
-        )
+        url = reverse('view_recipe', args=[self.recipe.id])
+        self.response = self.client.get(url)
 
     def testShowsTitle(self):
         """Test response has title."""
@@ -333,3 +333,26 @@ class AddRecipeBookTests(TestCase):
         self.client.force_login(self.user)
         self.postData(dict(books=[self.rb1.id]))
         self.assertEqual(self.rb1.recipes.count(), 0)
+
+
+class DisplayReviewTests(TestCase):
+    """Test displaying reviews on recipe page."""
+
+    def setUp(self):
+        """Create a review to be displayed."""
+        self.user, self.recipe = createRecipeAndUser()
+        self.review = Review(
+            user=self.user,
+            recipe=self.recipe,
+            title='review',
+            body='this is a review',
+            score=3
+        )
+        self.review.save()
+
+    def testReviewFieldsDisplayed(self):
+        """Test review's fields are displayed on recipe response."""
+        url = reverse('view_recipe', args=[self.recipe.id])
+        response = self.client.get(url)
+        for field in ['recipe', 'title', 'body', 'score']:
+            self.assertContains(response, getattr(self.review, field))

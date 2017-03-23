@@ -51,5 +51,22 @@
       <input type="submit" value="Update Recipe Books">
     </form>
   </section>
+  <section class="recipe-reviews">
+    <header>
+      <h3>Reviews</h3>
+    </header>
+    {% for review in object.reviews.all %}
+    <article>
+      <header>
+        <h4>{{ review.title }}</h4>
+        <span class="review-author">By {{ review.user }}</span>
+        <span class="review-score">{{ review.score }}</span>
+      </header>
+      <div>{{ review.body }}</div>
+    </article>
+    {% empty %}
+    No reviews yet...
+    {% endfor %}
+  </section>
 </div>
 {% endblock %}
