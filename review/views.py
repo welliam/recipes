@@ -6,6 +6,8 @@ from .models import Review
 
 
 def review_create_view(request, pk):
+    if request.user.is_anonymous():
+        return HttpResponseRedirect(reverse('auth_login'))
     recipe = Recipe.objects.filter(pk=pk).first()
     Review(
         user=request.user,
