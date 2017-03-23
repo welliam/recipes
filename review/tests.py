@@ -28,7 +28,7 @@ class CreateReviewTestCase(TestCase):
             body='very good',
         ))
 
-    def testPostingDataUpdatesCount(self):
+    def testPostingUpdatesCount(self):
         """Test viewing recipe has form for review."""
         count = Review.objects.count()
         self.post_review()

@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ModelForm
 from django.contrib.auth.models import User
 from recipe.models import Recipe
 
@@ -19,3 +20,9 @@ class Review(models.Model):
     score = models.PositiveSmallIntegerField(
         choices=((r, r) for r in range(1, 6))
     )
+
+
+class ReviewForm(ModelForm):
+    class Meta:
+        model = Review
+        fields = ['title', 'body', 'score']
