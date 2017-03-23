@@ -119,7 +119,7 @@ textarea {
     white-space: pre-line;
 }
 
-.recipebook_form select {
+.recipe-recipebooks select {
     display: block;
     min-width: 20em;
     margin: auto;
