@@ -1,6 +1,8 @@
+from functools import partial
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
+from recipebook.models import RecipeBook
 from .models import Recipe
 from . import views
 
@@ -267,3 +269,31 @@ class DeleteViewTests(TestCase):
         self.client.logout()
         url = reverse('delete_recipe', args=[self.recipe.id])
         self.assertEqual(self.client.get(url).status_code, 302)
+
+
+class AddRecipeBookView(TestCase):
+    """Test adding a recipe to recipebooks."""
+
+    def setUp(self):
+        """Create a recipe and two recipebooks."""
+        self.user, self.recipe = createRecipeAndUser()
+        self.rb1 = RecipeBook(
+            title='one',
+            description='one',
+            user=self.user
+        )
+        self.rb2 = RecipeBook(
+            title='two',
+            description='two',
+            user=self.user
+        )
+        self.rb1.save()
+        self.rb2.save()
+        url = reverse('recipe_update_recipebooks', args=[self.recipe.id])
+        self.postData = partial(self.client.post, url)
+
+    def testAddRecipeToOneBook(self):
+        """Test POSTing to recipe_add_recipebook."""
+        self.assertEqual(self.recipe.recipebooks.count(), 0)
+        self.postData(dict(books=[self.rb1.id, self.rb2.id]))
+        self.assertEqual(self.recipe.recipebooks.count(), 2)

@@ -1,10 +1,11 @@
 import re
 from functools import reduce
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
      TemplateView, DetailView, CreateView, UpdateView, DeleteView
 )
+from django.http import HttpResponseRedirect
 from utils.utils import make_ownership_dispatch
 from .models import Recipe
 
@@ -90,3 +91,8 @@ class RecipeDeleteView(DeleteView):
     template_name = 'delete_recipe.html'
     success_url = reverse_lazy('home')
     dispatch = make_ownership_dispatch(lambda: RecipeDeleteView)
+
+
+def update_recipebooks(request, pk):
+    Recipe.objects.filter(pk=pk).first().recipebooks.set(request.POST.getlist('books'))
+    return HttpResponseRedirect(reverse('view_recipe', args=[pk]))

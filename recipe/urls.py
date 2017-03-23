@@ -5,6 +5,7 @@ from .views import (
     RecipeUpdateView,
     RecipeDeleteView,
     RecipeSearchView,
+    update_recipebooks,
 )
 
 urlpatterns = [
@@ -17,4 +18,7 @@ urlpatterns = [
         RecipeDeleteView.as_view(),
         name='delete_recipe'),
     url(r'search', RecipeSearchView.as_view(), name='recipe_search'),
+    url(r'(?P<pk>[0-9]+)/update_recipebooks',
+        update_recipebooks,
+        name='recipe_update_recipebooks')
 ]
