@@ -126,6 +126,10 @@ textarea {
     margin-bottom: 1em;
 }
 
+.recipe-recipebooks input[type="submit"] {
+    font-size: 1em;
+}
+
 #id_title {
     font-size: 1.3em;
 }
