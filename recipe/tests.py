@@ -25,7 +25,7 @@ def createRecipeAndUser(username='lydia'):
     return user, recipe
 
 
-class RecipeDetailTestCase(TestCase):
+class RecipeDetailTests(TestCase):
     """Test viewing a recipe."""
 
     def setUp(self):
@@ -294,7 +294,7 @@ class DeleteViewTests(TestCase):
         self.assertEqual(self.client.get(url).status_code, 302)
 
 
-class AddRecipeBookView(TestCase):
+class AddRecipeBookTests(TestCase):
     """Test adding a recipe to recipebooks."""
 
     def setUp(self):
