@@ -32,6 +32,9 @@ class Recipe(models.Model):
     directions = models.TextField()
     date_created = models.DateField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
     def __repr__(self):
         return '<Recipe {} "{}">'.format(self.id, self.title)
 

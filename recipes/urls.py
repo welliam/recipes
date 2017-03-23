@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^profile/', include('user_profile.urls')),
     url(r'^recipe/', include('recipe.urls')),
     url(r'^recipebook/', include('recipebook.urls')),
+    url(r'^review/', include('review.urls')),
 ]
