@@ -77,6 +77,29 @@ class RecipeDetailTestCase(TestCase):
         url = reverse('delete_recipe', args=[self.recipe.id])
         self.assertNotContains(self.response, url)
 
+    def testHasRecipeBookForm(self):
+        """Test logged in GET has form for adding recipe to recipebooks."""
+        self.client.force_login(self.user)
+        response = self.client.get(
+            reverse('view_recipe', args=[self.recipe.id])
+        )
+        url = reverse('recipe_update_recipebooks', args=[self.recipe.id])
+        self.assertContains(response, 'action="{}"'.format(url))
+
+    def testHasRecipeBooks(self):
+        """Test logged in GET has form for adding recipe to recipebooks."""
+        self.client.force_login(self.user)
+        recipebook = RecipeBook(
+            user=self.user,
+            title='good recipes',
+            description='recipe'
+        )
+        recipebook.save()
+        response = self.client.get(
+            reverse('view_recipe', args=[self.recipe.id])
+        )
+        self.assertContains(response, recipebook.title)
+
 
 class RecipeCreateTestCase(TestCase):
     """Test creating a recipe."""

@@ -101,9 +101,7 @@ textarea {
     text-align: center;
 }
 
-.recipe-description h3,
-.recipe-ingredients h3,
-.recipe-directions h3 {
+.recipe section h3 {
     border-bottom: solid thin;
     max-width: 10em;
     margin: auto;
@@ -119,6 +117,13 @@ textarea {
 
 .bio {
     white-space: pre-line;
+}
+
+.recipebook_form select {
+    display: block;
+    min-width: 20em;
+    margin: auto;
+    margin-bottom: 1em;
 }
 
 #id_title {

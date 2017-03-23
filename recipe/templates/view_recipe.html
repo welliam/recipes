@@ -35,5 +35,21 @@
       {% endfor %}
     </ul>
   </section>
+  <section class="recipebook_form">
+    <header>
+      <h3>Recipe Books</h3>
+    </header>
+    <form action="{% url 'recipe_update_recipebooks' object.id %}" method="POST">
+      {% csrf_token %}
+      <select name="books" multiple="multiple">
+        {% for book, checked in recipebooks %}
+        <option value="{{ book.id }}" {% if checked %} selected="selected" {% endif %}>
+          {{ book.title }}
+        </option>
+        {% endfor %}
+      </select>
+      <input type="submit" value="Update Recipe Books">
+    </form>
+  </section>
 </div>
 {% endblock %}
