@@ -25,4 +25,4 @@ class Review(models.Model):
 class ReviewForm(ModelForm):
     class Meta:
         model = Review
-        fields = ['title', 'body', 'score']
+        fields = ['title', 'score', 'body']

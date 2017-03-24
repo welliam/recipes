@@ -349,10 +349,15 @@ class DisplayReviewTests(TestCase):
             score=3
         )
         self.review.save()
+        url = reverse('view_recipe', args=[self.recipe.id])
+        self.response = self.client.get(url)
 
     def testReviewFieldsDisplayed(self):
         """Test review's fields are displayed on recipe response."""
-        url = reverse('view_recipe', args=[self.recipe.id])
-        response = self.client.get(url)
         for field in ['recipe', 'title', 'body', 'score']:
-            self.assertContains(response, getattr(self.review, field))
+            self.assertContains(self.response, getattr(self.review, field))
+
+    def testReviewFormDisplayed(self):
+        """Test review's has creation form"""
+        url = reverse('new_review', args=[self.recipe.id])
+        self.assertContains(self.response, 'action="{}"'.format(url))

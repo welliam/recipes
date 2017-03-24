@@ -8,6 +8,7 @@ from django.views.generic import (
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from utils.utils import make_ownership_dispatch
 from .models import Recipe
+from review.models import ReviewForm
 
 
 def splitDirectionLine(direction):
@@ -51,6 +52,7 @@ class RecipeDetailView(DetailView):
             recipebooks,
             (self.object in book.recipes.all() for book in recipebooks)
         )
+        context['review_form'] = ReviewForm
         return context
 
 
