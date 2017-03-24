@@ -21,6 +21,7 @@ def review_create_view(request, pk):
 class ReviewDeleteView(DeleteView):
     model = Review
     dispatch = make_ownership_dispatch(lambda: ReviewDeleteView)
+    template_name = 'delete_review.html'
 
     def get_success_url(self):
         return reverse('view_recipe', args=[self.object.recipe.id])

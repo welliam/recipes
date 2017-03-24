@@ -80,3 +80,8 @@ class DeleteReviewTestCase(ReviewTestCase):
         count = Review.objects.count()
         self.delete_review()
         self.assertEqual(Review.objects.count(), count)
+
+    def testDeleteViewFormMethod(self):
+        url = reverse('delete_review', args=[self.review.id])
+        response = self.client.get(url)
+        self.assertContains(response, 'method="POST"')
