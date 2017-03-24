@@ -4,20 +4,24 @@ from django.urls import reverse
 from recipe.models import Recipe
 from .models import Review
 
-
-class CreateReviewTestCase(TestCase):
-    def setUp(self):
-        self.user = User(username='chef')
-        self.user.save()
-        self.client.force_login(self.user)
-        self.recipe = Recipe(
-            user=self.user,
+def get_user_and_recipe(username='chef'):
+        user = User(username='chef')
+        user.save()
+        recipe = Recipe(
+            user=user,
             title='food',
             description='food',
             ingredients='food',
             directions='food'
         )
-        self.recipe.save()
+        recipe.save()
+        return user, recipe
+
+
+class CreateReviewTestCase(TestCase):
+    def setUp(self):
+        self.user, self.recipe = get_user_and_recipe()
+        self.client.force_login(self.user)
         url = reverse('view_recipe', args=[self.recipe.id])
         self.response = self.client.get(url)
 
