@@ -1,7 +1,8 @@
 from django.urls import reverse
+from django.views.generic import DeleteView
 from django.http import HttpResponseRedirect
 from recipe.models import Recipe
-from .models import ReviewForm
+from .models import Review, ReviewForm
 
 
 def review_create_view(request, pk):
@@ -14,3 +15,10 @@ def review_create_view(request, pk):
         review.recipe = Recipe.objects.filter(pk=pk).first()
         review.save()
     return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
+
+
+class ReviewDeleteView(DeleteView):
+    model = Review
+
+    def get_success_url(self):
+        return reverse('view_recipe', args=[self.object.recipe.id])

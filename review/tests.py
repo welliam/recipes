@@ -18,13 +18,15 @@ def get_user_and_recipe(username='chef'):
         return user, recipe
 
 
-class CreateReviewTestCase(TestCase):
+class ReviewTestCase(TestCase):
     def setUp(self):
         self.user, self.recipe = get_user_and_recipe()
         self.client.force_login(self.user)
         url = reverse('view_recipe', args=[self.recipe.id])
         self.response = self.client.get(url)
 
+
+class CreateReviewTestCase(ReviewTestCase):
     def post_review(self):
         self.client.post(reverse('new_review', args=[self.recipe.id]), dict(
             title='good review',
@@ -43,3 +45,24 @@ class CreateReviewTestCase(TestCase):
         self.client.logout()
         self.post_review()
         self.assertEqual(Review.objects.count(), count)
+
+
+class DeleteReviewTestCase(ReviewTestCase):
+    def setUp(self):
+        super(DeleteReviewTestCase, self).setUp()
+        self.review = Review(
+            user=self.user,
+            recipe=self.recipe,
+            title='review',
+            body='body',
+            score=3
+        )
+        self.review.save()
+
+    def delete_review(self):
+        self.client.post(reverse('delete_review', args=[self.review.id]))
+
+    def testDeleteReview(self):
+        count = Review.objects.count()
+        self.delete_review()
+        self.assertEqual(Review.objects.count(), count - 1)
