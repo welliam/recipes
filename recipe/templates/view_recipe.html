@@ -71,6 +71,7 @@
         </span>
         <h4>{{ review.title }}</h4>
         <span class="review-score">{{ review.score }} / 5</span>
+        <span><a href="{% url 'delete_review' review.id %}">Delete</a></span>
       </header>
       <div>{{ review.body }}</div>
     </article>

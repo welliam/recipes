@@ -361,3 +361,8 @@ class DisplayReviewTests(TestCase):
         """Test review's has creation form"""
         url = reverse('new_review', args=[self.recipe.id])
         self.assertContains(self.response, 'action="{}"'.format(url))
+
+    def testReviewByUserHasDeleteLink(self):
+        """Test link to delete review exists while logged in."""
+        url = reverse('delete_review', args=[self.review.id])
+        self.assertContains(self.response, 'href="{}"'.format(url))
