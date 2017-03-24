@@ -66,3 +66,17 @@ class DeleteReviewTestCase(ReviewTestCase):
         count = Review.objects.count()
         self.delete_review()
         self.assertEqual(Review.objects.count(), count - 1)
+
+    def testOtherUserCannotDeleteReview(self):
+        other_user = User(username='other')
+        other_user.save()
+        self.client.force_login(other_user)
+        count = Review.objects.count()
+        self.delete_review()
+        self.assertEqual(Review.objects.count(), count)
+
+    def testLoggedOutCannotDeleteReview(self):
+        self.client.logout()
+        count = Review.objects.count()
+        self.delete_review()
+        self.assertEqual(Review.objects.count(), count)

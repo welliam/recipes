@@ -3,6 +3,7 @@ from django.views.generic import DeleteView
 from django.http import HttpResponseRedirect
 from recipe.models import Recipe
 from .models import Review, ReviewForm
+from utils.utils import make_ownership_dispatch
 
 
 def review_create_view(request, pk):
@@ -19,6 +20,7 @@ def review_create_view(request, pk):
 
 class ReviewDeleteView(DeleteView):
     model = Review
+    dispatch = make_ownership_dispatch(lambda: ReviewDeleteView)
 
     def get_success_url(self):
         return reverse('view_recipe', args=[self.object.recipe.id])
