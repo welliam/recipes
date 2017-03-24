@@ -40,3 +40,9 @@ class Recipe(models.Model):
 
     def get_absolute_url(self):
         return reverse('view_recipe', args=[str(self.id)])
+
+    def get_average_score(self):
+        reviews_count = self.reviews.count()
+        score_sum = sum(map(lambda r: r.score, self.reviews.all()))
+        if reviews_count:
+            return round(score_sum / reviews_count, 1)

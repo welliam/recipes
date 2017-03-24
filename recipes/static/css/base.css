@@ -40,12 +40,14 @@ input[type="button"], input[type="submit"] {
 input[type="text"],
 input[type="email"],
 input[type="password"],
-textarea {
+textarea,
+select {
     font-family: sans-serif;
     padding: 0.3em;
     border: solid thin;
     outline: none;
     resize: none;
+    border-radius: 0.3em;
 }
 
 form {
@@ -126,8 +128,47 @@ textarea {
     margin-bottom: 1em;
 }
 
-.recipe-recipebooks input[type="submit"] {
+.recipe-recipebooks input[type="submit"],
+.recipe-reviews input,
+.recipe-reviews select
+{
     font-size: 1em;
+}
+
+.recipe-reviews form {
+    border: solid thin;
+    border-radius: 0.3em;
+    padding: 1em;
+}
+
+.recipe-reviews header {
+    text-align: center;
+}
+
+.recipe-reviews header h4 {
+    display: inline-block;
+}
+
+.recipe-reviews article header > *:nth-child(n+2) {
+    border-left: solid thin;
+    padding-left: 1em;
+    margin-left: 1em;
+}
+
+.recipe-reviews article header {
+    margin: 0;
+    padding: 0;
+}
+
+.recipe-reviews div {
+    white-space: pre-line;
+}
+
+.average-rating {
+    border-left: solid thin;
+    border-color: black;
+    padding-left: 1em;
+    margin-left: 1em;
 }
 
 #id_title {

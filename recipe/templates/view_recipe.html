@@ -6,6 +6,9 @@
     <h2>{{ object.title }}</h2>
     <div class="recipe-by">
       By <a href="{% url 'profile' object.user %}">{{ object.user }}</a> on {{ object.date_created }}
+      <span class="average-rating">
+        <a href="#reviews">{{ object.get_average_score }}</a>
+      </span>
     </div>
     {% if own_recipe %}
     <a href="{% url 'edit_recipe' object.id %}">Edit</a>
@@ -51,16 +54,23 @@
       <input type="submit" value="Update Recipe Books">
     </form>
   </section>
-  <section class="recipe-reviews">
+  <section id="reviews" class="recipe-reviews">
     <header>
       <h3>Reviews</h3>
     </header>
+    <form method="POST" action="{% url 'new_review' object.id %}">
+      {% csrf_token %}
+      {{ review_form.as_p }}
+      <input type="submit" value="Submit review">
+    </form>
     {% for review in object.reviews.all %}
     <article>
       <header>
+        <span class="review-author">
+          <a href="{% url 'profile' review.user %}">{{ review.user }}</a>
+        </span>
         <h4>{{ review.title }}</h4>
-        <span class="review-author">By {{ review.user }}</span>
-        <span class="review-score">{{ review.score }}</span>
+        <span class="review-score">{{ review.score }} / 5</span>
       </header>
       <div>{{ review.body }}</div>
     </article>
