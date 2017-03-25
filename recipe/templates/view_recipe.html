@@ -64,7 +64,7 @@
       <input type="submit" value="Submit review">
     </form>
     {% for review in object.reviews.all %}
-    <article>
+    <article id="review_{{ review.id }}">
       <header>
         <span class="review-author">
           <a href="{% url 'profile' review.user %}">{{ review.user }}</a>
