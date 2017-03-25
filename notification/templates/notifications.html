@@ -1,0 +1,9 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+{% for note in notifications %}
+<div>
+  {{ note|safe }}
+</div>
+{% endfor %}
+{% endblock %}

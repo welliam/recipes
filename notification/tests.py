@@ -6,9 +6,8 @@ from review.models import Review
 from recipe.models import Recipe
 
 
-class ReviewNotificationTests(TestCase):
+class NotificationTestCase(TestCase):
     def setUp(self):
-        """Set up a recipe and review."""
         self.user = User(username='test')
         self.user.save()
         self.recipe = Recipe(
@@ -34,6 +33,12 @@ class ReviewNotificationTests(TestCase):
         )
         self.notification.save()
 
+
+class ReviewNotificationTests(NotificationTestCase):
+    def setUp(self):
+        """Set up a recipe and review."""
+        super(ReviewNotificationTests, self).setUp()
+
     def test_review_notification_can_get_review(self):
         self.assertEqual(self.notification.get_object(), self.review)
 
@@ -58,3 +63,13 @@ class ReviewNotificationTests(TestCase):
                 score=5
             ))
         self.assertEqual(self.user.notifications.count(), count + amount)
+
+
+class NotificationsViewTests(NotificationTestCase):
+    def setUp(self):
+        super(NotificationsViewTests, self).setUp()
+        self.client.force_login(self.user)
+        self.response = self.client.get(reverse('view_notifications'))
+
+    def test_notification_links_review(self):
+        self.assertContains(self.response, self.review.id)

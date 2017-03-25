@@ -14,7 +14,7 @@ class NotificationType(object):
         self.template = get_template(self.template_name)
 
     def find(self, pk):
-        return self.model.filter(pk=pk).first()
+        return self.model.objects.filter(pk=pk).first()
 
     def render(self, obj):
         return self.template.render(context={'object': obj})
@@ -35,11 +35,14 @@ class Notification(models.Model):
         return model.objects.filter(id=self.object_key).first()
 
     def render(self):
-        return NOTIFICATION_TYPES[self.type].render(self.get_object)
+        search = self.get_object()
+        if search is None:
+            raise ValueError('Object not found')
+        return NOTIFICATION_TYPES[self.type].render(search)
 
 
 def define_notification_type(type, model, template_name):
     NOTIFICATION_TYPES[type] = NotificationType(model, template_name)
 
 
-define_notification_type('review', Review, 'review_notification.html')
+define_notification_type('review', Review, 'notifications/review.html')
