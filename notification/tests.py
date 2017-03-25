@@ -73,3 +73,16 @@ class NotificationsViewTests(NotificationTestCase):
 
     def test_notification_links_review(self):
         self.assertContains(self.response, self.review.id)
+
+
+class ReadNotificationsTests(NotificationTestCase):
+    def setUp(self):
+        super(ReadNotificationsTests, self).setUp()
+        self.client.force_login(self.user)
+
+    def test_reading_notifications(self):
+        unread = self.user.notifications.filter(read=False).count()
+        self.client.get(reverse('view_notifications'))
+        read_count = self.user.notifications.filter(read=False).count()
+        self.assertTrue(unread > 0)
+        self.assertEqual(read_count, 0)

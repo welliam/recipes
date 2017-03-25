@@ -8,4 +8,5 @@ def notifications_view(request):
         if note.get_object()
     )
     context = dict(notifications=notifications)
+    request.user.notifications.update(read=True)
     return render(request, 'notifications.html', context=context)
