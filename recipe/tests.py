@@ -11,7 +11,7 @@ from . import views
 RECIPE_FIELDS = ['title', 'description', 'ingredients', 'directions']
 
 
-def createRecipeAndUser(username='lydia'):
+def create_recipe_and_user(username='lydia'):
     """Returns a new user and recipe authored by that user."""
     user = User(username=username)
     user.save()
@@ -31,27 +31,27 @@ class RecipeDetailTests(TestCase):
 
     def setUp(self):
         """Initialize a recipe to be tested."""
-        self.user, self.recipe = createRecipeAndUser()
+        self.user, self.recipe = create_recipe_and_user()
         url = reverse('view_recipe', args=[self.recipe.id])
         self.response = self.client.get(url)
 
-    def testShowsTitle(self):
+    def test_shows_title(self):
         """Test response has title."""
         self.assertContains(self.response, self.recipe.title)
 
-    def testShowsDescription(self):
+    def test_shows_description(self):
         """Test response has description."""
         self.assertContains(self.response, self.recipe.description)
 
-    def testShowsIngredients(self):
+    def test_shows_ingredients(self):
         """Test response has ingredients."""
         self.assertContains(self.response, self.recipe.ingredients)
 
-    def testShowsDirections(self):
+    def test_shows_directions(self):
         """Test response has directions."""
         self.assertContains(self.response, self.recipe.directions)
 
-    def testShowsEdit(self):
+    def test_shows_edit_link(self):
         """Test response has link to edit when logged in."""
         self.client.force_login(self.user)
         view_url = reverse('view_recipe', args=[self.recipe.id])
@@ -59,12 +59,12 @@ class RecipeDetailTests(TestCase):
         edit_url = reverse('edit_recipe', args=[self.recipe.id])
         self.assertContains(response, edit_url)
 
-    def testShowsEditOnlyAuthenticated(self):
+    def test_shows_edit_only_authenticated(self):
         """Test response has link to edit only when logged in."""
         url = reverse('edit_recipe', args=[self.recipe.id])
         self.assertNotContains(self.response, url)
 
-    def testShowsDelete(self):
+    def test_shows_delete(self):
         """Test response has link to delete when logged in."""
         self.client.force_login(self.user)
         view_url = reverse('view_recipe', args=[self.recipe.id])
@@ -72,12 +72,12 @@ class RecipeDetailTests(TestCase):
         delete_url = reverse('delete_recipe', args=[self.recipe.id])
         self.assertContains(response, delete_url)
 
-    def testShowsDeleteOnlyAuthenticated(self):
+    def test_shows_delete_only_authenticated(self):
         """Test response has link to delete only when logged in."""
         url = reverse('delete_recipe', args=[self.recipe.id])
         self.assertNotContains(self.response, url)
 
-    def testHasRecipeBookForm(self):
+    def test_has_recipe_book_form(self):
         """Test logged in GET has form for adding recipe to recipebooks."""
         self.client.force_login(self.user)
         response = self.client.get(
@@ -86,7 +86,7 @@ class RecipeDetailTests(TestCase):
         url = reverse('recipe_update_recipebooks', args=[self.recipe.id])
         self.assertContains(response, 'action="{}"'.format(url))
 
-    def testHasRecipeBooks(self):
+    def test_has_recipe_books(self):
         """Test logged in GET has form for adding recipe to recipebooks."""
         self.client.force_login(self.user)
         recipebook = RecipeBook(
@@ -117,34 +117,34 @@ class RecipeCreateTestCase(TestCase):
         self.get = self.client.get(reverse('new_recipe'))
         self.post = self.client.post(reverse('new_recipe'), self.data)
 
-    def testGetCreateRecipe(self):
+    def test_get_create_recipe(self):
         """Get the create recipe page."""
         self.assertEquals(self.get.status_code, 200)
 
-    def testGetCreateRecipeHasForm(self):
+    def test_get_create_recipe_has_form(self):
         """Test the create recipe page has a form."""
         self.assertContains(self.get, '</form>')
 
-    def testFormMethodPost(self):
+    def test_form_method_post(self):
         """Test the create recipe page has a form with method=POST."""
         self.assertContains(self.get, 'method="POST"')
 
-    def testFormHasInputs(self):
+    def test_form_has_inputs(self):
         """Test the create recipe page has a form with method=POST."""
         for name in RECIPE_FIELDS:
             self.assertContains(self.get, 'name="{}"'.format(name))
 
-    def testPostCreateRecipeRedirects(self):
+    def test_post_create_recipe_redirects(self):
         """Posts a recipe using the create view."""
         self.assertEquals(self.post.status_code, 302)
 
-    def testPostCreateRecipe(self):
+    def test_post_create_recipe(self):
         """Posts a recipe using the create view."""
         count = Recipe.objects.count()
         self.client.post(reverse('new_recipe'), self.data)
         self.assertEquals(Recipe.objects.count(), count + 1)
 
-    def testCreateRecipeWithoutFieldDoesNothing(self):
+    def test_create_recipe_without_field_does_nothing(self):
         """Test POSTing a recipe without fields doesn't update DB."""
         count = Recipe.objects.count()
         for field in RECIPE_FIELDS:
@@ -153,7 +153,7 @@ class RecipeCreateTestCase(TestCase):
             self.client.post(reverse('new_recipe'), data)
             self.assertEquals(Recipe.objects.count(), count)
 
-    def testPostCreateRecipeUnauthenticated(self):
+    def test_post_unauthenticated(self):
         """Test POSTing a recipe while not logged in."""
         self.client.logout()
         count = Recipe.objects.count()
@@ -164,7 +164,7 @@ class RecipeCreateTestCase(TestCase):
 class ViewLogicTests(TestCase):
     """Test helper functions behind view."""
 
-    def testStructureDirections(self):
+    def test_structure_directions(self):
         structured = list(views.structureDirections("""Season
         Mix cubed tofu with lime juice, turmeric, salt, and black pepper.
 
@@ -207,10 +207,10 @@ class SearchViewTests(TestCase):
         ).save()
         self.response = self.client.get(reverse('recipe_search') + '?q=good')
 
-    def testSearchForGoodRecipe(self):
+    def test_search_for_good_recipe(self):
         self.assertContains(self.response, self.title)
 
-    def testSearchForGoodRecipeRetainsSearch(self):
+    def test_search_for_good_recipe_retains_search(self):
         """Test that search bar contains query."""
         self.assertContains(self.response, 'value="good"')
 
@@ -220,10 +220,10 @@ class EditViewTests(TestCase):
 
     def setUp(self):
         """Create recipe to be edited."""
-        self.user, self.recipe = createRecipeAndUser()
+        self.user, self.recipe = create_recipe_and_user()
         self.client.force_login(self.user)
 
-    def editRecipeTitle(self, to):
+    def edit_recipe_title(self, to):
         """Edit posted recipe's title using self.client."""
         data = dict(
             title=to,
@@ -234,26 +234,26 @@ class EditViewTests(TestCase):
         url = reverse('edit_recipe', args=[self.recipe.id])
         self.client.post(url, data)
 
-    def testEditTitle(self):
+    def test_edit_title(self):
         """Test editing title."""
         new_title = 'new title'
-        self.editRecipeTitle(new_title)
+        self.edit_recipe_title(new_title)
         recipe = Recipe.objects.filter(id=self.recipe.id).first()
         self.assertEqual(recipe.title, new_title)
 
-    def testEditingRecipeMaintainsCount(self):
+    def test_editing_recipe_maintains_count(self):
         """Test editing title."""
         new_title = 'new title'
         count = Recipe.objects.count()
-        self.editRecipeTitle(new_title)
+        self.edit_recipe_title(new_title)
         self.assertEqual(count, Recipe.objects.count())
 
-    def testWrongUserCannotEdit(self):
+    def test_wrong_user_cannot_edit(self):
         """Test that a user who does not own a recipe cannot edit it."""
         evil_user = User(username="evil")
         evil_user.save()
         self.client.force_login(evil_user)
-        self.editRecipeTitle('bad')
+        self.edit_recipe_title('bad')
         recipe = Recipe.objects.filter(id=self.recipe.id).first()
         self.assertEqual(recipe.title, self.recipe.title)
 
@@ -263,22 +263,22 @@ class DeleteViewTests(TestCase):
 
     def setUp(self):
         """Create recipe to be deleted."""
-        self.user, self.recipe = createRecipeAndUser()
+        self.user, self.recipe = create_recipe_and_user()
         self.client.force_login(self.user)
 
-    def testDeleteViewHasMethodPOST(self):
+    def test_delete_view_has_method_post(self):
         """Test delete view has method="POST"."""
         url = reverse('delete_recipe', args=[self.recipe.id])
         self.assertContains(self.client.get(url), 'method="POST"')
 
-    def testDeletingRecipeDecrementsCount(self):
+    def test_deleting_recipe_decrements_count(self):
         """Test deleting a recipe decrements the number of recipes."""
         count = Recipe.objects.count()
         url = reverse('delete_recipe', args=[self.recipe.id])
         self.client.post(url)
         self.assertEqual(count - 1, Recipe.objects.count())
 
-    def testWrongUserCannotDelete(self):
+    def test_wrong_user_cannot_delete(self):
         """Test that a user who does not own a recipe cannot delete it."""
         count = Recipe.objects.count()
         evil_user = User(username="evil")
@@ -287,7 +287,7 @@ class DeleteViewTests(TestCase):
         self.client.post(reverse('delete_recipe', args=[self.recipe.id]))
         self.assertEqual(count, Recipe.objects.count())
 
-    def testUnauthorizedUser302(self):
+    def test_unauthorized_redirects(self):
         """Test an unauthorized user gets redirected to login."""
         self.client.logout()
         url = reverse('delete_recipe', args=[self.recipe.id])
@@ -299,7 +299,7 @@ class AddRecipeBookTests(TestCase):
 
     def setUp(self):
         """Create a recipe and two recipebooks."""
-        self.user, self.recipe = createRecipeAndUser()
+        self.user, self.recipe = create_recipe_and_user()
         self.client.force_login(self.user)
         self.rb1 = RecipeBook(
             title='one',
@@ -316,20 +316,20 @@ class AddRecipeBookTests(TestCase):
         self.url = reverse('recipe_update_recipebooks', args=[self.recipe.id])
         self.postData = partial(self.client.post, self.url)
 
-    def testAddRecipeToOneBook(self):
+    def test_add_recipe_to_book(self):
         """Test POSTing to recipe_add_recipebook."""
         self.assertEqual(self.recipe.recipebooks.count(), 0)
         self.postData(dict(books=[self.rb1.id, self.rb2.id]))
         self.assertEqual(self.recipe.recipebooks.count(), 2)
 
-    def testGetDoesNothing(self):
+    def test_get_does_nothing(self):
         self.postData(dict(books=[self.rb1.id, self.rb2.id]))
         count = self.recipe.recipebooks.count()
         self.client.get(self.url)
         self.assertEqual(self.recipe.recipebooks.count(), count)
 
-    def testWrongUserDoesNotUpdate(self):
-        self.user, _ = createRecipeAndUser('bad')
+    def test_wrong_user_does_not_update(self):
+        self.user, _ = create_recipe_and_user('bad')
         self.client.force_login(self.user)
         self.postData(dict(books=[self.rb1.id]))
         self.assertEqual(self.rb1.recipes.count(), 0)
@@ -338,9 +338,13 @@ class AddRecipeBookTests(TestCase):
 class DisplayReviewTests(TestCase):
     """Test displaying reviews on recipe page."""
 
+    def view_recipe(self):
+        url = reverse('view_recipe', args=[self.recipe.id])
+        return self.client.get(url)
+
     def setUp(self):
         """Create a review to be displayed."""
-        self.user, self.recipe = createRecipeAndUser()
+        self.user, self.recipe = create_recipe_and_user()
         self.review = Review(
             user=self.user,
             recipe=self.recipe,
@@ -349,20 +353,34 @@ class DisplayReviewTests(TestCase):
             score=3
         )
         self.review.save()
-        url = reverse('view_recipe', args=[self.recipe.id])
-        self.response = self.client.get(url)
+        self.response = self.view_recipe()
 
-    def testReviewFieldsDisplayed(self):
+    def test_review_fields_displayed(self):
         """Test review's fields are displayed on recipe response."""
         for field in ['recipe', 'title', 'body', 'score']:
             self.assertContains(self.response, getattr(self.review, field))
 
-    def testReviewFormDisplayed(self):
+    def test_review_form_displayed(self):
         """Test review's has creation form"""
         url = reverse('new_review', args=[self.recipe.id])
         self.assertContains(self.response, 'action="{}"'.format(url))
 
-    def testReviewByUserHasDeleteLink(self):
+    def test_review_by_user_has_delete_link(self):
         """Test link to delete review exists while logged in."""
+        self.client.force_login(self.user)
+        response = self.view_recipe()
         url = reverse('delete_review', args=[self.review.id])
-        self.assertContains(self.response, 'href="{}"'.format(url))
+        self.assertContains(response, 'href="{}"'.format(url))
+
+    def test_review_logged_out_has_no_delete_link(self):
+        """Test link to delete review does not exist while logged out."""
+        url = reverse('delete_review', args=[self.review.id])
+        self.assertNotContains(self.response, 'href="{}"'.format(url))
+
+    def test_review_other_user_has_no_delete_link(self):
+        """Test link to delete review does not exist while logged out."""
+        user = User(username='someone')
+        user.save()
+        self.client.force_login(user)
+        url = reverse('delete_review', args=[self.review.id])
+        self.assertNotContains(self.response, 'href="{}"'.format(url))

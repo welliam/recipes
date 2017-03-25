@@ -12,10 +12,10 @@ class UserProfileTestCase(TestCase):
         self.user = User(username='friend')
         self.user.save()
 
-    def testUserHasProfile(self):
+    def test_user_has_profile(self):
         self.assertTrue(hasattr(self.user, 'profile'))
 
-    def testProfileHasBio(self):
+    def test_profile_has_bio(self):
         self.assertTrue(hasattr(self.user.profile, 'bio'))
 
 
@@ -46,34 +46,34 @@ class ProfileViewTestCase(TestCase):
         url = reverse('profile', args=[self.user.username])
         self.response = self.client.get(url)
 
-    def testProfileHasUsername(self):
+    def test_profile_has_username(self):
         self.assertContains(self.response, self.username)
 
-    def testProfileHasRecipeTitle(self):
+    def test_profile_has_recipe_title(self):
         self.assertContains(self.response, self.recipe.title)
 
-    def testProfileShowsBio(self):
+    def test_profile_shows_bio(self):
         self.assertContains(self.response, self.bio)
 
-    def testProfileHasEditLoggedIn(self):
+    def test_profile_has_edit_logged_in(self):
         self.client.force_login(self.user)
         url = reverse('profile', args=[self.user.username])
         self.assertContains(self.client.get(url), reverse('edit_profile'))
 
-    def testProfileHasNoEditLoggedOut(self):
+    def test_profile_has_no_edit_logged_out(self):
         self.assertNotContains(self.response, reverse('edit_profile'))
 
-    def testProfileHasNoEditWrongUser(self):
+    def test_profile_has_no_edit_wrong_user(self):
         user = User(username='someone_else')
         user.save()
         self.client.force_login(user)
         url = reverse('profile', args=[self.user.username])
         self.assertNotContains(self.client.get(url), reverse('edit_profile'))
 
-    def testProfileShowsRecipebooks(self):
+    def test_profile_shows_recipebooks(self):
         self.assertContains(self.response, self.recipebook.title)
 
-    def testProfileLinksRecipebooks(self):
+    def test_profile_links_recipebooks(self):
         url = reverse('view_recipebook', args=[self.recipebook.id])
         self.assertContains(self.response, url)
 
@@ -87,7 +87,7 @@ class ProfileEditTestCase(TestCase):
         self.user.save()
         self.client.force_login(self.user)
 
-    def testEditProfileBiography(self):
+    def test_edit_profile_biography(self):
         bio = 'chef'
         self.client.post(reverse('edit_profile'), dict(bio=bio))
         self.assertEqual(User.objects.last().profile.bio, bio)

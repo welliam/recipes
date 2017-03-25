@@ -34,13 +34,13 @@ class CreateReviewTestCase(ReviewTestCase):
             body='very good',
         ))
 
-    def testPostingUpdatesCount(self):
+    def test_posting_updates_count(self):
         """Test viewing recipe has form for review."""
         count = Review.objects.count()
         self.post_review()
         self.assertEqual(Review.objects.count(), count + 1)
 
-    def testLoggedOutUserCannotPost(self):
+    def test_logged_out_cannot_post(self):
         count = Review.objects.count()
         self.client.logout()
         self.post_review()
@@ -62,12 +62,12 @@ class DeleteReviewTestCase(ReviewTestCase):
     def delete_review(self):
         self.client.post(reverse('delete_review', args=[self.review.id]))
 
-    def testDeleteReview(self):
+    def test_delete_review(self):
         count = Review.objects.count()
         self.delete_review()
         self.assertEqual(Review.objects.count(), count - 1)
 
-    def testOtherUserCannotDeleteReview(self):
+    def test_other_user_cannot_delete_review(self):
         other_user = User(username='other')
         other_user.save()
         self.client.force_login(other_user)
@@ -75,13 +75,13 @@ class DeleteReviewTestCase(ReviewTestCase):
         self.delete_review()
         self.assertEqual(Review.objects.count(), count)
 
-    def testLoggedOutCannotDeleteReview(self):
+    def test_logged_out_cannot_delete_review(self):
         self.client.logout()
         count = Review.objects.count()
         self.delete_review()
         self.assertEqual(Review.objects.count(), count)
 
-    def testDeleteViewFormMethod(self):
+    def test_delete_view_form_method(self):
         url = reverse('delete_review', args=[self.review.id])
         response = self.client.get(url)
         self.assertContains(response, 'method="POST"')

@@ -11,7 +11,7 @@ class RecipeBookCreateViewTests(TestCase):
         self.user.save()
         self.client.force_login(self.user)
 
-    def testCreateRecipeBookIncrementsCount(self):
+    def test_create_recipe_book_increments_count(self):
         count = RecipeBook.objects.count()
         self.client.post(reverse('new_recipebook'), dict(
             title='bakes',
@@ -19,7 +19,7 @@ class RecipeBookCreateViewTests(TestCase):
         ))
         self.assertEqual(RecipeBook.objects.count(), count + 1)
 
-    def testCreateRecipeBookUnauthenticated(self):
+    def test_create_recipe_book_unauthenticated(self):
         self.client.logout()
         count = RecipeBook.objects.count()
         self.client.post(reverse('new_recipebook'), dict(
@@ -63,21 +63,21 @@ class RecipeBookDetailViewTests(RecipeBookTestCase):
         url = reverse('view_recipebook', args=[self.recipebook.id])
         self.response = self.client.get(url)
 
-    def testResponseHasTitle(self):
+    def test_response_has_title(self):
         self.assertContains(self.response, self.recipebook.title)
 
-    def testResponseHasDescription(self):
+    def test_response_has_description(self):
         self.assertContains(self.response, self.recipebook.description)
 
-    def testResponseHasContainedRecipes(self):
+    def test_response_has_recipes(self):
         for recipe in self.recipes:
             self.assertContains(self.response, recipe.title)
 
-    def testResponseHasEditLink(self):
+    def test_response_has_edit_link(self):
         url = reverse('edit_recipebook', args=[self.recipebook.id])
         self.assertContains(self.response, url)
 
-    def testResponseFromOtherUserHasNoEditLink(self):
+    def test_response_from_other_user_has_no_edit_link(self):
         user = User(username='other_friend')
         user.save()
         self.client.force_login(user)
@@ -85,17 +85,17 @@ class RecipeBookDetailViewTests(RecipeBookTestCase):
         edit_url = reverse('edit_recipebook', args=[self.recipebook.id])
         self.assertNotContains(self.client.get(view_url), edit_url)
 
-    def testResponseFromLoggedOutHasNoEditLink(self):
+    def test_response_from_logged_out_has_no_edit_link(self):
         self.client.logout()
         view_url = reverse('view_recipebook', args=[self.recipebook.id])
         edit_url = reverse('edit_recipebook', args=[self.recipebook.id])
         self.assertNotContains(self.client.get(view_url), edit_url)
 
-    def testResponseHasDeleteLink(self):
+    def test_response_has_delete_link(self):
         url = reverse('delete_recipebook', args=[self.recipebook.id])
         self.assertContains(self.response, url)
 
-    def testResponseFromOtherUserHasNoDeleteLink(self):
+    def test_response_from_other_user_has_no_delete_link(self):
         user = User(username='other_friend')
         user.save()
         self.client.force_login(user)
@@ -103,7 +103,7 @@ class RecipeBookDetailViewTests(RecipeBookTestCase):
         delete_url = reverse('delete_recipebook', args=[self.recipebook.id])
         self.assertNotContains(self.client.get(view_url), delete_url)
 
-    def testResponseFromLoggedOutHasNoDeleteLink(self):
+    def test_response_logged_out_has_no_delete_link(self):
         self.client.logout()
         view_url = reverse('view_recipebook', args=[self.recipebook.id])
         delete_url = reverse('delete_recipebook', args=[self.recipebook.id])
@@ -111,7 +111,7 @@ class RecipeBookDetailViewTests(RecipeBookTestCase):
 
 
 class RecipeBookUpdateViewTests(RecipeBookTestCase):
-    def testUpdateTitle(self):
+    def test_update_title(self):
         url = reverse('edit_recipebook', args=[self.recipebook.id])
         new_title = 'new'
         self.client.post(url, dict(
@@ -120,7 +120,7 @@ class RecipeBookUpdateViewTests(RecipeBookTestCase):
         )
         self.assertEqual(RecipeBook.objects.last().title, new_title)
 
-    def testLoggedOutCannotUpdate(self):
+    def test_logged_out_cannot_update(self):
         url = reverse('edit_recipebook', args=[self.recipebook.id])
         new_title = 'new'
         self.client.logout()
@@ -133,7 +133,7 @@ class RecipeBookUpdateViewTests(RecipeBookTestCase):
             self.recipebook.title
         )
 
-    def testOtherUserCannotUpdate(self):
+    def test_other_user_cannot_update(self):
         url = reverse('edit_recipebook', args=[self.recipebook.id])
         new_title = 'new'
         other_user = User(username='other_friend')
@@ -150,29 +150,29 @@ class RecipeBookUpdateViewTests(RecipeBookTestCase):
 
 
 class RecipeBookDeleteViewTests(RecipeBookTestCase):
-    def testDeleteDecrementsCount(self):
+    def test_delete_decrements_count(self):
         count = RecipeBook.objects.count()
         url = reverse('delete_recipebook', args=[self.recipebook.id])
         self.client.post(url)
         self.assertEqual(RecipeBook.objects.count(), count - 1)
 
-    def testDeleteRedirectsToProfile(self):
+    def test_delete_redirects_to_profile(self):
         url = reverse('delete_recipebook', args=[self.recipebook.id])
         response = self.client.post(url)
         redirect_url = reverse('profile', args=[self.user.username])
         self.assertEqual(response.url, redirect_url)
 
-    def testGetDeleteViewResponseCode(self):
+    def test_get_delete_view_response_code(self):
         url = reverse('delete_recipebook', args=[self.recipebook.id])
         self.assertEqual(self.client.get(url).status_code, 200)
 
-    def testGetDeleteViewHasForm(self):
+    def test_get_delete_view_has_form(self):
         url = reverse('delete_recipebook', args=[self.recipebook.id])
         response = self.client.get(url)
         self.assertContains(response, 'method="POST"')
         self.assertContains(response, '</form>')
 
-    def testOtherUserDeleteMaintainsCount(self):
+    def test_other_user_delete_maintains_count(self):
         other_user = User(username='other_friend')
         other_user.save()
         self.client.force_login(other_user)
@@ -181,7 +181,7 @@ class RecipeBookDeleteViewTests(RecipeBookTestCase):
         self.client.post(url)
         self.assertEqual(RecipeBook.objects.count(), count)
 
-    def testLoggedOutDeleteMaintainsCount(self):
+    def test_logged_out_delete_maintains_count(self):
         self.client.logout()
         count = RecipeBook.objects.count()
         url = reverse('delete_recipebook', args=[self.recipebook.id])

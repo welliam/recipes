@@ -21,16 +21,16 @@ class HomePageTests(TestCase):
             ).save()
         self.response = self.client.get(reverse('home'))
 
-    def testHomePageHasSearch(self):
+    def test_home_page_has_search(self):
         """Home page has search form."""
         self.assertContains(self.response, 'input')
 
-    def testHomePageHasRecipes(self):
+    def test_home_page_has_recipes(self):
         """Home page has most recent recipes."""
         for recipe in Recipe.objects.reverse()[:5]:
             self.assertContains(self.response, recipe.title)
 
-    def testHomePageSearchGoesToSearchResults(self):
+    def test_home_page_search_goes_to_search_results(self):
         self.assertContains(self.response, reverse('recipe_search'))
 
 
