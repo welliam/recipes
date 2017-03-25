@@ -1,0 +1,1 @@
+<a href="{% url 'profile' object.user.username %}">{{ object.user.username }}</a> has written a review of <a href="{% url 'view_recipe' object.recipe.id %}#review_{{ object.id }}">{{ object.title }}</a>!
