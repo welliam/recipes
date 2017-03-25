@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from recipe.models import Recipe
 from .models import Review, ReviewForm
 from utils.utils import make_ownership_dispatch
+from notification.models import Notification
 
 
 def review_create_view(request, pk):
@@ -15,6 +16,11 @@ def review_create_view(request, pk):
         review.user = request.user
         review.recipe = Recipe.objects.filter(pk=pk).first()
         review.save()
+        Notification(
+            user=request.user,
+            type='review',
+            object_key=review.id
+        ).save()
     return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
 
 
