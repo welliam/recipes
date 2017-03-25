@@ -53,6 +53,7 @@ class RecipeDetailView(DetailView):
             (self.object in book.recipes.all() for book in recipebooks)
         )
         context['review_form'] = ReviewForm
+        context['request_user'] = self.request.user
         return context
 
 
