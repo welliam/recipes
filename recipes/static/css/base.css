@@ -116,12 +116,13 @@ textarea {
     white-space: pre-line;
 }
 
-.recipe header {
-    margin-bottom: 3em;
-}
-
 .bio {
     white-space: pre-line;
+}
+
+.recipe-recipebooks header,
+.recipe-reviews header {
+    margin-bottom: 1em;
 }
 
 .recipe-recipebooks select {
