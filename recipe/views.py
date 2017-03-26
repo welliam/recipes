@@ -77,7 +77,7 @@ class RecipeSearchView(TemplateView):
         context = super(RecipeSearchView, self).get_context_data(**kwargs)
         query = self.request.GET['q']
         context['recipes'] = reduce(
-            lambda o, w: o.filter(title__contains=w),
+            lambda o, w: o.filter(title__icontains=w),
             query.split()[:20],
             Recipe.objects.all()
         )
