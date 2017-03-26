@@ -83,6 +83,23 @@ class ProfileViewTestCase(TestCase):
     def test_profile_shows_followed_users(self):
         self.assertContains(self.response, self.followed_user.username)
 
+    def test_other_profile_has_follow_button(self):
+        another_user = User(username='one_more')
+        another_user.save()
+        profile_url = reverse('profile', args=[another_user.username])
+        follow_url = format(reverse('follow', args=[another_user.username]))
+        follow_action_url = 'action="{}"'.format(follow_url)
+        self.assertContains(self.client.get(profile_url), follow_action_url)
+
+    def test_post_follow(self):
+        """Test posting to follow view adds user to follows list."""
+        self.client.force_login(self.user)
+        another_user = User(username='one_more')
+        another_user.save()
+        follow_url = format(reverse('follow', args=[another_user.username]))
+        self.client.post(follow_url)
+        self.assertEqual(self.user.profile.follows.last(), another_user)
+
 
 class ProfileEditTestCase(TestCase):
     """Test case for editing profiles."""

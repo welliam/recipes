@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.views.generic import DetailView, UpdateView
+from django.http import HttpResponseRedirect
 from .models import UserProfile
 
 
@@ -28,3 +29,10 @@ class ProfileUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('profile', args=[self.request.user.username])
+
+
+def follow_view(request, slug):
+    """Add a follower."""
+    user = User.objects.filter(username=slug).first()
+    request.user.profile.follows.add(user)
+    return HttpResponseRedirect(reverse('profile', args=[slug]))

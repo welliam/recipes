@@ -5,6 +5,10 @@
 {% if own_profile %}
 <a href="{% url 'edit_profile'%}">Edit</a>
 {% endif %}
+<form method="POST" action="{% url 'follow' object.username %}">
+  {% csrf_token %}
+  <input type="submit" value="follow">
+</form>
 <section>
   <h3>Biography </h3>
   <div class="bio">
