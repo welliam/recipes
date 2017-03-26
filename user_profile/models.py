@@ -13,6 +13,10 @@ class UserProfile(models.Model):
         related_name="profile",
     )
     bio = models.TextField(max_length=1000, blank=True)
+    follows = models.ManyToManyField(
+        User,
+        related_name="followers"
+    )
 
 
 @receiver(post_save, sender=User)
