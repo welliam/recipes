@@ -21,7 +21,7 @@ class ProfileDetailView(DetailView):
 
 class ProfileUpdateView(UpdateView):
     model = UserProfile
-    template_name = 'edit_recipe.html'
+    template_name = 'edit_profile.html'
     fields = ['bio']
 
     def get_object(self):

@@ -1,0 +1,12 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+<div class="block">
+  <h2>Edit Profile</h2>
+  <form method="POST">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <input type="submit" value="Update profile">
+  </form>
+</div>
+{% endblock %}
