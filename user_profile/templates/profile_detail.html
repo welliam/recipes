@@ -16,6 +16,18 @@
   </div>
 </section>
 <section>
+  <h3>Following</h3>
+  <ul>
+    {% for follow in follows %}
+    <li>
+      <a href="{% url 'profile' follow.username %}">{{ follow.username }}</a>
+    </li>
+    {% empty %}
+    Following no one yet...
+    {% endfor %}
+  </ul>
+</section>
+<section>
   <h3>Recipes</h3>
   <ul>
     {% for recipe in recipes %}

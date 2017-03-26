@@ -14,6 +14,7 @@ class ProfileDetailView(DetailView):
         context['recipes'] = self.object.recipes.all()[:5]
         context['own_profile'] = self.object == self.request.user
         context['recipebooks'] = self.object.recipebooks.all()[:5]
+        context['follows'] = self.object.profile.follows.all()[:5]
         return context
 
 

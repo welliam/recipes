@@ -28,6 +28,9 @@ class ProfileViewTestCase(TestCase):
         self.user.save()
         self.bio = 'this is a bio'
         self.user.profile.bio = self.bio
+        self.followed_user = User(username='another')
+        self.followed_user.save()
+        self.user.profile.follows.add(self.followed_user)
         self.user.profile.save()
         self.recipe = Recipe(
             user=self.user,
@@ -76,6 +79,9 @@ class ProfileViewTestCase(TestCase):
     def test_profile_links_recipebooks(self):
         url = reverse('view_recipebook', args=[self.recipebook.id])
         self.assertContains(self.response, url)
+
+    def test_profile_shows_followed_users(self):
+        self.assertContains(self.response, self.followed_user.username)
 
 
 class ProfileEditTestCase(TestCase):
