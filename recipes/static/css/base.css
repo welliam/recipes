@@ -171,6 +171,11 @@ textarea {
     margin-left: 1em;
 }
 
+.notification-read {
+    display: inline-block;
+    min-width: 1em;
+}
+
 #id_title {
     font-size: 1.3em;
 }

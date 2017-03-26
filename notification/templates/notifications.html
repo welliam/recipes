@@ -4,7 +4,8 @@
 <h2>Notifications</h2>
 {% for note in notifications %}
 <div>
-  {{ note|safe }}
+  <span class="notification-read">{% if not note.read %}!{% endif %}</span>
+  {{ note.render|safe }}
 </div>
 {% endfor %}
 {% endblock %}
