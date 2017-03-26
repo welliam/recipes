@@ -12,14 +12,10 @@
       {{ object.description }}
     </div>
   </header>
-  <ul>
-    {% for recipe in recipes %}
-    <li>
-      <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
-    </li>
-    {% empty %}
-    No recipes here yet...
-    {% endfor %}
-  </ul>
 </div>
+{% for recipe in recipes %}
+{% include 'recipes/listed-recipe.html' with object=recipe %}
+{% empty %}
+No recipes here yet...
+{% endfor %}
 {% endblock %}

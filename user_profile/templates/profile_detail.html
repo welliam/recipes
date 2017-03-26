@@ -33,18 +33,6 @@
     </ul>
   </section>
   <section>
-    <h3>Recipes</h3>
-    <ul>
-      {% for recipe in recipes %}
-      <li>
-        <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
-      </li>
-      {% empty %}
-      No recipes yet...
-      {% endfor %}
-    </ul>
-  </section>
-  <section>
     <h3>Recipebooks</h3>
     <ul>
       {% for recipebook in recipebooks %}
@@ -55,6 +43,14 @@
       No recipebooks yet...
       {% endfor %}
     </ul>
+  </section>
+</div>
+  <section>
+    {% for recipe in recipes %}
+    {% include 'recipes/listed-recipe.html' with object=recipe %}
+    {% empty %}
+    No recipes yet...
+    {% endfor %}
   </section>
 </div>
 {% endblock %}
