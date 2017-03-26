@@ -12,9 +12,9 @@ class ProfileDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileDetailView, self).get_context_data(**kwargs)
-        context['recipes'] = self.object.recipes.all()[:5]
+        context['recipes'] = self.object.recipes.order_by('-date_created')[:5]
         context['own_profile'] = self.object == self.request.user
-        context['recipebooks'] = self.object.recipebooks.all()[:5]
+        context['recipebooks'] = self.object.recipebooks.order_by('-date_created')[:5]
         context['follows'] = self.object.profile.follows.all()[:5]
         return context
 
