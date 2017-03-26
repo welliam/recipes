@@ -1,8 +1,10 @@
 {% extends "recipes/base.html" %}
 {% block content %}
-<form action="" method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Sign Up</button>
-</form>
+<div class="block">
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign Up</button>
+  </form>
+</div>
 {% endblock %}

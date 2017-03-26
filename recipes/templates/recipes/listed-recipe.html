@@ -1,0 +1,24 @@
+<div class="block recipe listed-recipe">
+  <header>
+    <a href="{% url 'view_recipe' object.id %}"><h2>{{ object.title }}</h2></a>
+    <div class="recipe-by">
+      By <a href="{% url 'profile' object.user %}">{{ object.user }}</a> on {{ object.date_created }}
+      {% if object.get_average_score %}
+      <span class="average-rating">
+        <a href="{% url 'view_recipe' object.id %}#reviews">{{ object.get_average_score }}</a>
+      </span>
+      {% endif %}
+    </div>
+    {% if own_recipe %}
+    <a href="{% url 'edit_recipe' object.id %}">Edit</a>
+    <a href="{% url 'delete_recipe' object.id %}">Delete</a>
+    {% endif %}
+  </header>
+  <section class="recipe-description">
+    <h3>Description</h3>
+    <div>{{ object.description }}</div>
+  </section>
+  <div class="view-full-recipe-link">
+    <a href="{% url 'view_recipe' object.id %}">View full recipe</a>
+  </div>
+</div>

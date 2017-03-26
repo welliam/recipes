@@ -1,58 +1,60 @@
 {% extends "recipes/base.html" %}
 
 {% block content %}
-<h2>{{ object.username }}</h2>
-{% if own_profile %}
-<a href="{% url 'edit_profile'%}">Edit</a>
-{% endif %}
-<form method="POST" action="{% url 'follow' object.username %}">
-  {% csrf_token %}
-  <input type="submit" value="follow">
-</form>
-<section>
-  <h3>Biography </h3>
-  <div class="bio">
-    {% if object.profile.bio %}
-    {{ object.profile.bio }}
-    {% else %}
-    No biography yet...
-    {% endif %}
-  </div>
-</section>
-<section>
-  <h3>Following</h3>
-  <ul>
-    {% for follow in follows %}
-    <li>
-      <a href="{% url 'profile' follow.username %}">{{ follow.username }}</a>
-    </li>
-    {% empty %}
-    Following no one yet...
-    {% endfor %}
-  </ul>
-</section>
-<section>
-  <h3>Recipes</h3>
-  <ul>
-    {% for recipe in recipes %}
-    <li>
-      <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
-    </li>
-    {% empty %}
-    No recipes yet...
-    {% endfor %}
-  </ul>
-</section>
-<section>
-  <h3>Recipebooks</h3>
-  <ul>
-    {% for recipebook in recipebooks %}
-    <li>
-      <a href="{% url 'view_recipebook' recipebook.id %}">{{ recipebook.title }}</a>
-    </li>
-    {% empty %}
-    No recipebooks yet...
-    {% endfor %}
-  </ul>
-</section>
+<div class="block">
+  <h2>{{ object.username }}</h2>
+  {% if own_profile %}
+  <a href="{% url 'edit_profile'%}">Edit</a>
+  {% endif %}
+  <form method="POST" action="{% url 'follow' object.username %}">
+    {% csrf_token %}
+    <input type="submit" value="follow">
+  </form>
+  <section>
+    <h3>Biography </h3>
+    <div class="bio">
+      {% if object.profile.bio %}
+      {{ object.profile.bio }}
+      {% else %}
+      No biography yet...
+      {% endif %}
+    </div>
+  </section>
+  <section>
+    <h3>Following</h3>
+    <ul>
+      {% for follow in follows %}
+      <li>
+        <a href="{% url 'profile' follow.username %}">{{ follow.username }}</a>
+      </li>
+      {% empty %}
+      Following no one yet...
+      {% endfor %}
+    </ul>
+  </section>
+  <section>
+    <h3>Recipes</h3>
+    <ul>
+      {% for recipe in recipes %}
+      <li>
+        <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
+      </li>
+      {% empty %}
+      No recipes yet...
+      {% endfor %}
+    </ul>
+  </section>
+  <section>
+    <h3>Recipebooks</h3>
+    <ul>
+      {% for recipebook in recipebooks %}
+      <li>
+        <a href="{% url 'view_recipebook' recipebook.id %}">{{ recipebook.title }}</a>
+      </li>
+      {% empty %}
+      No recipebooks yet...
+      {% endfor %}
+    </ul>
+  </section>
+</div>
 {% endblock %}

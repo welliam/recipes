@@ -1,16 +1,18 @@
 {% extends "recipes/base.html" %}
 
 {% block content %}
-<form action="{% url 'recipe_search' %}">
-  <input name="q" type="text" placeholder="Search" value="{{ query }}" autofocus>
-</form>
-<ul>
-  {% for recipe in recipes %}
-  <li>
-    <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
-    by
-    <a href="{% url 'profile' recipe.user.username %}">{{ recipe.user }}</a>
-  </li>
-  {% endfor %}
-</ul>
+<div class="block">
+  <form action="{% url 'recipe_search' %}">
+    <input name="q" type="text" placeholder="Search" value="{{ query }}" autofocus>
+  </form>
+  <ul>
+    {% for recipe in recipes %}
+    <li>
+      <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
+      by
+      <a href="{% url 'profile' recipe.user.username %}">{{ recipe.user }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 {% endblock %}

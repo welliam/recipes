@@ -4,7 +4,7 @@ body {
     font-family: arial;
 }
 
-main {
+.block {
     border-radius: 0.3em;
     max-width: 50em;
     background-color: #fff;
@@ -16,10 +16,6 @@ main {
 a {
     color: #d799b5;
     text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
 }
 
 ul {
@@ -83,9 +79,16 @@ textarea {
     color: #555;
 }
 
+.siteheader a:hover {
+    text-decoration: underline;
+}
 
 .recipe > * {
     margin-bottom: 1em;
+}
+
+.listed-recipe {
+    margin-top: 1em;
 }
 
 .helptext {
@@ -174,6 +177,19 @@ textarea {
 .notification-read {
     display: inline-block;
     min-width: 1em;
+}
+
+.view-full-recipe-link {
+    text-align: center;
+    font-size: 1.15em;
+}
+
+.listed-recipe a h2 {
+    color: black
+}
+
+.listed-recipe header a:hover  {
+    text-decoration: none;   
 }
 
 #id_title {

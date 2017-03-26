@@ -1,11 +1,13 @@
 {% extends 'recipes/base.html' %}
 
 {% block content %}
-<h2>Notifications</h2>
-{% for note in notifications %}
-<div>
-  <span class="notification-read">{% if not note.read %}!{% endif %}</span>
-  {{ note.render|safe }}
+<div class="block">
+  <h2>Notifications</h2>
+  {% for note in notifications %}
+  <div>
+    <span class="notification-read">{% if not note.read %}!{% endif %}</span>
+    {{ note.render|safe }}
+  </div>
+  {% endfor %}
 </div>
-{% endfor %}
 {% endblock %}

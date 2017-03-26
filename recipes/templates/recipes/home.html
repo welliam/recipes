@@ -1,18 +1,12 @@
 {% extends "recipes/base.html" %}
 
 {% block content %}
-<form action="{% url 'recipe_search' %}">
-  <input name="q" type="text" placeholder="Search" autofocus>
-</form>
-
-<h2>Most recent recipes</h2>
-<ul>
-{% for recipe in recipes %}
-  <li>
-    <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
-  </li>
-{% empty %}
-No recipes yet...
-{% endfor %}
-</ul>
+  <form action="{% url 'recipe_search' %}">
+    <input name="q" type="text" placeholder="Search" autofocus>
+  </form>
+  {% for recipe in recipes %}
+  {% include 'recipes/listed-recipe.html' with object=recipe %}
+  {% empty %}
+  No recipes yet...
+  {% endfor %}
 {% endblock %}

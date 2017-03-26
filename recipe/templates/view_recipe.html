@@ -1,85 +1,89 @@
 {% extends 'recipes/base.html' %}
 
 {% block content %}
-<div class="recipe">
-  <header>
-    <h2>{{ object.title }}</h2>
-    <div class="recipe-by">
-      By <a href="{% url 'profile' object.user %}">{{ object.user }}</a> on {{ object.date_created }}
-      <span class="average-rating">
-        <a href="#reviews">{{ object.get_average_score }}</a>
-      </span>
-    </div>
-    {% if own_recipe %}
-    <a href="{% url 'edit_recipe' object.id %}">Edit</a>
-    <a href="{% url 'delete_recipe' object.id %}">Delete</a>
-    {% endif %}
-  </header>
-  <section class="recipe-description">
-    <h3>Description</h3>
-    <div>{{ object.description }}</div>
-  </section>
-  <section class="recipe-ingredients">
-    <h3>Ingredients</h3>
-    <ul>
-      {% for ingredient in ingredients %}
-      <li>{{ ingredient }}</li>
-      {% endfor %}
-    </ul>
-  </section>
-  <section class="recipe-directions">
-    <h3>Directions</h3>
-    <ul>
-      {% for direction in directions %}
-      <li>
-        <b>{{ direction.summary }}{% if direction.details %}:{% endif %}</b>
-        {{ direction.details }}
-      </li>
-      {% endfor %}
-    </ul>
-  </section>
-  <section class="recipe-recipebooks">
+<div class="block">
+  <div class="recipe">
     <header>
-      <h3>Recipe Books</h3>
-    </header>
-    <form action="{% url 'recipe_update_recipebooks' object.id %}" method="POST">
-      {% csrf_token %}
-      <select name="books" multiple="multiple">
-        {% for book, checked in recipebooks %}
-        <option value="{{ book.id }}" {% if checked %} selected="selected" {% endif %}>
-          {{ book.title }}
-        </option>
-        {% endfor %}
-      </select>
-      <input type="submit" value="Update Recipe Books">
-    </form>
-  </section>
-  <section id="reviews" class="recipe-reviews">
-    <header>
-      <h3>Reviews</h3>
-    </header>
-    <form method="POST" action="{% url 'new_review' object.id %}">
-      {% csrf_token %}
-      {{ review_form.as_p }}
-      <input type="submit" value="Submit review">
-    </form>
-    {% for review in object.reviews.all %}
-    <article id="review_{{ review.id }}">
-      <header>
-        <span class="review-author">
-          <a href="{% url 'profile' review.user %}">{{ review.user }}</a>
+      <h2>{{ object.title }}</h2>
+      <div class="recipe-by">
+        By <a href="{% url 'profile' object.user %}">{{ object.user }}</a> on {{ object.date_created }}
+        {% if object.get_average_score %}
+        <span class="average-rating">
+          <a href="#reviews">{{ object.get_average_score }}</a>
         </span>
-        <h4>{{ review.title }}</h4>
-        <span class="review-score">{{ review.score }} / 5</span>
-        {% if object.user == request_user %}
-        <span><a href="{% url 'delete_review' review.id %}">Delete</a></span>
         {% endif %}
+      </div>
+      {% if own_recipe %}
+      <a href="{% url 'edit_recipe' object.id %}">Edit</a>
+      <a href="{% url 'delete_recipe' object.id %}">Delete</a>
+      {% endif %}
+    </header>
+    <section class="recipe-description">
+      <h3>Description</h3>
+      <div>{{ object.description }}</div>
+    </section>
+    <section class="recipe-ingredients">
+      <h3>Ingredients</h3>
+      <ul>
+        {% for ingredient in ingredients %}
+        <li>{{ ingredient }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+    <section class="recipe-directions">
+      <h3>Directions</h3>
+      <ul>
+        {% for direction in directions %}
+        <li>
+          <b>{{ direction.summary }}{% if direction.details %}:{% endif %}</b>
+          {{ direction.details }}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    <section class="recipe-recipebooks">
+      <header>
+        <h3>Recipe Books</h3>
       </header>
-      <div>{{ review.body }}</div>
-    </article>
-    {% empty %}
-    No reviews yet...
-    {% endfor %}
-  </section>
+      <form action="{% url 'recipe_update_recipebooks' object.id %}" method="POST">
+        {% csrf_token %}
+        <select name="books" multiple="multiple">
+          {% for book, checked in recipebooks %}
+          <option value="{{ book.id }}" {% if checked %} selected="selected" {% endif %}>
+            {{ book.title }}
+          </option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Update Recipe Books">
+      </form>
+    </section>
+    <section id="reviews" class="recipe-reviews">
+      <header>
+        <h3>Reviews</h3>
+      </header>
+      <form method="POST" action="{% url 'new_review' object.id %}">
+        {% csrf_token %}
+        {{ review_form.as_p }}
+        <input type="submit" value="Submit review">
+      </form>
+      {% for review in object.reviews.all %}
+      <article id="review_{{ review.id }}">
+        <header>
+          <span class="review-author">
+            <a href="{% url 'profile' review.user %}">{{ review.user }}</a>
+          </span>
+          <h4>{{ review.title }}</h4>
+          <span class="review-score">{{ review.score }} / 5</span>
+          {% if object.user == request_user %}
+          <span><a href="{% url 'delete_review' review.id %}">Delete</a></span>
+          {% endif %}
+        </header>
+        <div>{{ review.body }}</div>
+      </article>
+      {% empty %}
+      No reviews yet...
+      {% endfor %}
+    </section>
+  </div>
 </div>
 {% endblock %}

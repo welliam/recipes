@@ -1,5 +1,6 @@
 {% extends "recipes/base.html" %}
 {% block content %}
+<div class="block">
   <h2>Log In</h2>
   <form action="" method="POST">
     {% csrf_token %}
@@ -7,4 +8,5 @@
     <input type="submit" value="Submit"/>
     {% if error %} <h1>{{ error }}</h1> {% endif %}
   </form>
+</div>
 {% endblock %}
