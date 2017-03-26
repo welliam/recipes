@@ -29,6 +29,7 @@ class Notification(models.Model):
     type = models.CharField(max_length=20)
     object_key = models.IntegerField()
     read = models.BooleanField(default=False)
+    date = models.DateField(auto_now_add=True)
 
     def get_object(self):
         model = NOTIFICATION_TYPES[self.type].model

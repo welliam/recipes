@@ -33,6 +33,7 @@ class RecipeBook(models.Model):
         Recipe,
         related_name='recipebooks'
     )
+    date_created = models.DateField(auto_now_add=True)
 
     def get_absolute_url(self):
         return reverse('view_recipebook', args=[str(self.id)])
