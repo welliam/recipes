@@ -47,11 +47,12 @@ class RecipeDetailView(DetailView):
         context['ingredients'] = self.object.ingredients.split('\n')
         context['directions'] = structureDirections(self.object.directions)
         context['own_recipe'] = self.object.user == self.request.user
-        recipebooks = self.object.user.recipebooks.all()
-        context['recipebooks'] = zip(
-            recipebooks,
-            (self.object in book.recipes.all() for book in recipebooks)
-        )
+        if self.request.user.is_authenticated():
+            recipebooks = self.request.user.recipebooks.all()
+            context['recipebooks'] = zip(
+                recipebooks,
+                (self.object in book.recipes.all() for book in recipebooks)
+            )
         context['review_form'] = ReviewForm
         context['request_user'] = self.request.user
         return context
@@ -104,7 +105,9 @@ class RecipeDeleteView(DeleteView):
 def update_recipebooks(request, pk):
     if request.method == 'POST':
         recipe = Recipe.objects.filter(pk=pk).first()
-        if recipe.user != request.user:
+        if request.user.is_anonymous():
+            return HttpResponseRedirect(reverse('auth_login'))
+        elif recipe.user != request.user:
             return HttpResponseForbidden()
         recipe.recipebooks.set(request.POST.getlist('books'))
     return HttpResponseRedirect(reverse('view_recipe', args=[pk]))

@@ -100,6 +100,29 @@ class RecipeDetailTests(TestCase):
         )
         self.assertContains(response, recipebook.title)
 
+    def test_logged_out_has_no_recipe_book_form(self):
+        """Test logged out GET has no form for adding to recipebooks."""
+        response = self.client.get(
+            reverse('view_recipe', args=[self.recipe.id])
+        )
+        url = reverse('recipe_update_recipebooks', args=[self.recipe.id])
+        self.assertNotContains(response, 'action="{}"'.format(url))
+
+    def test_user_only_has_own_recipe_books(self):
+        recipebook = RecipeBook(
+            user=self.user,
+            title='good recipes',
+            description='recipe'
+        )
+        recipebook.save()
+        user = User(username='other')
+        user.save()
+        self.client.force_login(user)
+        response = self.client.get(
+            reverse('view_recipe', args=[self.recipe.id])
+        )
+        self.assertNotContains(response, recipebook.title)
+
 
 class RecipeCreateTestCase(TestCase):
     """Test creating a recipe."""
@@ -334,6 +357,11 @@ class AddRecipeBookTests(TestCase):
         self.postData(dict(books=[self.rb1.id]))
         self.assertEqual(self.rb1.recipes.count(), 0)
 
+    def test_logged_out_does_not_update(self):
+        self.client.logout()
+        self.postData(dict(books=[self.rb1.id]))
+        self.assertEqual(self.rb1.recipes.count(), 0)
+
 
 class DisplayReviewTests(TestCase):
     """Test displaying reviews on recipe page."""
@@ -362,8 +390,14 @@ class DisplayReviewTests(TestCase):
 
     def test_review_form_displayed(self):
         """Test review's has creation form"""
+        self.client.force_login(self.user)
         url = reverse('new_review', args=[self.recipe.id])
-        self.assertContains(self.response, 'action="{}"'.format(url))
+        self.assertContains(self.view_recipe(), 'action="{}"'.format(url))
+
+    def test_review_form_logged_out_not_displayed(self):
+        """Test review's has creation form"""
+        url = reverse('new_review', args=[self.recipe.id])
+        self.assertNotContains(self.view_recipe(), 'action="{}"'.format(url))
 
     def test_review_by_user_has_delete_link(self):
         """Test link to delete review exists while logged in."""
