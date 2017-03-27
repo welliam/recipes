@@ -19,7 +19,10 @@ class HomePage(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomePage, self).get_context_data(**kwargs)
         if self.request.user.is_authenticated():
-            recipes = get_recipes(self.request.user)
+            recipes = list(get_recipes(self.request.user))
+            if not recipes:
+                recipes = Recipe.objects.all()
+                context['no_recipes'] = True
         else:
             recipes = Recipe.objects.all()
         context['recipes'] = sorted(recipes, key=lambda r: r.date_created)

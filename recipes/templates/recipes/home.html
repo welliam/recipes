@@ -4,6 +4,7 @@
   <form action="{% url 'recipe_search' %}">
     <input name="q" type="text" placeholder="Search" autofocus>
   </form>
+  <h3>Follow some users to see their recipes here!</h3>
   {% for recipe in recipes %}
   {% include 'recipes/listed-recipe.html' with object=recipe %}
   {% empty %}
