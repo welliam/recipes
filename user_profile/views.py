@@ -38,6 +38,8 @@ class ProfileUpdateView(UpdateView):
 
 def follow_view(request, slug):
     """Add a follower."""
+    if request.user.is_anonymous():
+        return HttpResponseRedirect(reverse('auth_login'))
     user = User.objects.filter(username=slug).first()
     if request.POST['follow'] == 'follow':
         request.user.profile.follows.add(user)

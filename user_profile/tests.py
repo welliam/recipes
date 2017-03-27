@@ -131,6 +131,11 @@ class ProfileViewTestCase(TestCase):
         response = self.client.get(profile_url)
         self.assertNotContains(response, follow_action_url)
 
+    def test_post_follow_logged_out_redirects(self):
+        follow_url = format(reverse('follow', args=[self.user]))
+        response = self.client.post(follow_url, dict(follow='unfollow'))
+        self.assertEqual(response.status_code, 302)
+
 
 class ProfileEditTestCase(TestCase):
     """Test case for editing profiles."""
