@@ -124,6 +124,13 @@ class ProfileViewTestCase(TestCase):
         self.client.post(follow_url, dict(follow='unfollow'))
         self.assertNotEqual(self.user.profile.follows.last(), another_user)
 
+    def test_logged_out_has_no_follow_button(self):
+        profile_url = reverse('profile', args=[self.user.username])
+        follow_url = format(reverse('follow', args=[self.user.username]))
+        follow_action_url = 'action="{}"'.format(follow_url)
+        response = self.client.get(profile_url)
+        self.assertNotContains(response, follow_action_url)
+
 
 class ProfileEditTestCase(TestCase):
     """Test case for editing profiles."""

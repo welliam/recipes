@@ -6,10 +6,12 @@
   {% if own_profile %}
   <a href="{% url 'edit_profile'%}">Edit</a>
   {% endif %}
+  {% if request.user.is_authenticated %}
   <form method="POST" action="{% url 'follow' object.username %}">
     {% csrf_token %}
     <input type="submit" name="follow" value="{% if followed %}un{% endif %}follow">
   </form>
+  {% endif %}
   <section>
     <h3>Biography </h3>
     <div class="bio">{% if object.profile.bio %}{{ object.profile.bio }}{% else %}No biography yet... {% endif %}</div>
