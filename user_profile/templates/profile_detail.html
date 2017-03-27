@@ -6,7 +6,7 @@
   {% if own_profile %}
   <a href="{% url 'edit_profile'%}">Edit</a>
   {% endif %}
-  {% if request.user.is_authenticated %}
+  {% if request.user.is_authenticated and request.user != object %}
   <form method="POST" action="{% url 'follow' object.username %}">
     {% csrf_token %}
     <input type="submit" name="follow" value="{% if followed %}un{% endif %}follow">
