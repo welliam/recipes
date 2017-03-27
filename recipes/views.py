@@ -1,5 +1,15 @@
+from itertools import chain
 from django.views.generic.base import TemplateView
 from recipe.models import Recipe
+
+
+def get_recipes(user):
+    followed_recipes = chain.from_iterable(
+        user.recipes.all()
+        for user in user.profile.follows.all()
+    )
+    user_recipes = user.recipes.all()
+    return chain(followed_recipes, user_recipes)
 
 
 class HomePage(TemplateView):
@@ -8,7 +18,11 @@ class HomePage(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomePage, self).get_context_data(**kwargs)
-        context['recipes'] = Recipe.objects.order_by('-date_created')[:5]
+        if self.request.user.is_authenticated():
+            recipes = get_recipes(self.request.user)
+        else:
+            recipes = Recipe.objects.all()
+        context['recipes'] = sorted(recipes, key=lambda r: r.date_created)
         return context
 
 

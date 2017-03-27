@@ -40,3 +40,49 @@ class AboutPageTests(TestCase):
     def setUp(self):
         """Initialize a response to be tested."""
         self.response = self.client.get(reverse('about'))
+
+
+def recipe_with_user(username, title):
+    user = User(username=username)
+    user.save()
+    recipe = Recipe(
+        user=user,
+        title=title,
+        description='a recipe',
+        ingredients='food',
+        directions='make it'
+    )
+    recipe.save()
+    return recipe
+
+
+class RecipeStreamTests(TestCase):
+    """Tests for recipes on front page."""
+
+    def setUp(self):
+        """Initialize three users with recipes."""
+        self.my_recipe = recipe_with_user('user1', 'recipe1')
+        self.followed_recipe = recipe_with_user('user2', 'recipe2')
+        self.not_followed_recipe = recipe_with_user('user3', 'recipe3')
+        me = self.my_recipe.user
+        self.client.force_login(me)
+        me.profile.follows.add(self.followed_recipe.user)
+        self.response = self.client.get(reverse('home'))
+
+    def assert_has_recipe(self, recipe):
+        self.assertContains(self.response, recipe.title)
+        recipe_url = reverse('view_recipe', args=[recipe.id])
+        self.assertContains(self.response, 'href="{}"'.format(recipe_url))
+        user_url = reverse('profile', args=[recipe.user.username])
+        self.assertContains(self.response, 'href="{}"'.format(user_url))
+
+    def test_home_page_has_own_recipe(self):
+        self.assert_has_recipe(self.my_recipe)
+
+    def test_home_page_has_followed_recipe(self):
+        self.assert_has_recipe(self.followed_recipe)
+
+    def test_home_page_hasnt_other_recipe(self):
+        self.assertNotContains(self.response, self.not_followed_recipe.title)
+        url = reverse('view_recipe', args=[self.not_followed_recipe.id])
+        self.assertNotContains(self.response, 'href="{}"'.format(url))
