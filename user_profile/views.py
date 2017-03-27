@@ -14,8 +14,13 @@ class ProfileDetailView(DetailView):
         context = super(ProfileDetailView, self).get_context_data(**kwargs)
         context['recipes'] = self.object.recipes.order_by('-date_created')[:5]
         context['own_profile'] = self.object == self.request.user
-        context['recipebooks'] = self.object.recipebooks.order_by('-date_created')[:5]
+        recipebooks = self.object.recipebooks
+        context['recipebooks'] = recipebooks.order_by('-date_created')[:5]
         context['follows'] = self.object.profile.follows.all()[:5]
+        if self.request.user.is_authenticated():
+            context['followed'] = self.request.user.profile.follows.filter(
+                username=self.object.username
+            ).count()
         return context
 
 
@@ -34,5 +39,8 @@ class ProfileUpdateView(UpdateView):
 def follow_view(request, slug):
     """Add a follower."""
     user = User.objects.filter(username=slug).first()
-    request.user.profile.follows.add(user)
+    if request.POST['follow'] == 'follow':
+        request.user.profile.follows.add(user)
+    else:
+        request.user.profile.follows.remove(user)
     return HttpResponseRedirect(reverse('profile', args=[slug]))

@@ -8,7 +8,7 @@
   {% endif %}
   <form method="POST" action="{% url 'follow' object.username %}">
     {% csrf_token %}
-    <input type="submit" value="follow">
+    <input type="submit" name="follow" value="{% if followed %}un{% endif %}follow">
   </form>
   <section>
     <h3>Biography </h3>

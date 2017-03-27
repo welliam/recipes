@@ -84,12 +84,14 @@ class ProfileViewTestCase(TestCase):
         self.assertContains(self.response, self.followed_user.username)
 
     def test_other_profile_has_follow_button(self):
+        self.client.force_login(self.user)
         another_user = User(username='one_more')
         another_user.save()
         profile_url = reverse('profile', args=[another_user.username])
         follow_url = format(reverse('follow', args=[another_user.username]))
         follow_action_url = 'action="{}"'.format(follow_url)
         self.assertContains(self.client.get(profile_url), follow_action_url)
+        self.assertContains(self.client.get(profile_url), 'value="follow"')
 
     def test_post_follow(self):
         """Test posting to follow view adds user to follows list."""
@@ -97,8 +99,30 @@ class ProfileViewTestCase(TestCase):
         another_user = User(username='one_more')
         another_user.save()
         follow_url = format(reverse('follow', args=[another_user.username]))
-        self.client.post(follow_url)
+        self.client.post(follow_url, dict(follow='follow'))
         self.assertEqual(self.user.profile.follows.last(), another_user)
+
+    def test_followed_profile_has_unfollow_button(self):
+        self.client.force_login(self.user)
+        another_user = User(username='one_more')
+        another_user.save()
+        self.user.profile.follows.add(another_user)
+        profile_url = reverse('profile', args=[another_user.username])
+        follow_url = format(reverse('follow', args=[another_user.username]))
+        follow_action_url = 'action="{}"'.format(follow_url)
+        response = self.client.get(profile_url)
+        self.assertContains(response, follow_action_url)
+        self.assertContains(response, 'value="unfollow"')
+
+    def test_post_unfollow(self):
+        """Test posting to follow view adds user to follows list."""
+        self.client.force_login(self.user)
+        another_user = User(username='one_more')
+        another_user.save()
+        self.user.profile.follows.add(another_user)
+        follow_url = format(reverse('follow', args=[another_user.username]))
+        self.client.post(follow_url, dict(follow='unfollow'))
+        self.assertNotEqual(self.user.profile.follows.last(), another_user)
 
 
 class ProfileEditTestCase(TestCase):
