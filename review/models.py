@@ -20,6 +20,7 @@ class Review(models.Model):
     score = models.PositiveSmallIntegerField(
         choices=((r, r) for r in range(1, 6))
     )
+    date_created = models.DateTimeField(auto_now_add=True)
 
 
 class ReviewForm(ModelForm):
