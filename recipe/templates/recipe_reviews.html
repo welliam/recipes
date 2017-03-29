@@ -1,0 +1,13 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+<div class="block recipe-reviews">
+  <h2>Reviews for <a href="{% url 'view_recipe' object.id %}">{{ object.title }}</a></h2>
+  {% for review in objects %}
+  {% include 'review.html' with review=review request=request %}
+  {% empty %}
+  No reviews yet...
+  {% endfor %}
+</div>
+  {{ paginated_arrows|safe }}
+{% endblock %}

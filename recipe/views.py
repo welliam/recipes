@@ -6,7 +6,7 @@ from django.views.generic import (
      TemplateView, DetailView, CreateView, UpdateView, DeleteView
 )
 from django.http import HttpResponseRedirect, HttpResponseForbidden
-from utils.utils import make_ownership_dispatch
+from utils.utils import make_ownership_dispatch, paginate
 from .models import Recipe
 from recipebook.models import RecipeBook
 from review.models import ReviewForm
@@ -55,6 +55,7 @@ class RecipeDetailView(DetailView):
                 (self.object in book.recipes.all() for book in recipebooks)
             )
         context['review_form'] = ReviewForm
+        context['reviews'] = self.object.reviews.order_by('-date_created')[:5]
         context['request_user'] = self.request.user
         return context
 
@@ -120,3 +121,17 @@ def update_recipebooks(request, pk):
             return HttpResponseForbidden()
         recipe.recipebooks.set(books)
     return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
+
+
+class ReviewsListView(DetailView):
+    """View that renders a recipe."""
+    model = Recipe
+    template_name = 'recipe_reviews.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewsListView, self).get_context_data(**kwargs)
+        context.update(paginate(
+            self.request,
+            self.object.reviews.order_by('-date_created'))
+        )
+        return context

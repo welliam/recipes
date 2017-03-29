@@ -424,3 +424,23 @@ class DisplayReviewTests(TestCase):
         self.client.force_login(user)
         url = reverse('delete_review', args=[self.review.id])
         self.assertNotContains(self.response, 'href="{}"'.format(url))
+
+
+class RecipeReviewsTests(TestCase):
+    def setUp(self):
+        self.user, self.recipe = create_recipe_and_user()
+        self.reviews = [
+            Review(
+                user=self.user,
+                recipe=self.recipe,
+                title='this is a review',
+                body='this is a review',
+                score=5,
+            )
+        ]
+        for review in self.reviews:
+            review.save()
+        self.response = self.client.get('recipe_reviews', args=[self.recipe])
+
+    def test_has_titles(self):
+        self.assertContains(self.response, self.reviews[0].title, 10)

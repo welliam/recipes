@@ -70,23 +70,12 @@
         <input type="submit" value="Submit review">
       </form>
       {% endif %}
-      {% for review in object.reviews.all %}
-      <article id="review_{{ review.id }}">
-        <header>
-          <span class="review-author">
-            <a href="{% url 'profile' review.user %}">{{ review.user }}</a>
-          </span>
-          <h4>{{ review.title }}</h4>
-          <span class="review-score">{{ review.score }} / 5</span>
-          {% if object.user == request_user %}
-          <span><a href="{% url 'delete_review' review.id %}">Delete</a></span>
-          {% endif %}
-        </header>
-        <div>{{ review.body }}</div>
-      </article>
+      {% for review in reviews %}
+      {% include 'review.html' with review=review request=request %}
       {% empty %}
       No reviews yet...
       {% endfor %}
+      <a href="{% url 'recipe_reviews' object.id %}"><h4>View all reviews</h4></a>
     </section>
   </div>
 </div>

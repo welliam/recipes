@@ -1,0 +1,13 @@
+<article id="review_{{ review.id }}">
+  <header>
+    <span class="review-author">
+      <a href="{% url 'profile' review.user %}">{{ review.user }}</a>
+    </span>
+    <h4>{{ review.title }}</h4>
+    <span class="review-score">{{ review.score }} / 5</span>
+    {% if review.user == request %}
+    <span><a href="{% url 'delete_review' review.id %}">Delete</a></span>
+    {% endif %}
+  </header>
+  <div>{{ review.body }}</div>
+</article>
