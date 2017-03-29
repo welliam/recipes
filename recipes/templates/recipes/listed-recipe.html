@@ -18,7 +18,5 @@
     <h3>Description</h3>
     <div>{{ object.description }}</div>
   </section>
-  <div class="view-full-recipe-link">
-    <a href="{% url 'view_recipe' object.id %}">View full recipe</a>
-  </div>
+  <h4><a href="{% url 'view_recipe' object.id %}">View full recipe</a></h4>
 </div>

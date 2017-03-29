@@ -194,11 +194,6 @@ textarea {
     min-width: 1em;
 }
 
-.view-full-recipe-link {
-    text-align: center;
-    font-size: 1.15em;
-}
-
 .listed-recipe a h2 {
     color: black
 }
