@@ -1,0 +1,8 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+{% for recipebook in objects %}
+{% include 'recipebook_meta.html' with object=recipebook own_recipebook=own_profile %}
+{% endfor %}
+{{ pagination_arrows|safe }}
+{% endblock %}

@@ -175,3 +175,28 @@ class ProfileEditTestCase(TestCase):
         bio = 'chef'
         self.client.post(reverse('edit_profile'), dict(bio=bio))
         self.assertEqual(User.objects.last().profile.bio, bio)
+
+
+class RecipeBooksTestCase(TestCase):
+    """Test case for recipebooks list view."""
+
+    def setUp(self):
+        self.username = 'friend'
+        self.user = User(username=self.username)
+        self.user.save()
+        self.client.force_login(self.user)
+        self.recipebooks = [
+            RecipeBook(
+                user=self.user,
+                title='this is a recipebook',
+                description='recipesss'
+            ) for _ in range(50)
+        ]
+        for book in self.recipebooks:
+            book.save()
+
+    def test_recipebooks_list_has_recipes(self):
+        url = reverse('profile_recipebooks', args=[self.user.username])
+        response = self.client.get(url)
+        title = self.recipebooks[0].title
+        self.assertContains(response, title, 10)

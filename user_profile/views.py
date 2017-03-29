@@ -50,3 +50,18 @@ def follow_view(request, slug):
     else:
         request.user.profile.follows.remove(user)
     return HttpResponseRedirect(reverse('profile', args=[slug]))
+
+
+class RecipeBooksListView(DetailView):
+    model = User
+    template_name = 'profile_recipebooks.html'
+    slug_field = 'username'
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeBooksListView, self).get_context_data(**kwargs)
+        context['own_profile'] = self.object == self.request.user
+        context.update(paginate(
+            self.request,
+            self.object.recipebooks.order_by('-date_created')
+        ))
+        return context

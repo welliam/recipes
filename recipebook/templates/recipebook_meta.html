@@ -1,0 +1,12 @@
+<div class="block">
+  <header>
+    <a href={% url 'view_recipebook' object.id %}><h2>{{ object.title }}</h2></a>
+    {% if own_recipebook %}
+    <a href="{% url 'edit_recipebook' object.id %}">Edit</a>
+    <a href="{% url 'delete_recipebook' object.id %}">Delete</a>
+    {% endif %}
+    <div>
+      {{ object.description }}
+    </div>
+  </header>
+</div>

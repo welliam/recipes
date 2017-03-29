@@ -1,18 +1,7 @@
 {% extends 'recipes/base.html' %}
 
 {% block content %}
-<div class="block">
-  <header>
-    <h2>{{ object.title }}</h2>
-    {% if own_recipebook %}
-    <a href="{% url 'edit_recipebook' object.id %}">Edit</a>
-    <a href="{% url 'delete_recipebook' object.id %}">Delete</a>
-    {% endif %}
-    <div>
-      {{ object.description }}
-    </div>
-  </header>
-</div>
+{% include 'recipebook_meta.html' with object=object own_recipebook=own_recipebook%}
 {% for recipe in objects %}
 {% include 'recipes/listed-recipe.html' with object=recipe %}
 {% empty %}
