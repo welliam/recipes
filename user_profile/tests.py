@@ -161,6 +161,10 @@ class ProfileViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertContains(response, title, 10)
 
+    def test_profile_links_profile_recipebooks(self):
+        url = reverse('profile_recipebooks', args=[self.user.username])
+        self.assertContains(self.response, url)
+
 
 class ProfileEditTestCase(TestCase):
     """Test case for editing profiles."""
