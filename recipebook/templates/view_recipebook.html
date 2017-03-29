@@ -13,9 +13,10 @@
     </div>
   </header>
 </div>
-{% for recipe in recipes %}
+{% for recipe in objects %}
 {% include 'recipes/listed-recipe.html' with object=recipe %}
 {% empty %}
 No recipes here yet...
 {% endfor %}
+{{ pagination_arrows|safe }}
 {% endblock %}

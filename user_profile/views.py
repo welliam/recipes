@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.views.generic import DetailView, UpdateView
 from django.http import HttpResponseRedirect
+from utils.utils import paginate
 from .models import UserProfile
 
 
@@ -12,7 +13,10 @@ class ProfileDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileDetailView, self).get_context_data(**kwargs)
-        context['recipes'] = self.object.recipes.order_by('-date_created')[:5]
+        context.update(paginate(
+            self.request,
+            self.object.recipes.order_by('-date_created')
+        ))
         context['own_profile'] = self.object == self.request.user
         recipebooks = self.object.recipebooks
         context['recipebooks'] = recipebooks.order_by('-date_created')[:5]

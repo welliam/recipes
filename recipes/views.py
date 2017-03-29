@@ -1,5 +1,6 @@
 from itertools import chain
 from django.views.generic.base import TemplateView
+from utils.utils import paginate
 from recipe.models import Recipe
 
 
@@ -25,7 +26,11 @@ class HomePage(TemplateView):
                 context['no_recipes'] = True
         else:
             recipes = Recipe.objects.all()
-        context['recipes'] = sorted(recipes, key=lambda r: r.date_created)
+        sorted_recipes = sorted(
+            recipes,
+            key=lambda r: r.date_created, reverse=True
+        )
+        context.update(paginate(self.request, sorted_recipes))
         return context
 
 

@@ -1,0 +1,12 @@
+<div class="pagination-arrows">
+  <span>
+    {% if previous_page_url %}
+    <a href="{{ previous_page_url }}">&larr;</a>
+    {% endif %}
+  </span>
+  <span>
+    {% if next_page_url %}
+    <a href="{{ next_page_url }}">&rarr;</a>
+    {% endif %}
+  </span>
+</div>

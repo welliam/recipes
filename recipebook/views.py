@@ -6,7 +6,7 @@ from django.views.generic import (
 )
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from utils.utils import make_ownership_dispatch
+from utils.utils import paginate, make_ownership_dispatch
 from .models import RecipeBook
 
 
@@ -31,7 +31,7 @@ class RecipeBookDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(RecipeBookDetailView, self).get_context_data(**kwargs)
-        context['recipes'] = self.object.recipes.all()[:5]
+        context.update(paginate(self.request, self.object.recipes.all()))
         context['own_recipebook'] = self.object.user == self.request.user
         return context
 

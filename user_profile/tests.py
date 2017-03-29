@@ -144,6 +144,23 @@ class ProfileViewTestCase(TestCase):
         response = self.client.get(url)
         self.assertNotContains(response, follow_action_url)
 
+    def test_profile_paginates(self):
+        title = 'this is some food'
+        recipes = [
+            Recipe(
+                user=self.user,
+                title=title,
+                description='meal',
+                ingredients='food',
+                directions='prepare food'
+            ) for i in range(50)
+        ]
+        for recipe in recipes:
+            recipe.save()
+        url = reverse('profile', args=[self.user.username])
+        response = self.client.get(url)
+        self.assertContains(response, title, 10)
+
 
 class ProfileEditTestCase(TestCase):
     """Test case for editing profiles."""

@@ -42,11 +42,12 @@
   </section>
 </div>
   <section>
-    {% for recipe in recipes %}
+    {% for recipe in objects %}
     {% include 'recipes/listed-recipe.html' with object=recipe %}
     {% empty %}
-    No recipes yet...
+    <h3>No recipes yet...</h3>
     {% endfor %}
   </section>
+  {{ pagination_arrows|safe }}
 </div>
 {% endblock %}

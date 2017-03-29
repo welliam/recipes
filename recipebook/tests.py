@@ -109,6 +109,23 @@ class RecipeBookDetailViewTests(RecipeBookTestCase):
         delete_url = reverse('delete_recipebook', args=[self.recipebook.id])
         self.assertNotContains(self.client.get(view_url), delete_url)
 
+    def test_paginated_recipebook(self):
+        title = 'this is a title'
+        for _ in range(50):
+            recipe = Recipe(
+                title=title,
+                user=self.user,
+                description='t',
+                ingredients='t',
+                directions='t'
+            )
+            recipe.save()
+            self.recipebook.recipes.add(recipe)
+        p2 = reverse('view_recipebook', args=[self.recipebook.id]) + '?p=2'
+        self.assertContains(self.client.get(p2), title, 10)
+        p3 = reverse('view_recipebook', args=[self.recipebook.id]) + '?p=3'
+        self.assertContains(self.client.get(p3), title, 10)
+
 
 class RecipeBookUpdateViewTests(RecipeBookTestCase):
     def test_update_title(self):

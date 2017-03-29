@@ -86,3 +86,18 @@ class RecipeStreamTests(TestCase):
         self.assertNotContains(self.response, self.not_followed_recipe.title)
         url = reverse('view_recipe', args=[self.not_followed_recipe.id])
         self.assertNotContains(self.response, 'href="{}"'.format(url))
+
+    def test_home_page_paginated(self):
+        title = 'this is a title'
+        for i in range(50):
+            recipe = Recipe(
+                title=title,
+                user=self.followed_recipe.user,
+                description='t',
+                ingredients='t',
+                directions='t'
+            )
+            recipe.save()
+            self.followed_recipe.user.recipes.add(recipe)
+        response = self.client.get(reverse('home'))
+        self.assertContains(response, title, 10)

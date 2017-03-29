@@ -83,6 +83,20 @@ textarea {
     text-decoration: underline;
 }
 
+.pagination-arrows {
+    text-align: center;
+}
+
+.pagination-arrows > * {
+    display: inline-block;
+    min-width: 2em;
+    font-size: 2em;
+}
+
+.pagination-arrows a {
+    color: #555;
+}
+
 .recipe > * {
     margin-bottom: 1em;
 }
