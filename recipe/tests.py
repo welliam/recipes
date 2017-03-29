@@ -362,6 +362,12 @@ class AddRecipeBookTests(TestCase):
         self.postData(dict(books=[self.rb1.id]))
         self.assertEqual(self.rb1.recipes.count(), 0)
 
+    def test_can_add_recipe_by_other_user(self):
+        count = self.rb1.recipes.count()
+        _, other_recipe = create_recipe_and_user('someone')
+        self.rb1.recipes.add(other_recipe)
+        self.assertEqual(self.rb1.recipes.count(), count + 1)
+
 
 class DisplayReviewTests(TestCase):
     """Test displaying reviews on recipe page."""

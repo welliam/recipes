@@ -8,6 +8,7 @@ from django.views.generic import (
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from utils.utils import make_ownership_dispatch
 from .models import Recipe
+from recipebook.models import RecipeBook
 from review.models import ReviewForm
 
 
@@ -102,12 +103,20 @@ class RecipeDeleteView(DeleteView):
     dispatch = make_ownership_dispatch(lambda: RecipeDeleteView)
 
 
+def any_recipebooks_user_mismatched(user, book_pks):
+    for pk in book_pks:
+        book = RecipeBook.objects.filter(id=pk).first()
+        if book and book.user != user:
+            return True
+
+
 def update_recipebooks(request, pk):
     if request.method == 'POST':
+        books = request.POST.getlist('books')
         recipe = Recipe.objects.filter(pk=pk).first()
         if request.user.is_anonymous():
             return HttpResponseRedirect(reverse('auth_login'))
-        elif recipe.user != request.user:
+        elif any_recipebooks_user_mismatched(request.user, books):
             return HttpResponseForbidden()
-        recipe.recipebooks.set(request.POST.getlist('books'))
+        recipe.recipebooks.set(books)
     return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
