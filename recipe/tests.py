@@ -434,13 +434,14 @@ class RecipeReviewsTests(TestCase):
                 user=self.user,
                 recipe=self.recipe,
                 title='this is a review',
-                body='this is a review',
+                body='review body',
                 score=5,
-            )
+            ) for i in range(30)
         ]
         for review in self.reviews:
             review.save()
-        self.response = self.client.get('recipe_reviews', args=[self.recipe])
+        url = reverse('recipe_reviews', args=[self.recipe.id])
+        self.response = self.client.get(url)
 
     def test_has_titles(self):
         self.assertContains(self.response, self.reviews[0].title, 10)
