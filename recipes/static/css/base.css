@@ -119,8 +119,16 @@ textarea {
     margin-bottom: 1em;
 }
 
-.listed-recipe {
+.listed-recipe, .recipebook-meta {
     margin-top: 1em;
+}
+
+.recipebook-meta header {
+    text-align: center;
+}
+
+.recipebook-meta h2 a {
+    color: #555;
 }
 
 .helptext {
@@ -136,6 +144,7 @@ textarea {
 .recipe-by {
     font-style: italic;
     text-align: center;
+    margin-bottom: 0.3em;
 }
 
 .recipe section h3 {
@@ -212,8 +221,8 @@ textarea {
     min-width: 1em;
 }
 
-.listed-recipe a h2 {
-    color: black
+.listed-recipe h2 a {
+    color: #555;
 }
 
 .listed-recipe header a:hover  {
@@ -244,7 +253,7 @@ textarea {
     z-index: 4;
 }
 
-#modal-forms {
+.modal-forms {
     display: none;
 }
 

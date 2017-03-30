@@ -2,7 +2,7 @@
 
 {% block content %}
 {% if own_recipe %}
-<div id="modal-forms">
+<div class="modal-forms">
   <form id="edit-recipe-form" action="{% url 'edit_recipe' object.id %}" method="POST">{% csrf_token %}
     <h3>Edit {{ object.title }}</h3>
     {{ recipe_form.as_p }}

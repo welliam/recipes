@@ -4,6 +4,7 @@ from django.views.generic import DetailView, UpdateView
 from django.http import HttpResponseRedirect
 from utils.utils import paginate
 from .models import UserProfile
+from recipebook.models import RecipeBookForm
 
 
 class ProfileDetailView(DetailView):
@@ -64,4 +65,5 @@ class RecipeBooksListView(DetailView):
             self.request,
             self.object.recipebooks.order_by('-date_created')
         ))
+        context['recipebook_form'] = RecipeBookForm
         return context

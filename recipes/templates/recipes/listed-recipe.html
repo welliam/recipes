@@ -1,6 +1,6 @@
 <div class="block recipe listed-recipe">
   <header>
-    <a href="{% url 'view_recipe' object.id %}"><h2>{{ object.title }}</h2></a>
+    <h2><a href="{% url 'view_recipe' object.id %}">{{ object.title }}</a></h2>
     <div class="recipe-by">
       By <a href="{% url 'profile' object.user %}">{{ object.user }}</a> on {{ object.date_created }}
       {% if object.get_average_score %}

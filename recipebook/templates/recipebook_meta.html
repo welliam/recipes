@@ -1,6 +1,6 @@
-<div class="block">
+<div class="block recipebook-meta">
   <header>
-    <a href={% url 'view_recipebook' object.id %}><h2>{{ object.title }}</h2></a>
+    <h2><a href={% url 'view_recipebook' object.id %}>{{ object.title }}</a></h2>
     {% if own_recipebook %}
     <a href="{% url 'edit_recipebook' object.id %}">Edit</a>
     <a href="{% url 'delete_recipebook' object.id %}">Delete</a>

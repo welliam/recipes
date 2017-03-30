@@ -22,7 +22,7 @@ class RecipeBookCreateView(LoginRequiredMixin, CreateView):
         return super(RecipeBookCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('profile', args=[self.request.user.username])
+        return reverse('profile_recipebooks', args=[self.request.user.username])
 
 
 class RecipeBookDetailView(DetailView):

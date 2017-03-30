@@ -1,6 +1,7 @@
 from random import randint
 from django.contrib.auth.models import User
 from django.db import models
+from django.forms import ModelForm
 from django.utils.encoding import python_2_unicode_compatible
 from django.urls import reverse
 from recipe.models import Recipe
@@ -37,3 +38,9 @@ class RecipeBook(models.Model):
 
     def get_absolute_url(self):
         return reverse('view_recipebook', args=[str(self.id)])
+
+
+class RecipeBookForm(ModelForm):
+    class Meta:
+        model = RecipeBook
+        fields = ['title', 'description']
