@@ -5,7 +5,7 @@
     </span>
     <h4>{{ review.title }}</h4>
     <span class="review-score">{{ review.score }} / 5</span>
-    {% if review.user == request %}
+    {% if review.user == request.user %}
     <span><a href="{% url 'delete_review' review.id %}">Delete</a></span>
     {% endif %}
   </header>
