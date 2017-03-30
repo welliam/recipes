@@ -6,8 +6,8 @@
     <input name="q" type="text" placeholder="Search">
   </form>
   {% if request.user.is_authenticated %}
-  <a href="{% url 'new_recipe' %}">New recipe</a>
-  <a href="{% url 'profile_recipebooks' request.user %}">Recipe books</a>
+  <h3><a href="{% url 'new_recipe' %}">New recipe</a></h3>
+  <h3><a href="{% url 'profile_recipebooks' request.user %}">Recipe books</a></h3>
   {% endif %}
 </header>
 {% if no_recipes %}
