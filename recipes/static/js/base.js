@@ -21,8 +21,16 @@ recipes = {};
     });
   }
 
+  function initializeEditLink(formQuery, linkQuery) {
+    var form = $(formQuery),
+        link = $(linkQuery);
+    link.on('click', () => recipes.dialog(form));
+    link.attr('href', '#');
+  }
+
   recipes.dialog = dialog;
   recipes.closeDialog = closeDialogElements;
+  recipes.initializeEditLink = initializeEditLink;
 
   $(() => {
     initDialog();

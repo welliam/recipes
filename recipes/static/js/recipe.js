@@ -27,11 +27,11 @@
   }
 
   function initializeUpdateForm() {
-    initializeRecipeEditForm('#edit-recipe-form', '.recipe-edit-link');
+    recipes.initializeEditLink('#edit-recipe-form', '.recipe-edit-link');
   }
 
   function initializeDeleteForm() {
-    initializeRecipeEditForm('#delete-recipe-form', '.recipe-delete-link');
+    recipes.initializeEditLink('#delete-recipe-form', '.recipe-delete-link');
   }
 
   $(() => {

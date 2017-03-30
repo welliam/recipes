@@ -1,12 +1,19 @@
 {% extends "recipes/base.html" %}
 
 {% block content %}
+<div class="modal-forms">
+  <form id="create-recipe-form" action="{% url 'new_recipe' %}" method="POST">{% csrf_token %}
+    <h3>New Recipe</h3>
+    {{ recipe_form.as_p }}
+    <input type="submit" value="Submit recipe">
+  </form>
+</div>
 <header class="home-header">
   <form action="{% url 'recipe_search' %}">
     <input name="q" type="text" placeholder="Search">
   </form>
   {% if request.user.is_authenticated %}
-  <h3><a href="{% url 'new_recipe' %}">New recipe</a></h3>
+  <h3><a class="new-recipe-link" href="{% url 'new_recipe' %}">New recipe</a></h3>
   <h3><a href="{% url 'profile_recipebooks' request.user %}">Recipe books</a></h3>
   {% endif %}
 </header>
@@ -19,4 +26,9 @@
 No recipes yet...
 {% endfor %}
 {{ pagination_arrows|safe }}
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/home.js' %}"></script>
 {% endblock %}

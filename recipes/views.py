@@ -1,7 +1,7 @@
 from itertools import chain
 from django.views.generic.base import TemplateView
 from utils.utils import paginate
-from recipe.models import Recipe
+from recipe.models import Recipe, RecipeForm
 
 
 def get_recipes(user):
@@ -31,6 +31,7 @@ class HomePage(TemplateView):
             key=lambda r: r.date_created, reverse=True
         )
         context.update(paginate(self.request, sorted_recipes))
+        context['recipe_form'] = RecipeForm
         return context
 
 
