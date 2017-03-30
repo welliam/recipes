@@ -1,8 +1,21 @@
 {% extends 'recipes/base.html' %}
 
 {% block content %}
+{% if own_profile %}
+<div class="block new-recipebook-form-block">
+  <form id="new-recipebook-form" method="POST" action="{% url 'new_recipebook' %}">{% csrf_token %}
+    {{ recipebook_form.as_p }}
+    <input type="submit" value="Create recipe book">
+  </form>
+</div>
+{% endif %}
 {% for recipebook in objects %}
 {% include 'recipebook_meta.html' with object=recipebook own_recipebook=own_profile %}
 {% endfor %}
 {{ pagination_arrows|safe }}
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/profile-recipebooks.js' %}"></script>
 {% endblock %}

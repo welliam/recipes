@@ -1,0 +1,8 @@
+(() => {
+  function initializeCreateRecipeBookForm() {
+  }
+
+  $(() => {
+    initializeCreateRecipeBookForm();
+  });
+})();

@@ -12,6 +12,7 @@
 
   function initializeRecipeBookForm() {
     makeModal('.recipe-recipebooks', 'Recipe Books', 'select');
+    $('#new-recipebook-form').css('display', 'block');
   }
 
   function initializeReviewsForm() {

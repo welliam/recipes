@@ -70,6 +70,10 @@
         </select>
         <input type="submit" value="Update Recipe Books">
       </form>
+      <form id="new-recipebook-form" method="POST" action="{% url 'new_recipebook' %}">{% csrf_token %}
+        {{ recipebook_form.as_p }}
+        <input type="submit" value="Create recipe book">
+      </form>
     </section>
     {% endif %}
     <section id="reviews" class="recipe-reviews">

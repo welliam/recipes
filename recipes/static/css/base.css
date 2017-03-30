@@ -173,6 +173,11 @@ textarea {
     margin-bottom: 1em;
 }
 
+.recipe-recipebooks #new-recipebook-form {
+    margin-top: 3em;
+    display: none;
+}
+
 .recipe-recipebooks input[type="submit"],
 .recipe-reviews input,
 .recipe-reviews select
