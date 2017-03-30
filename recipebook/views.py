@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic import (
     CreateView,
     DetailView,
@@ -57,6 +57,8 @@ class RecipeBookDeleteView(DeleteView):
 
 
 def recipe_book_ajax_create_view(request):
+    if request.user.is_anonymous():
+        return HttpResponseRedirect(reverse('auth_login'))
     form = RecipeBookForm(request.POST)
     if form.is_valid():
         recipebook = form.save(commit=False)

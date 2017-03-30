@@ -223,3 +223,9 @@ class RecipeBookAjaxCreateTests(TestCase):
         response = self.client.post(self.url, dict(title='hi', description='there'))
         new_id = int(json.loads(response.content.decode())['id'])
         self.assertEqual(new_id, RecipeBook.objects.last().id)
+
+    def test_logged_out_maintains_count(self):
+        self.client.logout()
+        count = RecipeBook.objects.count()
+        self.client.post(self.url, dict(title='hi', description='there'))
+        self.assertEqual(RecipeBook.objects.count(), count)
