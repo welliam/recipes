@@ -18,21 +18,25 @@
     makeModal('.recipe-reviews form', 'Write Review', '#id_title');
   }
 
-  function initializeEditForm() {
-    var form = $('#edit-recipe-form');
-    $('.recipe-edit-link').on('click', (e) => {
-      form.css('display', 'block');
-      recipes.dialog(form);
-    });
-    $('.recipe-edit-link').attr('href', '#');
+  function initializeRecipeEditForm(formQuery, linkQuery) {
+    var form = $(formQuery),
+        link = $(linkQuery);
+    link.on('click', () => recipes.dialog(form));
+    link.attr('href', '#');
+  }
+
+  function initializeUpdateForm() {
+    initializeRecipeEditForm('#edit-recipe-form', '.recipe-edit-link');
   }
 
   function initializeDeleteForm() {
+    initializeRecipeEditForm('#delete-recipe-form', '.recipe-delete-link');
   }
 
   $(() => {
     initializeRecipeBookForm();
     initializeReviewsForm();
-    initializeEditForm();
+    initializeUpdateForm();
+    initializeDeleteForm();
   });
 })();

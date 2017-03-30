@@ -221,16 +221,16 @@ textarea {
 #dialog {
     display: none;
     position: fixed;
-    min-width: 45%;
+    max-width: 45em;
     margin: auto;
-    max-width: 30em;
+    top: 4em;
     left: 0;
     right: 0;
     opacity: 1;
     z-index: 4;
 }
 
-#edit-recipe-form {
+#modal-forms {
     display: none;
 }
 

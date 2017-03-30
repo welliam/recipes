@@ -2,11 +2,17 @@
 
 {% block content %}
 {% if own_recipe %}
-<form id="edit-recipe-form" action="{% url 'edit_recipe' object.id %}" method="POST">{% csrf_token %}
-  <h3>Edit recipe</h3>
-  {{ recipe_form.as_p }}
-  <input type="submit" value="Edit recipe">
-</form>
+<div id="modal-forms">
+  <form id="edit-recipe-form" action="{% url 'edit_recipe' object.id %}" method="POST">{% csrf_token %}
+    <h3>Edit {{ object.title }}</h3>
+    {{ recipe_form.as_p }}
+    <input type="submit" value="Edit recipe">
+  </form>
+  <form id="delete-recipe-form" action="{% url 'delete_recipe' object.id %}" method="POST">{% csrf_token %}
+    <h3>Are you sure you want to delete {{ object.title }}?</h3>
+    <input type="submit" value="Confirm delete">
+  </form>
+</div>
 {% endif %}
 <div class="block">
   <div class="recipe">

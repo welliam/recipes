@@ -447,13 +447,19 @@ class RecipeReviewsTests(TestCase):
         self.assertContains(self.response, self.reviews[0].title, 10)
 
 
-class RecipeJSFormsTests(TestCase):
+class RecipeModalFormsTests(TestCase):
     def setUp(self):
         self.user, self.recipe = create_recipe_and_user()
         self.client.force_login(self.user)
         url = reverse('view_recipe', args=[self.recipe.id])
         self.response = self.client.get(url)
 
-    def test_recipe_view_has_edit_form(self):
-        url = reverse('edit_recipe', args=[self.recipe.id])
+    def assert_has_form(self, url_name):
+        url = reverse(url_name, args=[self.recipe.id])
         self.assertContains(self.response, 'action="{}"'.format(url))
+
+    def test_recipe_view_has_edit_form(self):
+        self.assert_has_form('edit_recipe')
+
+    def test_recipe_view_has_delete_form(self):
+        self.assert_has_form('delete_recipe')
