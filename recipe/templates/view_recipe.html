@@ -59,7 +59,9 @@
       <header>
         <h3>Recipe Books</h3>
       </header>
-      <form action="{% url 'recipe_update_recipebooks' object.id %}" method="POST">
+      <form id="recipebook-form"
+            action="{% url 'recipe_update_recipebooks' object.id %}"
+            method="POST">
         {% csrf_token %}
         <select name="books" multiple="multiple">
           {% for book, checked in recipebooks %}
@@ -70,7 +72,7 @@
         </select>
         <input type="submit" value="Update Recipe Books">
       </form>
-      <form id="new-recipebook-form" method="POST" action="{% url 'new_recipebook' %}">{% csrf_token %}
+      <form id="new-recipebook-form" method="POST" action="{% url 'ajax_create_recipebook' %}">{% csrf_token %}
         {{ recipebook_form.as_p }}
         <input type="submit" value="Create recipe book">
       </form>

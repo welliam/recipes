@@ -10,9 +10,33 @@
     elem.css('display', 'none');
   }
 
+  function addOption(title, id) {
+    var option = $('<option>' + title + '</option>')
+    option.attr('value', id);
+    $('#recipebook-form').find('select').append(option);
+  }
+
+  function ajaxSubmitForm(form) {
+    var title = form.find('input[name="title"]').val(),
+        desc = form.find('textarea[name="description"]').val(),
+        csrf = form.find('input[name="csrfmiddlewaretoken"]').val();
+    if (title && desc) {
+      $.post(form.attr('action'), {
+        title: title,
+        description: desc,
+        csrfmiddlewaretoken: csrf
+      }, (data) => addOption(title, data.id));
+    }
+  }
+
   function initializeRecipeBookForm() {
     makeModal('.recipe-recipebooks', 'Recipe Books', 'select');
-    $('#new-recipebook-form').css('display', 'block');
+    var form = $('#new-recipebook-form');
+    form.css('display', 'block');
+    form.find('input[type="submit"]').on('click', (e) => {
+      e.preventDefault();
+      ajaxSubmitForm(form);
+    });
   }
 
   function initializeReviewsForm() {
