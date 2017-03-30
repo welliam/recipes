@@ -97,6 +97,20 @@ textarea {
     color: #555;
 }
 
+.home-header {
+    text-align: center;
+}
+
+.home-header > * {
+    display: inline-block;
+    margin-right: 1em;
+    margin-left: 1em;
+}
+
+.home-header a {
+    color: #555;
+}
+
 .recipe header {
     text-align: center;
 }

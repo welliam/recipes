@@ -1,16 +1,22 @@
 {% extends "recipes/base.html" %}
 
 {% block content %}
+<header class="home-header">
   <form action="{% url 'recipe_search' %}">
-    <input name="q" type="text" placeholder="Search" autofocus>
+    <input name="q" type="text" placeholder="Search">
   </form>
-  {% if no_recipes %}
-  <h3>Follow some users to see their recipes here!</h3>
+  {% if request.user.is_authenticated %}
+  <a href="{% url 'new_recipe' %}">New recipe</a>
+  <a href="{% url 'profile_recipebooks' request.user %}">Recipe books</a>
   {% endif %}
-  {% for recipe in objects %}
-  {% include 'recipes/listed-recipe.html' with object=recipe %}
-  {% empty %}
-  No recipes yet...
-  {% endfor %}
-  {{ pagination_arrows|safe }}
+</header>
+{% if no_recipes %}
+<h3>Follow some users to see their recipes here!</h3>
+{% endif %}
+{% for recipe in objects %}
+{% include 'recipes/listed-recipe.html' with object=recipe %}
+{% empty %}
+No recipes yet...
+{% endfor %}
+{{ pagination_arrows|safe }}
 {% endblock %}
