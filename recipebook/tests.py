@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.test import TestCase
@@ -204,3 +205,21 @@ class RecipeBookDeleteViewTests(RecipeBookTestCase):
         url = reverse('delete_recipebook', args=[self.recipebook.id])
         self.client.post(url)
         self.assertEqual(RecipeBook.objects.count(), count)
+
+
+class RecipeBookAjaxCreateTests(TestCase):
+    def setUp(self):
+        self.user = User(username='h')
+        self.user.save()
+        self.client.force_login(self.user)
+        self.url = reverse('ajax_create_recipebook')
+
+    def test_post_creates_recipebook(self):
+        count = RecipeBook.objects.count()
+        self.client.post(self.url, dict(title='hi', description='there'))
+        self.assertEqual(RecipeBook.objects.count(), count + 1)
+
+    def test_post_returns_json_id(self):
+        response = self.client.post(self.url, dict(title='hi', description='there'))
+        new_id = int(json.loads(response.content.decode())['id'])
+        self.assertEqual(new_id, RecipeBook.objects.last().id)

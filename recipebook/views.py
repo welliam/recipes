@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.views.generic import (
     CreateView,
     DetailView,
@@ -7,7 +8,7 @@ from django.views.generic import (
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from utils.utils import paginate, make_ownership_dispatch
-from .models import RecipeBook
+from .models import RecipeBook, RecipeBookForm
 
 
 class RecipeBookCreateView(LoginRequiredMixin, CreateView):
@@ -22,7 +23,10 @@ class RecipeBookCreateView(LoginRequiredMixin, CreateView):
         return super(RecipeBookCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('profile_recipebooks', args=[self.request.user.username])
+        return reverse(
+            'profile_recipebooks',
+            args=[self.request.user.username]
+        )
 
 
 class RecipeBookDetailView(DetailView):
@@ -50,3 +54,12 @@ class RecipeBookDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('profile', args=[self.request.user.username])
+
+
+def recipe_book_ajax_create_view(request):
+    form = RecipeBookForm(request.POST)
+    if form.is_valid():
+        recipebook = form.save(commit=False)
+        recipebook.user = request.user
+        recipebook.save()
+        return JsonResponse({'id': str(recipebook.id)})
