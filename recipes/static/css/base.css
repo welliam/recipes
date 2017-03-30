@@ -97,6 +97,10 @@ textarea {
     color: #555;
 }
 
+.recipe header {
+    text-align: center;
+}
+
 .recipe > * {
     margin-bottom: 1em;
 }
@@ -224,6 +228,10 @@ textarea {
     right: 0;
     opacity: 1;
     z-index: 4;
+}
+
+#edit-recipe-form {
+    display: none;
 }
 
 #id_title {

@@ -18,8 +18,21 @@
     makeModal('.recipe-reviews form', 'Write Review', '#id_title');
   }
 
+  function initializeEditForm() {
+    var form = $('#edit-recipe-form');
+    $('.recipe-edit-link').on('click', (e) => {
+      form.css('display', 'block');
+      recipes.dialog(form);
+    });
+    $('.recipe-edit-link').attr('href', '#');
+  }
+
+  function initializeDeleteForm() {
+  }
+
   $(() => {
     initializeRecipeBookForm();
-    initializeReviewsForm()
+    initializeReviewsForm();
+    initializeEditForm();
   });
 })();

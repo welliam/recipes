@@ -445,3 +445,15 @@ class RecipeReviewsTests(TestCase):
 
     def test_has_titles(self):
         self.assertContains(self.response, self.reviews[0].title, 10)
+
+
+class RecipeJSFormsTests(TestCase):
+    def setUp(self):
+        self.user, self.recipe = create_recipe_and_user()
+        self.client.force_login(self.user)
+        url = reverse('view_recipe', args=[self.recipe.id])
+        self.response = self.client.get(url)
+
+    def test_recipe_view_has_edit_form(self):
+        url = reverse('edit_recipe', args=[self.recipe.id])
+        self.assertContains(self.response, 'action="{}"'.format(url))

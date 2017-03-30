@@ -1,5 +1,6 @@
 from random import randint
 from django.db import models
+from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
 from django.urls import reverse
@@ -46,3 +47,9 @@ class Recipe(models.Model):
         score_sum = sum(map(lambda r: r.score, self.reviews.all()))
         if reviews_count:
             return round(score_sum / reviews_count, 1)
+
+
+class RecipeForm(ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ['title', 'description', 'ingredients', 'directions']

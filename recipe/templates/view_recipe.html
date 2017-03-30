@@ -1,6 +1,13 @@
 {% extends 'recipes/base.html' %}
 
 {% block content %}
+{% if own_recipe %}
+<form id="edit-recipe-form" action="{% url 'edit_recipe' object.id %}" method="POST">{% csrf_token %}
+  <h3>Edit recipe</h3>
+  {{ recipe_form.as_p }}
+  <input type="submit" value="Edit recipe">
+</form>
+{% endif %}
 <div class="block">
   <div class="recipe">
     <header>
@@ -14,8 +21,8 @@
         {% endif %}
       </div>
       {% if own_recipe %}
-      <a href="{% url 'edit_recipe' object.id %}">Edit</a>
-      <a href="{% url 'delete_recipe' object.id %}">Delete</a>
+      <a class="recipe-edit-link" href="{% url 'edit_recipe' object.id %}">Edit</a>
+      <a class="recipe-delete-link" href="{% url 'delete_recipe' object.id %}">Delete</a>
       {% endif %}
     </header>
     <section class="recipe-description">

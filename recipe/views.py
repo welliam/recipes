@@ -7,7 +7,7 @@ from django.views.generic import (
 )
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from utils.utils import make_ownership_dispatch, paginate
-from .models import Recipe
+from .models import Recipe, RecipeForm
 from recipebook.models import RecipeBook
 from review.models import ReviewForm
 
@@ -57,6 +57,7 @@ class RecipeDetailView(DetailView):
         context['review_form'] = ReviewForm
         context['reviews'] = self.object.reviews.order_by('-date_created')[:5]
         context['request_user'] = self.request.user
+        context['recipe_form'] = RecipeForm(initial=self.object.__dict__)
         return context
 
 
