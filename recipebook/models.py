@@ -2,7 +2,6 @@ from random import randint
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
-from django.utils.encoding import python_2_unicode_compatible
 from django.urls import reverse
 from recipe.models import Recipe
 
@@ -17,7 +16,6 @@ def create_unique_urlindex(lower_bound=100000000):
             return i
 
 
-@python_2_unicode_compatible
 class RecipeBook(models.Model):
     id = models.PositiveIntegerField(
         primary_key=True,
