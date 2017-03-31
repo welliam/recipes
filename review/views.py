@@ -17,7 +17,7 @@ def review_create_view(request, pk):
         review.recipe = Recipe.objects.filter(pk=pk).first()
         review.save()
         Notification(
-            user=request.user,
+            user=review.recipe.user,
             type='review',
             object_key=review.id
         ).save()

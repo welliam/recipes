@@ -65,6 +65,23 @@ class ReviewNotificationTests(NotificationTestCase):
             ))
         self.assertEqual(self.user.notifications.count(), count + amount)
 
+    def test_post_review_adds_notification_to_other_user(self):
+        reviewer = User(username="critic")
+        reviewer.save()
+        self.client.force_login(reviewer)
+        count = self.user.notifications.count()
+        url = reverse('new_review', args=[self.recipe.id])
+        amount = 5
+        self.assertEqual(reviewer.notifications.count(), 0)
+        for i in range(amount):
+            self.client.post(url, dict(
+                title='review',
+                body="it's good",
+                score=5
+            ))
+        self.assertEqual(self.user.notifications.count(), count + amount)
+        self.assertEqual(reviewer.notifications.count(), 0)
+
 
 class NotificationsViewTests(NotificationTestCase):
     def setUp(self):
