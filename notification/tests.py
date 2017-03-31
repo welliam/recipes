@@ -96,6 +96,5 @@ class NotificationCountView(NotificationTestCase):
 
     def test_notification_count_view(self):
         response = self.client.get(reverse('notification_count_view'))
-        import pdb; pdb.set_trace()
         count = json.loads(response.content.decode())['count']
         self.assertEqual(count, 1)

@@ -34,12 +34,25 @@ recipes = {};
     });
   }
 
+  function checkNotifications() {
+    $.get('/notifications/count', (data) => {
+      var n = data['count']
+      $('.notifications-count').html(n ? ' (' + n + ')' : '');
+    });
+  }
+
+  function initNotificationsCheck() {
+    checkNotifications();
+    setInterval(checkNotifications, 5000);
+  }
+
   recipes.dialog = dialog;
   recipes.closeDialog = closeDialogElements;
   recipes.initializeEditLink = initializeEditLink;
 
   $(() => {
     initDialog();
+    initNotificationsCheck();
   });
 })();
 

@@ -14,7 +14,7 @@
         {% if request.user.is_authenticated %}
         <a href="{% url 'profile' request.user.username %}">{{ request.user.username }}</a>
         <a href="{% url 'auth_logout' %}">Log out</a>
-        <a href="{% url 'view_notifications' %}">Notifications</a>
+        <a href="{% url 'view_notifications' %}">Notifications<span class="notifications-count"></span></a>
         {% else %}
         <a href="{% url 'auth_login' %}">Log in</a>
         <a href="{% url 'registration_register' %}">Register</a>
