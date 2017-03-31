@@ -8,9 +8,25 @@
     <input type="submit" value="Create recipe book">
   </form>
 </div>
+<div class="modal-forms">
+  <form id="edit-recipebook-form" method="POST">{% csrf_token %}
+    <h3>Edit <span id="edit-recipebook-title"></span></h3>
+    {{ recipebook_form.as_p }}
+    <input type="submit" value="Edit recipe">
+  </form>
+  <form id="delete-recipebook-form" method="POST">{% csrf_token %}
+    <h3>Are you sure you want to delete <span id="delete-recipebook-title"></span>?</h3>
+    <input type="submit" value="Confirm delete">
+  </form>
+</div>
 {% endif %}
 {% for recipebook in objects %}
 {% include 'recipebook_meta.html' with object=recipebook own_recipebook=own_profile %}
 {% endfor %}
 {{ pagination_arrows|safe }}
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/view-recipebook.js' %}"></script>
 {% endblock %}

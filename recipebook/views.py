@@ -37,6 +37,7 @@ class RecipeBookDetailView(DetailView):
         context = super(RecipeBookDetailView, self).get_context_data(**kwargs)
         context.update(paginate(self.request, self.object.recipes.all()))
         context['own_recipebook'] = self.object.user == self.request.user
+        context['recipebook_form'] = RecipeBookForm
         return context
 
 
@@ -53,7 +54,7 @@ class RecipeBookDeleteView(DeleteView):
     dispatch = make_ownership_dispatch(lambda: RecipeBookDeleteView)
 
     def get_success_url(self):
-        return reverse('profile', args=[self.request.user.username])
+        return reverse('profile_recipebooks', args=[self.request.user.username])
 
 
 def recipe_book_ajax_create_view(request):

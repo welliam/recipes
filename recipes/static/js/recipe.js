@@ -43,13 +43,6 @@
     makeModal('.recipe-reviews form', 'Write Review', '#id_title');
   }
 
-  function initializeRecipeEditForm(formQuery, linkQuery) {
-    var form = $(formQuery),
-        link = $(linkQuery);
-    link.on('click', () => recipes.dialog(form));
-    link.attr('href', '#');
-  }
-
   function initializeUpdateForm() {
     recipes.initializeEditLink('#edit-recipe-form', '.recipe-edit-link');
   }

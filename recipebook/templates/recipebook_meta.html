@@ -2,11 +2,9 @@
   <header>
     <h2><a href={% url 'view_recipebook' object.id %}>{{ object.title }}</a></h2>
     {% if own_recipebook %}
-    <a href="{% url 'edit_recipebook' object.id %}">Edit</a>
-    <a href="{% url 'delete_recipebook' object.id %}">Delete</a>
+    <a class="edit-recipebook-link" href="{% url 'edit_recipebook' object.id %}">Edit</a>
+    <a class="delete-recipebook-link" href="{% url 'delete_recipebook' object.id %}">Delete</a>
     {% endif %}
-    <div>
-      {{ object.description }}
-    </div>
+    <div class="recipebook-description">{{ object.description }}</div>
   </header>
 </div>

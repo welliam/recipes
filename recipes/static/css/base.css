@@ -153,6 +153,7 @@ textarea {
     margin: auto;
 }
 
+.recipebook-description,
 .recipe-description {
     white-space: pre-line;
 }

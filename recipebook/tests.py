@@ -174,10 +174,10 @@ class RecipeBookDeleteViewTests(RecipeBookTestCase):
         self.client.post(url)
         self.assertEqual(RecipeBook.objects.count(), count - 1)
 
-    def test_delete_redirects_to_profile(self):
+    def test_delete_redirects_to_recipebook_list(self):
         url = reverse('delete_recipebook', args=[self.recipebook.id])
         response = self.client.post(url)
-        redirect_url = reverse('profile', args=[self.user.username])
+        redirect_url = reverse('profile_recipebooks', args=[self.user.username])
         self.assertEqual(response.url, redirect_url)
 
     def test_get_delete_view_response_code(self):

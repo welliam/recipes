@@ -21,11 +21,17 @@ recipes = {};
     });
   }
 
-  function initializeEditLink(formQuery, linkQuery) {
-    var form = $(formQuery),
-        link = $(linkQuery);
-    link.on('click', () => recipes.dialog(form));
-    link.attr('href', '#');
+  function initializeEditLink(formQuery, linkQuery, f) {
+    var form = $(formQuery);
+    $(linkQuery).each(function (i) {
+      var link = $(this);
+      link.on('click', () => {
+        f && f(form, link);
+        recipes.dialog(form);
+      });
+      link.attr('data-old-href', link.attr('href'));
+      link.attr('href', '#');
+    });
   }
 
   recipes.dialog = dialog;
