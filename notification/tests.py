@@ -1,3 +1,4 @@
+import json
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -86,3 +87,15 @@ class ReadNotificationsTests(NotificationTestCase):
         read_count = self.user.notifications.filter(read=False).count()
         self.assertTrue(unread > 0)
         self.assertEqual(read_count, 0)
+
+
+class NotificationCountView(NotificationTestCase):
+    def setUp(self):
+        super(NotificationCountView, self).setUp()
+        self.client.force_login(self.user)
+
+    def test_notification_count_view(self):
+        response = self.client.get(reverse('notification_count_view'))
+        import pdb; pdb.set_trace()
+        count = json.loads(response.content.decode())['count']
+        self.assertEqual(count, 1)

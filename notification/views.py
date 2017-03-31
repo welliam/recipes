@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 
 
@@ -10,3 +11,12 @@ def notifications_view(request):
     context = dict(notifications=notifications)
     request.user.notifications.update(read=True)
     return render(request, 'notifications.html', context=context)
+
+
+def notification_count_view(request):
+    count = sum(
+        1
+        for note in request.user.notifications.order_by('-date')
+        if note.get_object() and not note.read
+    )
+    return JsonResponse(dict(count=count))
