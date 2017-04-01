@@ -1,18 +1,15 @@
 {% extends "recipes/base.html" %}
 
 {% block content %}
+<form action="{% url 'recipe_search' %}">
+  <input name="q" type="text" placeholder="Search" value="{{ query }}" autofocus>
+</form>
+{% for recipe in objects %}
+{% include 'recipes/listed-recipe.html' with object=recipe %}
+{% empty %}
 <div class="block">
-  <form action="{% url 'recipe_search' %}">
-    <input name="q" type="text" placeholder="Search" value="{{ query }}" autofocus>
-  </form>
-  <ul>
-    {% for recipe in recipes %}
-    <li>
-      <a href="{% url 'view_recipe' recipe.id %}">{{ recipe.title }}</a>
-      by
-      <a href="{% url 'profile' recipe.user.username %}">{{ recipe.user }}</a>
-    </li>
-    {% endfor %}
-  </ul>
+  <h2>No results found</h2>
+  Words less than 3 characters long are disregarded.
 </div>
+{% endfor %}
 {% endblock %}

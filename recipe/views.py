@@ -80,12 +80,15 @@ class RecipeSearchView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(RecipeSearchView, self).get_context_data(**kwargs)
-        query = self.request.GET['q']
-        context['recipes'] = reduce(
-            lambda o, w: o.filter(title__icontains=w),
-            query.split()[:20],
-            Recipe.objects.all()
-        )
+        query = self.request.GET.get('q', '')
+        cleaned = [w for w in query.split() if w[2:]]
+        if cleaned:
+            search_results = reduce(
+                lambda o, w: o.filter(title__icontains=w),
+                cleaned,
+                Recipe.objects.all()
+            )
+            context.update(paginate(self.request, search_results))
         context['query'] = query
         return context
 

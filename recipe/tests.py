@@ -212,23 +212,25 @@ class SearchViewTests(TestCase):
     def setUp(self):
         """Insert some recipes into the db"""
         self.title = 'good recipe'
-        user = User(username="friend")
-        user.save()
+        self.user = User(username="friend")
+        self.user.save()
+        self.add_recipe(self.user, self.title)
+        self.add_recipe(self.user, 'bad_recipe')
+        self.response = self.get_response()
+
+    def get_response(self, query='good'):
+        url = reverse('recipe_search') + '?q={}'.format(query)
+        return self.client.get(url)
+
+    def add_recipe(self, user, title):
+        """Insert a recipe with self.title into the database."""
         Recipe(
             user=user,
-            title=self.title,
+            title=title,
             description='test',
             ingredients='test',
             directions='test'
         ).save()
-        Recipe(
-            user=user,
-            title='bad recipe',
-            description='test',
-            ingredients='test',
-            directions='test'
-        ).save()
-        self.response = self.client.get(reverse('recipe_search') + '?q=good')
 
     def test_search_for_good_recipe(self):
         self.assertContains(self.response, self.title)
@@ -236,6 +238,22 @@ class SearchViewTests(TestCase):
     def test_search_for_good_recipe_retains_search(self):
         """Test that search bar contains query."""
         self.assertContains(self.response, 'value="good"')
+
+    def test_search_paginates(self):
+        for i in range(50):
+            self.add_recipe(self.user, self.title)
+        self.assertContains(self.get_response(), self.title, 10)
+
+    def test_search_short_words_returns_nothing(self):
+        for c1, c2 in zip(self.title, self.title[1:]):
+            self.assertNotContains(self.get_response(c1 + c2), self.title)
+
+    def test_empty_search_returns_nothing(self):
+        self.assertNotContains(self.get_response(''), self.title)
+
+    def test_get_without_querystring(self):
+        status_code = self.client.get(reverse('recipe_search')).status_code
+        self.assertEqual(status_code, 200)
 
 
 class EditViewTests(TestCase):
