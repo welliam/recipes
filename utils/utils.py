@@ -24,6 +24,15 @@ def make_ownership_dispatch(get_class):
     return f
 
 
+def format_querystring(d):
+    return ';'.join('{}={}'.format(k, d[k]) for k in d)
+
+
+def format_url(uri, params, page_param, page):
+    params[page_param] = page
+    return '{}?{}'.format(uri, format_querystring(params))
+
+
 def paginate(request, objects, page_param='p', per_page=10):
     """Returns an object with a pages object and relevant objects.
 
@@ -31,18 +40,23 @@ def paginate(request, objects, page_param='p', per_page=10):
       objects=<paginated objects>,
       pages=<rendered pages>
     )"""
+    params = request.GET.dict()
     try:
-        page = int(request.GET.get(page_param, 1))
+        page = max(int(params.get(page_param, 1)), 1)
     except ValueError:
         page = 1
     uri = request.get_full_path().split('?')[0]
-    url_fmtstr = '{}?{}={}'.format(uri, page_param, '{}')
     count = len(objects)
-    pages_count = max(ceil(count / per_page), 1)
+    num_pages = max(ceil(count / per_page), 1)
+    previous_page = next_page = None
+    if page > 1:
+        previous_page = format_url(uri, params, page_param, page-1)
+    if page <= num_pages:
+        next_page = format_url(uri, params, page_param, page+1)
     return dict(
         pagination_arrows=render_to_string('recipes/pages.html', dict(
-            previous_page_url=page != 1 and url_fmtstr.format(page-1),
-            next_page_url=page != pages_count and url_fmtstr.format(page+1)
+            previous_page_url=previous_page,
+            next_page_url=next_page
         )),
         objects=objects[(page-1)*per_page:page*per_page]
     )
