@@ -47,3 +47,5 @@ def define_notification_type(type, model, template_name):
 
 
 define_notification_type('review', Review, 'notifications/review.html')
+
+define_notification_type('follow', User, 'notifications/follow.html')

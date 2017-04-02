@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from utils.utils import paginate
 from .models import UserProfile
 from recipebook.models import RecipeBookForm
+from notification.models import Notification
 
 
 class ProfileDetailView(DetailView):
@@ -48,6 +49,11 @@ def follow_view(request, slug):
     user = User.objects.filter(username=slug).first()
     if request.POST['follow'] == 'follow':
         request.user.profile.follows.add(user)
+        Notification(
+            user=user,
+            type='follow',
+            object_key=request.user.id
+        ).save()
     else:
         request.user.profile.follows.remove(user)
     return HttpResponseRedirect(reverse('profile', args=[slug]))

@@ -116,3 +116,17 @@ class ReviewNotificationTests(NotificationTestCase):
         self.assertEqual(self.user.notifications.count(), count + amount)
         self.assertEqual(reviewer.notifications.count(), 0)
 
+
+class FollowNotificationTests(NotificationTestCase):
+    def setUp(self):
+        """Set up two users."""
+        super(FollowNotificationTests, self).setUp()
+        self.followed_user = User(username='friend')
+        self.followed_user.save()
+
+    def test_following_adds_notification(self):
+        count = self.followed_user.notifications.count()
+        self.client.force_login(self.user)
+        url = reverse('follow', args=[self.followed_user])
+        self.client.post(url, dict(follow='follow'))
+        self.assertEqual(self.followed_user.notifications.count(), count + 1)
