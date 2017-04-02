@@ -52,7 +52,9 @@ recipes = {};
 
   $(() => {
     initDialog();
-    initNotificationsCheck();
+    if (window.LOGGED_IN) {
+      initNotificationsCheck();
+    }
   });
 })();
 
