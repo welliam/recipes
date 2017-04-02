@@ -51,7 +51,7 @@ def paginate(request, objects, page_param='p', per_page=10):
     previous_page = next_page = None
     if page > 1:
         previous_page = format_url(uri, params, page_param, page-1)
-    if page <= num_pages:
+    if page < num_pages:
         next_page = format_url(uri, params, page_param, page+1)
     return dict(
         pagination_arrows=render_to_string('recipes/pages.html', dict(
