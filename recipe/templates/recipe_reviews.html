@@ -1,6 +1,12 @@
 {% extends 'recipes/base.html' %}
 
 {% block content %}
+<div class="modal-forms">
+  <form id="delete-review-form" method="POST">{% csrf_token %}
+    <h3>Are you sure you want to delete <span id="delete-review-title"></span>?</h3>
+    <input type="submit" value="Confirm delete">
+  </form>
+</div>
 <div class="block recipe-reviews">
   <h2>Reviews for <a href="{% url 'view_recipe' object.id %}">{{ object.title }}</a></h2>
   {% for review in objects %}
@@ -9,5 +15,10 @@
   No reviews yet...
   {% endfor %}
 </div>
-  {{ paginated_arrows|safe }}
+{{ paginated_arrows|safe }}
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/review.js' %}"></script>
 {% endblock %}

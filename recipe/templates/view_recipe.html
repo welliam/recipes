@@ -12,6 +12,10 @@
     <h3>Are you sure you want to delete {{ object.title }}?</h3>
     <input type="submit" value="Confirm delete">
   </form>
+  <form id="delete-review-form" method="POST">{% csrf_token %}
+    <h3>Are you sure you want to delete <span id="delete-review-title"></span>?</h3>
+    <input type="submit" value="Confirm delete">
+  </form>
 </div>
 {% endif %}
 <div class="block">
@@ -103,4 +107,5 @@
 {% block scripts %}
 {% load static %}
 <script src="{% static 'js/recipe.js' %}"></script>
+<script src="{% static 'js/review.js' %}"></script>
 {% endblock %}
