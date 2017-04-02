@@ -35,6 +35,40 @@ class NotificationTestCase(TestCase):
         self.notification.save()
 
 
+class NotificationsViewTests(NotificationTestCase):
+    def setUp(self):
+        super(NotificationsViewTests, self).setUp()
+        self.client.force_login(self.user)
+        self.response = self.client.get(reverse('view_notifications'))
+
+    def test_notification_links_review(self):
+        self.assertContains(self.response, self.review.id)
+
+
+class ReadNotificationsTests(NotificationTestCase):
+    def setUp(self):
+        super(ReadNotificationsTests, self).setUp()
+        self.client.force_login(self.user)
+
+    def test_reading_notifications(self):
+        unread = self.user.notifications.filter(read=False).count()
+        self.client.get(reverse('view_notifications'))
+        read_count = self.user.notifications.filter(read=False).count()
+        self.assertTrue(unread > 0)
+        self.assertEqual(read_count, 0)
+
+
+class NotificationCountView(NotificationTestCase):
+    def setUp(self):
+        super(NotificationCountView, self).setUp()
+        self.client.force_login(self.user)
+
+    def test_notification_count_view(self):
+        response = self.client.get(reverse('notification_count_view'))
+        count = json.loads(response.content.decode())['count']
+        self.assertEqual(count, 1)
+
+
 class ReviewNotificationTests(NotificationTestCase):
     def setUp(self):
         """Set up a recipe and review."""
@@ -82,36 +116,3 @@ class ReviewNotificationTests(NotificationTestCase):
         self.assertEqual(self.user.notifications.count(), count + amount)
         self.assertEqual(reviewer.notifications.count(), 0)
 
-
-class NotificationsViewTests(NotificationTestCase):
-    def setUp(self):
-        super(NotificationsViewTests, self).setUp()
-        self.client.force_login(self.user)
-        self.response = self.client.get(reverse('view_notifications'))
-
-    def test_notification_links_review(self):
-        self.assertContains(self.response, self.review.id)
-
-
-class ReadNotificationsTests(NotificationTestCase):
-    def setUp(self):
-        super(ReadNotificationsTests, self).setUp()
-        self.client.force_login(self.user)
-
-    def test_reading_notifications(self):
-        unread = self.user.notifications.filter(read=False).count()
-        self.client.get(reverse('view_notifications'))
-        read_count = self.user.notifications.filter(read=False).count()
-        self.assertTrue(unread > 0)
-        self.assertEqual(read_count, 0)
-
-
-class NotificationCountView(NotificationTestCase):
-    def setUp(self):
-        super(NotificationCountView, self).setUp()
-        self.client.force_login(self.user)
-
-    def test_notification_count_view(self):
-        response = self.client.get(reverse('notification_count_view'))
-        count = json.loads(response.content.decode())['count']
-        self.assertEqual(count, 1)
