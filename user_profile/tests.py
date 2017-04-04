@@ -80,9 +80,6 @@ class ProfileViewTests(TestCase):
         url = reverse('view_recipebook', args=[self.recipebook.id])
         self.assertContains(self.response, url)
 
-    def test_profile_shows_followed_users(self):
-        self.assertContains(self.response, self.followed_user.username)
-
     def test_other_profile_has_follow_button(self):
         self.client.force_login(self.user)
         another_user = User(username='one_more')
@@ -164,6 +161,43 @@ class ProfileViewTests(TestCase):
     def test_profile_links_profile_recipebooks(self):
         url = reverse('profile_recipebooks', args=[self.user.username])
         self.assertContains(self.response, url)
+
+    def test_profile_links_followers_list(self):
+        url = reverse('followers_list', args=[self.user.username])
+        self.assertContains(self.response, url)
+
+    def test_profile_links_following_list(self):
+        url = reverse('following_list', args=[self.user.username])
+        self.assertContains(self.response, url)
+
+
+class FollowListsTestCase(TestCase):
+    def setUp(self):
+        user = User(username='someone')
+        user.save()
+        self.client.force_login(user)
+        for i in range(50):
+            other_user = User(username='user_follows_{}'.format(i))
+            other_user.save()
+            user.profile.follows.add(other_user)
+        for i in range(50):
+            other_user = User(username='following_user_{}'.format(i))
+            other_user.save()
+            other_user.profile.follows.add(user)
+        following_url = reverse('following_list', args=[user])
+        self.following_response = self.client.get(following_url)
+        follower_url = reverse('followers_list', args=[user])
+        self.follower_response = self.client.get(follower_url)
+
+    def test_following_view_has_users(self):
+        self.assertContains(self.following_response, 'user_follows', 20)
+        # 20 instances of username in response; one for profile link,
+        # one for listing
+
+    def test_follower_view_has_users(self):
+        self.assertContains(self.follower_response, 'following_user', 20)
+        # 20 instances of username in response; one for profile link,
+        # one for listing
 
 
 class ProfileEditTests(TestCase):

@@ -1,0 +1,21 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+<div class="block">
+  <h2>
+    {% if following_list %}
+    Users followed by
+    <a href="{% url 'profile' request.user.username %}">{{ request.user.username }}</a>
+    {% else %}
+    <a href="{% url 'profile' request.user.username %}">{{ request.user.username }}</a>'s
+    followers
+    {% endif %}
+  </h2>
+  <ul>
+    {% for user in objects %}
+    <li><a href="{% url 'profile' user.username %}">{{ user.username }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+{{ pagination_arrows|safe }}
+{% endblock %}

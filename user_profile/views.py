@@ -22,7 +22,7 @@ class ProfileDetailView(DetailView):
         context['own_profile'] = self.object == self.request.user
         recipebooks = self.object.recipebooks
         context['recipebooks'] = recipebooks.order_by('-date_created')[:5]
-        context['follows'] = self.object.profile.follows.all()[:5]
+        context['follower_count'] = get_followers(self.object).count()
         if self.request.user.is_authenticated():
             context['followed'] = self.request.user.profile.follows.filter(
                 username=self.object.username
@@ -73,3 +73,33 @@ class RecipeBooksListView(DetailView):
         ))
         context['recipebook_form'] = RecipeBookForm
         return context
+
+
+class FollowingListView(DetailView):
+    model = User
+    template_name = 'following_list.html'
+    slug_field = 'username'
+
+    def get_context_data(self, **kwargs):
+        context = super(FollowingListView, self).get_context_data(**kwargs)
+        context['following_list'] = True
+        context.update(paginate(
+            self.request,
+            self.object.profile.follows.all()
+        ))
+        return context
+
+
+class FollowersListView(DetailView):
+    model = User
+    template_name = 'following_list.html'
+    slug_field = 'username'
+
+    def get_context_data(self, **kwargs):
+        context = super(FollowersListView, self).get_context_data(**kwargs)
+        context.update(paginate(self.request, get_followers(self.object)))
+        return context
+
+
+def get_followers(user):
+    return User.objects.filter(profile__follows__username=user.username)

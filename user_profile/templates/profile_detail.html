@@ -17,16 +17,16 @@
     <div class="bio">{% if object.profile.bio %}{{ object.profile.bio }}{% else %}No biography yet... {% endif %}</div>
   </section>
   <section>
-    <h3>Following</h3>
-    <ul>
-      {% for follow in follows %}
-      <li>
-        <a href="{% url 'profile' follow.username %}">{{ follow.username }}</a>
-      </li>
-      {% empty %}
-      Following no one yet...
-      {% endfor %}
-    </ul>
+    <h3>
+      <a href="{% url 'following_list' object.username %}">
+        Following ({{ object.profile.follows.count }})
+      </a>
+    </h3>
+    <h3>
+      <a href="{% url 'followers_list' object.username %}">
+        Followers ({{ follower_count }})
+      </a>
+    </h3>
   </section>
   <section>
     <h3>Recipebooks</h3>
