@@ -5,9 +5,9 @@
   <h2>
     {% if following_list %}
     Users followed by
-    <a href="{% url 'profile' request.user.username %}">{{ request.user.username }}</a>
+    <a href="{% url 'profile' object.username %}">{{ object.username }}</a>
     {% else %}
-    <a href="{% url 'profile' request.user.username %}">{{ request.user.username }}</a>'s
+    <a href="{% url 'profile' object.username %}">{{ object.username }}</a>'s
     followers
     {% endif %}
   </h2>
