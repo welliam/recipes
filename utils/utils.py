@@ -4,7 +4,18 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 
 
-def make_ownership_dispatch(get_class):
+def ownership_dispatch_factory(cls):
+    def f(self, request, *args, **kwargs):
+        if self.request.user.is_anonymous():
+            return HttpResponseRedirect(reverse('auth_login'))
+        elif self.get_object().user != self.request.user:
+            return HttpResponseForbidden()
+        else:
+            return super(cls, self).dispatch(request, *args, **kwargs)
+    return f
+
+
+def ownership_dispatch(cls):
     """Make ownership based dispatch for use in UpdateViews, DeleteViews, etc.
 
     `get_class` is a callable which returns the class the dispatch
@@ -14,14 +25,8 @@ def make_ownership_dispatch(get_class):
     request's user. If that attribute is not on the user object, the
     user is assumed to be an AnonymousUser (i.e. not logged in).
     """
-    def f(self, request, *args, **kwargs):
-        if self.request.user.is_anonymous():
-            return HttpResponseRedirect(reverse('auth_login'))
-        elif self.get_object().user != self.request.user:
-            return HttpResponseForbidden()
-        else:
-            return super(get_class(), self).dispatch(request, *args, **kwargs)
-    return f
+    cls.dispatch = ownership_dispatch_factory(cls)
+    return cls
 
 
 def format_querystring(d):

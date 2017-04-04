@@ -6,7 +6,7 @@ from django.views.generic import (
      TemplateView, DetailView, CreateView, UpdateView, DeleteView
 )
 from django.http import HttpResponseRedirect, HttpResponseForbidden
-from utils.utils import make_ownership_dispatch, paginate
+from utils.utils import paginate, ownership_dispatch
 from .models import Recipe, RecipeForm
 from recipebook.models import RecipeBook, RecipeBookForm
 from review.models import ReviewForm
@@ -92,21 +92,20 @@ class RecipeSearchView(TemplateView):
         context['query'] = query
         return context
 
-
+@ownership_dispatch
 class RecipeUpdateView(UpdateView):
     """Update recipe."""
     model = Recipe
     template_name = 'edit_recipe.html'
     fields = ['title', 'description', 'ingredients', 'directions']
-    dispatch = make_ownership_dispatch(lambda: RecipeUpdateView)
 
 
+@ownership_dispatch
 class RecipeDeleteView(DeleteView):
     """Delete recipe."""
     model = Recipe
     template_name = 'delete_recipe.html'
     success_url = reverse_lazy('home')
-    dispatch = make_ownership_dispatch(lambda: RecipeDeleteView)
 
 
 def any_recipebooks_user_mismatched(user, book_pks):

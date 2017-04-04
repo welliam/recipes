@@ -7,7 +7,7 @@ from django.views.generic import (
 )
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from utils.utils import paginate, make_ownership_dispatch
+from utils.utils import paginate, ownership_dispatch
 from .models import RecipeBook, RecipeBookForm
 
 
@@ -41,17 +41,17 @@ class RecipeBookDetailView(DetailView):
         return context
 
 
+@ownership_dispatch
 class RecipeBookUpdateView(UpdateView):
     model = RecipeBook
     template_name = 'edit_recipebook.html'
     fields = ['title', 'description']
-    dispatch = make_ownership_dispatch(lambda: RecipeBookUpdateView)
 
 
+@ownership_dispatch
 class RecipeBookDeleteView(DeleteView):
     model = RecipeBook
     template_name = 'delete_recipebook.html'
-    dispatch = make_ownership_dispatch(lambda: RecipeBookDeleteView)
 
     def get_success_url(self):
         return reverse('profile_recipebooks', args=[self.request.user.username])
