@@ -5,7 +5,7 @@ from recipe.models import Recipe
 from recipebook.models import RecipeBook
 
 
-class UserProfileTestCase(TestCase):
+class UserProfileTests(TestCase):
     """Test case for profile mode."""
 
     def setUp(self):
@@ -19,7 +19,7 @@ class UserProfileTestCase(TestCase):
         self.assertTrue(hasattr(self.user.profile, 'bio'))
 
 
-class ProfileViewTestCase(TestCase):
+class ProfileViewTests(TestCase):
     """Test case for the profile view."""
 
     def setUp(self):
@@ -166,7 +166,7 @@ class ProfileViewTestCase(TestCase):
         self.assertContains(self.response, url)
 
 
-class ProfileEditTestCase(TestCase):
+class ProfileEditTests(TestCase):
     """Test case for editing profiles."""
 
     def setUp(self):
@@ -181,7 +181,7 @@ class ProfileEditTestCase(TestCase):
         self.assertEqual(User.objects.last().profile.bio, bio)
 
 
-class RecipeBooksTestCase(TestCase):
+class RecipeBooksTests(TestCase):
     """Test case for recipebooks list view."""
 
     def setUp(self):
