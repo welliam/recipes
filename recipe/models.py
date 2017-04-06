@@ -32,6 +32,13 @@ class Recipe(models.Model):
     ingredients = models.TextField()
     directions = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
+    origin_recipe = models.ForeignKey(
+        'self',
+        on_delete=models.deletion.CASCADE,
+        related_name='recipe_derivations',
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.title
