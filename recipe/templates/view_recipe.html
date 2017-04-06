@@ -29,6 +29,11 @@
           <a href="#reviews">{{ object.get_average_score }}</a>
         </span>
         {% endif %}
+        {% if object.origin_recipe %}
+        <span class="average-rating">
+          Derived from <a href="{% url 'view_recipe' object.origin_recipe.id %}">{{ object.origin_recipe.title }}</a>
+        </span>
+        {% endif %}
       </div>
       {% if own_recipe %}
       <a class="recipe-edit-link" href="{% url 'edit_recipe' object.id %}">Edit</a>

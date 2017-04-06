@@ -481,3 +481,34 @@ class RecipeModalFormsTests(TestCase):
 
     def test_recipe_view_has_delete_form(self):
         self.assert_has_form('delete_recipe')
+
+
+class DerivedRecipeTests(TestCase):
+    def setUp(self):
+        self.user, self.origin_recipe = create_recipe_and_user()
+        self.derived_recipe = Recipe(
+            user=self.user,
+            title="derived recipe",
+            description="this recipe is derived from another",
+            ingredients="food",
+            directions="make it",
+            origin_recipe=self.origin_recipe
+        )
+        self.derived_recipe.save()
+
+    def test_derived_recipe_view_links_origin(self):
+        origin_recipe_url = reverse(
+            'view_recipe', args=[self.origin_recipe.id]
+        )
+        derived_recipe_url = reverse(
+            'view_recipe', args=[self.derived_recipe.id]
+        )
+        response = self.client.get(derived_recipe_url)
+        self.assertContains(response, origin_recipe_url)
+
+    def test_derived_recipe_view_has_origin_title(self):
+        derived_recipe_url = reverse(
+            'view_recipe', args=[self.derived_recipe.id]
+        )
+        response = self.client.get(derived_recipe_url)
+        self.assertContains(response, self.origin_recipe.title)
