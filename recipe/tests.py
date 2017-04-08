@@ -512,3 +512,31 @@ class DerivedRecipeTests(TestCase):
         )
         response = self.client.get(derived_recipe_url)
         self.assertContains(response, self.origin_recipe.title)
+
+    def test_derive_recipe_form_in_recipe_view_logged_in(self):
+        self.client.force_login(self.user)
+        url = reverse('view_recipe', args=[self.origin_recipe.id])
+        response = self.client.get(url)
+        self.assertContains(response, 'name="origin_recipe"')
+        value_attribute = 'value="{}"'.format(self.origin_recipe.id)
+        self.assertContains(response, value_attribute)
+
+    def test_derive_recipe_form_not_in_recipe_view_not_logged_in(self):
+        url = reverse('view_recipe', args=[self.origin_recipe.id])
+        response = self.client.get(url)
+        self.assertNotContains(response, 'name="origin_recipe"')
+        value_attribute = 'value="{}"'.format(self.origin_recipe.id)
+        self.assertNotContains(response, value_attribute)
+
+    def test_derive_recipe_view_has_form(self):
+        self.client.force_login(self.user)
+        url = reverse('derive_recipe', args=[self.origin_recipe.id])
+        response = self.client.get(url)
+        self.assertContains(response, 'name="origin_recipe"')
+        value_attribute = 'value="{}"'.format(self.origin_recipe.id)
+        self.assertContains(response, value_attribute)
+
+    def test_derive_recipe_view_redirects_not_logged_in(self):
+        url = reverse('derive_recipe', args=[self.origin_recipe.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)

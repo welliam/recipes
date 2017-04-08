@@ -54,6 +54,7 @@ class RecipeDetailView(DetailView):
                 recipebooks,
                 (self.object in book.recipes.all() for book in recipebooks)
             )
+        context['derive_form'] = RecipeForm(initial=self.object.__dict__)
         context['review_form'] = ReviewForm
         context['reviews'] = self.object.reviews.order_by('-date_created')[:5]
         context['request_user'] = self.request.user
@@ -91,6 +92,7 @@ class RecipeSearchView(TemplateView):
             context.update(paginate(self.request, search_results))
         context['query'] = query
         return context
+
 
 @ownership_dispatch
 class RecipeUpdateView(UpdateView):
@@ -138,4 +140,15 @@ class ReviewsListView(DetailView):
             self.request,
             self.object.reviews.order_by('-date_created'))
         )
+        return context
+
+
+class DeriveRecipeView(LoginRequiredMixin, TemplateView):
+    template_name = 'derive_recipe.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DeriveRecipeView, self).get_context_data(**kwargs)
+        recipe = Recipe.objects.filter(pk=self.kwargs['pk']).first()
+        context['object'] = recipe
+        context['form'] = RecipeForm(initial=recipe.__dict__)
         return context

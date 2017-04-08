@@ -39,6 +39,7 @@
       <a class="recipe-edit-link" href="{% url 'edit_recipe' object.id %}">Edit</a>
       <a class="recipe-delete-link" href="{% url 'delete_recipe' object.id %}">Delete</a>
       {% endif %}
+      <a class="derive-recipe-link" href="{% url 'derive_recipe' object.id %}">Derive</a>
     </header>
     <section class="recipe-description">
       <h3>Description</h3>

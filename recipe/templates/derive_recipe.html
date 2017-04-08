@@ -1,0 +1,10 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+<h2>Derive {{ object.title }}</h2>
+<form id="derive-recipe-form" action="{% url 'new_recipe' %}" method="POST">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="hidden" name="origin_recipe" value="{{ object.id }}">
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}
