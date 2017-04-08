@@ -38,6 +38,13 @@ def format_url(uri, params, page_param, page):
     return '{}?{}'.format(uri, format_querystring(params))
 
 
+def get_page(params, page_param):
+    try:
+        return max(int(params.get(page_param, 1)), 1)
+    except ValueError:
+        return 1
+
+
 def paginate(request, objects, page_param='p', per_page=10):
     """Returns an object with a pages object and relevant objects.
 
@@ -46,13 +53,9 @@ def paginate(request, objects, page_param='p', per_page=10):
       pages=<rendered pages>
     )"""
     params = request.GET.dict()
-    try:
-        page = max(int(params.get(page_param, 1)), 1)
-    except ValueError:
-        page = 1
+    page = get_page(params, page_param)
     uri = request.get_full_path().split('?')[0]
-    count = len(objects)
-    num_pages = max(ceil(count / per_page), 1)
+    num_pages = max(ceil(len(objects) / per_page), 1)
     previous_page = next_page = None
     if page > 1:
         previous_page = format_url(uri, params, page_param, page-1)
