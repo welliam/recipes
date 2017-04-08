@@ -16,6 +16,12 @@
     <h3>Are you sure you want to delete <span id="delete-review-title"></span>?</h3>
     <input type="submit" value="Confirm delete">
   </form>
+  <form id="derive-recipe-form" action="{% url 'new_recipe' %}" method="POST">{% csrf_token %}
+    <h3>Derive {{ object.title }}</h3>
+    {{ recipe_form.as_p }}
+    <input type="hidden" name="origin_recipe" value="{{ object.id }}">
+    <input type="submit" value="Submit">
+  </form>
 </div>
 {% endif %}
 <div class="block">
@@ -39,7 +45,7 @@
       <a class="recipe-edit-link" href="{% url 'edit_recipe' object.id %}">Edit</a>
       <a class="recipe-delete-link" href="{% url 'delete_recipe' object.id %}">Delete</a>
       {% endif %}
-      <a class="derive-recipe-link" href="{% url 'derive_recipe' object.id %}">Derive</a>
+      <a class="recipe-derive-link" href="{% url 'derive_recipe' object.id %}">Derive</a>
     </header>
     <section class="recipe-description">
       <h3>Description</h3>

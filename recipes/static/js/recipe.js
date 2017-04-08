@@ -51,10 +51,15 @@
     recipes.initializeEditLink('#delete-recipe-form', '.recipe-delete-link');
   }
 
+  function initializeDeriveForm() {
+    recipes.initializeEditLink('#derive-recipe-form', '.recipe-derive-link');
+  }
+
   $(() => {
     initializeRecipeBookForm();
     initializeReviewsForm();
     initializeUpdateForm();
     initializeDeleteForm();
+    initializeDeriveForm()
   });
 })();
