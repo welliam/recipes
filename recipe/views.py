@@ -72,6 +72,9 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Attach user to form."""
         form.instance.user = self.request.user
+        id = self.request.POST.get('origin_recipe')
+        recipe = Recipe.objects.filter(id=id).first()
+        form.instance.origin_recipe = recipe
         return super(RecipeCreateView, self).form_valid(form)
 
 

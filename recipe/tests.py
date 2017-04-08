@@ -540,3 +540,29 @@ class DerivedRecipeTests(TestCase):
         url = reverse('derive_recipe', args=[self.origin_recipe.id])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
+
+    def test_post_derived_recipe(self):
+        self.client.force_login(self.user)
+        url = reverse('new_recipe')
+        self.client.post(url, dict(
+            title="derived recipe",
+            description="this recipe is derived from another",
+            ingredients="food",
+            directions="make it",
+            origin_recipe=self.origin_recipe.id
+        ))
+        posted_recipe = Recipe.objects.last().origin_recipe
+        self.assertEqual(posted_recipe, self.origin_recipe)
+
+    def test_post_derived_wrong_recipe(self):
+        self.client.force_login(self.user)
+        url = reverse('new_recipe')
+        self.client.post(url, dict(
+            title="derived recipe",
+            description="this recipe is derived from another",
+            ingredients="food",
+            directions="make it",
+            origin_recipe=0
+        ))
+        posted_recipe = Recipe.objects.last().origin_recipe
+        self.assertEqual(posted_recipe, None)
