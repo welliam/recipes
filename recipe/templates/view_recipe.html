@@ -1,8 +1,8 @@
 {% extends 'recipes/base.html' %}
 
 {% block content %}
-{% if own_recipe %}
 <div class="modal-forms">
+  {% if own_recipe %}
   <form id="edit-recipe-form" action="{% url 'edit_recipe' object.id %}" method="POST">{% csrf_token %}
     <h3>Edit {{ object.title }}</h3>
     {{ recipe_form.as_p }}
@@ -16,6 +16,7 @@
     <h3>Are you sure you want to delete <span id="delete-review-title"></span>?</h3>
     <input type="submit" value="Confirm delete">
   </form>
+  {% endif %}
   <form id="derive-recipe-form" action="{% url 'new_recipe' %}" method="POST">{% csrf_token %}
     <h3>Derive {{ object.title }}</h3>
     {{ recipe_form.as_p }}
@@ -23,7 +24,6 @@
     <input type="submit" value="Submit">
   </form>
 </div>
-{% endif %}
 <div class="block">
   <div class="recipe">
     <header>
