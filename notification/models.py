@@ -2,6 +2,7 @@ from django.template.loader import get_template
 from django.db import models
 from django.contrib.auth.models import User
 from review.models import Review
+from recipe.models import Recipe
 
 
 NOTIFICATION_TYPES = {}
@@ -49,3 +50,5 @@ def define_notification_type(type, model, template_name):
 define_notification_type('review', Review, 'notifications/review.html')
 
 define_notification_type('follow', User, 'notifications/follow.html')
+
+define_notification_type('derive', Recipe, 'notifications/derive.html')

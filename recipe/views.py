@@ -10,6 +10,7 @@ from utils.utils import paginate, ownership_dispatch
 from .models import Recipe, RecipeForm
 from recipebook.models import RecipeBook, RecipeBookForm
 from review.models import ReviewForm
+from notification.models import Notification
 
 
 def splitDirectionLine(direction):
@@ -73,8 +74,14 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         """Attach user to form."""
         form.instance.user = self.request.user
         id = self.request.POST.get('origin_recipe')
-        recipe = Recipe.objects.filter(id=id).first()
-        form.instance.origin_recipe = recipe
+        origin_recipe = Recipe.objects.filter(id=id).first()
+        if origin_recipe:
+            form.instance.origin_recipe = origin_recipe
+            Notification(
+                user=origin_recipe.user,
+                type='derive',
+                object_key=form.instance.id
+            ).save()
         return super(RecipeCreateView, self).form_valid(form)
 
 

@@ -130,3 +130,23 @@ class FollowNotificationTests(NotificationTestCase):
         url = reverse('follow', args=[self.followed_user])
         self.client.post(url, dict(follow='follow'))
         self.assertEqual(self.followed_user.notifications.count(), count + 1)
+
+
+class RecipeDerivationTests(NotificationTestCase):
+    def setUp(self):
+        """Set up two users."""
+        super(RecipeDerivationTests, self).setUp()
+        self.deriving_user = User(username='friend')
+        self.deriving_user.save()
+        self.client.force_login(self.deriving_user)
+
+    def test_deriving_notifies_original_user(self):
+        count = self.user.notifications.count()
+        self.client.post(reverse('new_recipe'), dict(
+            title='derived recipe',
+            description='this recipe is derived from another',
+            ingredients='food',
+            directions='etc',
+            origin_recipe=self.recipe.id,
+        ))
+        self.assertEqual(self.user.notifications.count(), count + 1)

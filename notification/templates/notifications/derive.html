@@ -1,0 +1,1 @@
+<a href="{% url 'profile' object.user.username %}">{{ object.user.username }}</a> derived <a href="{% url 'view_recipe' object.origin_recipe.id %}">{{ object.origin_recipe.title }}</a> as <a href="{% url 'view_recipe' object.id %}">{{ object.title }}</a>
