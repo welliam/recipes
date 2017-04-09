@@ -558,11 +558,11 @@ class DerivedRecipeTests(TestCase):
         self.client.force_login(self.user)
         url = reverse('new_recipe')
         self.client.post(url, dict(
-            title="derived recipe",
+            title="incorrectly derived recipe",
             description="this recipe is derived from another",
             ingredients="food",
             directions="make it",
             origin_recipe=0
         ))
-        posted_recipe = Recipe.objects.last().origin_recipe
-        self.assertEqual(posted_recipe, None)
+        posted_recipe = Recipe.objects.order_by('date_created').last()
+        self.assertEqual(posted_recipe.origin_recipe, None)
