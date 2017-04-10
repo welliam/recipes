@@ -36,6 +36,9 @@ class Notification(models.Model):
         model = NOTIFICATION_TYPES[self.type].model
         return model.objects.filter(id=self.object_key).first()
 
+    def __str__(self):
+        return '{} ({})'.format(self.type, self.object_key)
+
     def render(self):
         search = self.get_object()
         if search is None:

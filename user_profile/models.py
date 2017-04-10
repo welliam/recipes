@@ -18,6 +18,9 @@ class UserProfile(models.Model):
         related_name="followers"
     )
 
+    def __str__(self):
+        return "{}'s profile".format(self.user.username)
+
 
 @receiver(post_save, sender=User)
 def update_tracker_profile(sender, **kwargs):
