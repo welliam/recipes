@@ -551,8 +551,8 @@ class DerivedRecipeTests(TestCase):
             directions="make it",
             origin_recipe=self.origin_recipe.id
         ))
-        posted_recipe = Recipe.objects.last().origin_recipe
-        self.assertEqual(posted_recipe, self.origin_recipe)
+        posted_recipe = Recipe.objects.order_by('date_created').last()
+        self.assertEqual(posted_recipe.origin_recipe, self.origin_recipe)
 
     def test_post_derived_wrong_recipe(self):
         self.client.force_login(self.user)
