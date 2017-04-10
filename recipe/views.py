@@ -13,32 +13,6 @@ from review.models import ReviewForm
 from notification.models import Notification
 
 
-def splitDirectionLine(direction):
-    """Split a direction line into its summary and details."""
-    try:
-        t, d = direction.split('\n', 1)
-    except ValueError:
-        t, d = direction, ''
-    return dict(summary=t.strip(), details=d.strip())
-
-
-def removeNewlineWhitespace(s):
-    """Remove whitespace surrounding newlines.
-
-    Also remove \rs."""
-    return re.sub('[ \t]*\n[ \t]*', '\n', re.sub('\r', '', s))
-
-
-def structureDirections(directions):
-    """Structure directions.
-
-    Directions are entered like:
-    <direction summary>\n<direction details>...
-    """
-    directionLines = removeNewlineWhitespace(directions).split('\n\n')
-    return map(splitDirectionLine, directionLines)
-
-
 class RecipeDetailView(DetailView):
     """View that renders a recipe."""
     model = Recipe
@@ -119,26 +93,6 @@ class RecipeDeleteView(DeleteView):
     template_name = 'delete_recipe.html'
     success_url = reverse_lazy('home')
 
-
-def any_recipebooks_user_mismatched(user, book_pks):
-    for pk in book_pks:
-        book = RecipeBook.objects.filter(id=pk).first()
-        if book and book.user != user:
-            return True
-
-
-def update_recipebooks(request, pk):
-    if request.method == 'POST':
-        books = request.POST.getlist('books')
-        recipe = Recipe.objects.filter(pk=pk).first()
-        if request.user.is_anonymous():
-            return HttpResponseRedirect(reverse('auth_login'))
-        elif any_recipebooks_user_mismatched(request.user, books):
-            return HttpResponseForbidden()
-        recipe.recipebooks.set(books)
-    return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
-
-
 class ReviewsListView(DetailView):
     """View that renders a recipe."""
     model = Recipe
@@ -162,3 +116,48 @@ class DeriveRecipeView(LoginRequiredMixin, TemplateView):
         context['object'] = recipe
         context['form'] = RecipeForm(initial=recipe.__dict__)
         return context
+
+
+def update_recipebooks_view(request, pk):
+    if request.method == 'POST':
+        books = request.POST.getlist('books')
+        recipe = Recipe.objects.filter(pk=pk).first()
+        if request.user.is_anonymous():
+            return HttpResponseRedirect(reverse('auth_login'))
+        elif any_recipebooks_user_mismatched(request.user, books):
+            return HttpResponseForbidden()
+        recipe.recipebooks.set(books)
+    return HttpResponseRedirect(reverse('view_recipe', args=[pk]))
+
+
+def any_recipebooks_user_mismatched(user, book_pks):
+    for pk in book_pks:
+        book = RecipeBook.objects.filter(id=pk).first()
+        if book and book.user != user:
+            return True
+
+
+def splitDirectionLine(direction):
+    """Split a direction line into its summary and details."""
+    try:
+        t, d = direction.split('\n', 1)
+    except ValueError:
+        t, d = direction, ''
+    return dict(summary=t.strip(), details=d.strip())
+
+
+def removeNewlineWhitespace(s):
+    """Remove whitespace surrounding newlines.
+
+    Also remove \rs."""
+    return re.sub('[ \t]*\n[ \t]*', '\n', re.sub('\r', '', s))
+
+
+def structureDirections(directions):
+    """Structure directions.
+
+    Directions are entered like:
+    <direction summary>\n<direction details>...
+    """
+    directionLines = removeNewlineWhitespace(directions).split('\n\n')
+    return map(splitDirectionLine, directionLines)

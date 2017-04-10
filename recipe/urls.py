@@ -5,7 +5,7 @@ from .views import (
     RecipeUpdateView,
     RecipeDeleteView,
     RecipeSearchView,
-    update_recipebooks,
+    update_recipebooks_view,
     ReviewsListView,
     DeriveRecipeView,
 )
@@ -24,7 +24,7 @@ urlpatterns = [
         name='derive_recipe'),
     url(r'search', RecipeSearchView.as_view(), name='recipe_search'),
     url(r'(?P<pk>[0-9]+)/update_recipebooks',
-        update_recipebooks,
+        update_recipebooks_view,
         name='recipe_update_recipebooks'),
     url(r'(?P<pk>[0-9]+)/reviews$',
         ReviewsListView.as_view(),
