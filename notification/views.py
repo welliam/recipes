@@ -1,7 +1,10 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 
+@login_required
 def notifications_view(request):
     notifications = (
         note
@@ -14,6 +17,8 @@ def notifications_view(request):
 
 
 def notification_count_view(request):
+    if not request.user.is_authenticated():
+        return HttpResponseForbidden()
     count = sum(
         1
         for note in request.user.notifications.order_by('-date')

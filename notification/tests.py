@@ -38,11 +38,15 @@ class NotificationTestCase(TestCase):
 class NotificationsViewTests(NotificationTestCase):
     def setUp(self):
         super(NotificationsViewTests, self).setUp()
-        self.client.force_login(self.user)
-        self.response = self.client.get(reverse('view_notifications'))
 
     def test_notification_links_review(self):
-        self.assertContains(self.response, self.review.id)
+        self.client.force_login(self.user)
+        response = self.client.get(reverse('view_notifications'))
+        self.assertContains(response, self.review.id)
+
+    def test_logged_out_redirects(self):
+        response = self.client.get(reverse('view_notifications'))
+        self.assertEqual(response.status_code, 302)
 
 
 class ReadNotificationsTests(NotificationTestCase):
@@ -61,12 +65,16 @@ class ReadNotificationsTests(NotificationTestCase):
 class NotificationCountView(NotificationTestCase):
     def setUp(self):
         super(NotificationCountView, self).setUp()
-        self.client.force_login(self.user)
 
     def test_notification_count_view(self):
+        self.client.force_login(self.user)
         response = self.client.get(reverse('notification_count_view'))
         count = json.loads(response.content.decode())['count']
         self.assertEqual(count, 1)
+
+    def test_logged_out_disallowed(self):
+        response = self.client.get(reverse('notification_count_view'))
+        self.assertEqual(response.status_code, 403)
 
 
 class ReviewNotificationTests(NotificationTestCase):
