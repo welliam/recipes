@@ -566,3 +566,25 @@ class DerivedRecipeTests(TestCase):
         ))
         posted_recipe = Recipe.objects.order_by('date_created').last()
         self.assertEqual(posted_recipe.origin_recipe, None)
+
+
+class DerivedRecipesViewTests(TestCase):
+    def setUp(self):
+        self.user, self.origin_recipe = create_recipe_and_user()
+        for i in range(30):
+            Recipe(
+                user=self.user,
+                title="derived recipe",
+                description="this recipe is derived from another",
+                ingredients="food",
+                directions="make it",
+                origin_recipe=self.origin_recipe
+            ).save()
+        url = reverse('derived_recipes', args=[self.origin_recipe.id])
+        self.response = self.client.get(url)
+
+    def test_get_derived_recipes_view(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_derived_recipes_view_has_recipes(self):
+        self.assertContains(self.response, 'derived recipe', 10)

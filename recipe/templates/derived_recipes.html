@@ -1,0 +1,10 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+  <h2>Derivations of {{ object.title }}</h2>
+  {% for recipe in objects %}
+    {% include 'recipes/listed-recipe.html' with object=recipe %}
+  {% empty %}
+    <h3>No recipes here yet...</h3>
+  {% endfor %}
+{% endblock %}

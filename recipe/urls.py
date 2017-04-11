@@ -8,6 +8,7 @@ from .views import (
     update_recipebooks_view,
     ReviewsListView,
     DeriveRecipeView,
+    DerivedRecipesListView,
 )
 
 urlpatterns = [
@@ -22,6 +23,9 @@ urlpatterns = [
     url(r'(?P<pk>[0-9]+)/derive$',
         DeriveRecipeView.as_view(),
         name='derive_recipe'),
+    url(r'(?P<pk>[0-9]+)/derivations$',
+        DerivedRecipesListView.as_view(),
+        name='derived_recipes'),
     url(r'search', RecipeSearchView.as_view(), name='recipe_search'),
     url(r'(?P<pk>[0-9]+)/update_recipebooks',
         update_recipebooks_view,

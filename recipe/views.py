@@ -118,6 +118,20 @@ class DeriveRecipeView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class DerivedRecipesListView(DetailView):
+    """View that lists derived recipes."""
+    model = Recipe
+    template_name = 'derived_recipes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DerivedRecipesListView, self).get_context_data(**kwargs)
+        context.update(paginate(
+            self.request,
+            self.object.recipe_derivations.order_by('-date_created'))
+        )
+        return context
+
+
 def update_recipebooks_view(request, pk):
     if request.method == 'POST':
         books = request.POST.getlist('books')
