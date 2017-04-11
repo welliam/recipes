@@ -123,6 +123,10 @@ class RecipeDetailTests(TestCase):
         )
         self.assertNotContains(response, recipebook.title)
 
+    def test_recipe_links_derivation_list(self):
+        url = reverse('derived_recipes', args=[self.recipe.id])
+        self.assertContains(self.response, 'href="{}"'.format(url))
+
 
 class RecipeCreateTestCase(TestCase):
     """Test creating a recipe."""

@@ -218,7 +218,7 @@ textarea {
     white-space: pre-line;
 }
 
-.average-rating {
+.recipe-by > *:nth-child(n+2) {
     border-left: solid thin;
     border-color: black;
     padding-left: 1em;

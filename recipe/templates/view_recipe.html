@@ -31,15 +31,20 @@
     <header>
       <h2>{{ object.title }}</h2>
       <div class="recipe-by">
-        By <a href="{% url 'profile' object.user %}">{{ object.user }}</a> on {{ object.date_created }}
+        <span>By <a href="{% url 'profile' object.user %}">{{ object.user }}</a> on {{ object.date_created }}</span>
         {% if object.get_average_score %}
         <span class="average-rating">
-          <a href="#reviews">{{ object.get_average_score }}</a>
+          <a href="#reviews">{{ object.get_average_score }} / 5</a>
         </span>
         {% endif %}
         {% if object.origin_recipe %}
         <span class="average-rating">
           Derived from <a href="{% url 'view_recipe' object.origin_recipe.id %}">{{ object.origin_recipe.title }}</a>
+        </span>
+        {% endif %}
+        {% if recipe.recipe_derivations.count %}
+        <span>
+          <a href="{% url 'derived_recipes' object.id %}">{{ recipe.recipe_derivations.count }} derivations</a>
         </span>
         {% endif %}
       </div>
