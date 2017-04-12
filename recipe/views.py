@@ -19,6 +19,7 @@ class RecipeDetailView(DetailView):
     template_name = 'view_recipe.html'
 
     def get_context_data(self, **kwargs):
+        """Attach necessary context."""
         context = super(RecipeDetailView, self).get_context_data(**kwargs)
         context['ingredients'] = self.object.ingredients.split('\n')
         context['directions'] = structureDirections(self.object.directions)
@@ -45,7 +46,9 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     fields = ['title', 'description', 'ingredients', 'directions']
 
     def form_valid(self, form):
-        """Attach user to form."""
+        """Attach user and origin_recipe (if supplied) to form.
+
+        Send notification for derived recipe."""
         form.instance.user = self.request.user
         id = self.request.POST.get('origin_recipe')
         origin_recipe = Recipe.objects.filter(id=id).first()
@@ -60,10 +63,11 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
 
 
 class RecipeSearchView(TemplateView):
-    """View which renders search results."""
+    """View for rendering search results."""
     template_name = "search_results.html"
 
     def get_context_data(self, **kwargs):
+        """Process and find matching objects for the query."""
         context = super(RecipeSearchView, self).get_context_data(**kwargs)
         query = self.request.GET.get('q', '')
         cleaned = [w for w in query.split() if w[2:]]
@@ -80,7 +84,7 @@ class RecipeSearchView(TemplateView):
 
 @ownership_dispatch
 class RecipeUpdateView(UpdateView):
-    """Update recipe."""
+    """View for updating recipe."""
     model = Recipe
     template_name = 'edit_recipe.html'
     fields = ['title', 'description', 'ingredients', 'directions']
@@ -92,6 +96,7 @@ class RecipeDeleteView(DeleteView):
     model = Recipe
     template_name = 'delete_recipe.html'
     success_url = reverse_lazy('home')
+
 
 class ReviewsListView(DetailView):
     """View that renders a recipe."""
@@ -124,7 +129,10 @@ class DerivedRecipesListView(DetailView):
     template_name = 'derived_recipes.html'
 
     def get_context_data(self, **kwargs):
-        context = super(DerivedRecipesListView, self).get_context_data(**kwargs)
+        """Attach derivations of recipe to context."""
+        context = super(
+            DerivedRecipesListView, self
+        ).get_context_data(**kwargs)
         context.update(paginate(
             self.request,
             self.object.recipe_derivations.order_by('-date_created'))
@@ -133,6 +141,10 @@ class DerivedRecipesListView(DetailView):
 
 
 def update_recipebooks_view(request, pk):
+    """View for updating recipebooks contain a recipe.
+
+    For POST requests only. To be used internally for AJAX
+    requests."""
     if request.method == 'POST':
         books = request.POST.getlist('books')
         recipe = Recipe.objects.filter(pk=pk).first()
@@ -145,6 +157,7 @@ def update_recipebooks_view(request, pk):
 
 
 def any_recipebooks_user_mismatched(user, book_pks):
+    """Check if recipebooks are all owned by user."""
     for pk in book_pks:
         book = RecipeBook.objects.filter(id=pk).first()
         if book and book.user != user:

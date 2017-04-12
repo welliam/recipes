@@ -109,6 +109,7 @@ class RecipeDetailTests(TestCase):
         self.assertNotContains(response, 'action="{}"'.format(url))
 
     def test_user_only_has_own_recipe_books(self):
+        """Test ownership of recipebooks in update form."""
         recipebook = RecipeBook(
             user=self.user,
             title='good recipes',
@@ -128,6 +129,7 @@ class RecipeCreateTestCase(TestCase):
     """Test creating a recipe."""
 
     def setUp(self):
+        """Initialize requests for recipe create view."""
         user = User(username='lydia')
         user.save()
         self.client.force_login(user)
@@ -188,6 +190,7 @@ class ViewLogicTests(TestCase):
     """Test helper functions behind view."""
 
     def test_structure_directions(self):
+        """Test structure_directions helper function on an example recipe."""
         structured = list(views.structureDirections("""Season
         Mix cubed tofu with lime juice, turmeric, salt, and black pepper.
 
@@ -219,6 +222,7 @@ class SearchViewTests(TestCase):
         self.response = self.get_response()
 
     def get_response(self, query='good'):
+        """GET a search GET a search query."""
         url = reverse('recipe_search') + '?q={}'.format(query)
         return self.client.get(url)
 
@@ -232,7 +236,8 @@ class SearchViewTests(TestCase):
             directions='test'
         ).save()
 
-    def test_search_for_good_recipe(self):
+    def test_search_for_recipe(self):
+        """Search for a recipe containing self.title in the title."""
         self.assertContains(self.response, self.title)
 
     def test_search_for_good_recipe_retains_search(self):
@@ -240,24 +245,33 @@ class SearchViewTests(TestCase):
         self.assertContains(self.response, 'value="good"')
 
     def test_search_paginates(self):
+        """Test pagination of search view."""
         for i in range(50):
             self.add_recipe(self.user, self.title)
         self.assertContains(self.get_response(), self.title, 10)
 
     def test_search_short_words_returns_nothing(self):
+        """Test short words are ignored in search query."""
         for c1, c2 in zip(self.title, self.title[1:]):
             self.assertNotContains(self.get_response(c1 + c2), self.title)
 
     def test_empty_search_returns_nothing(self):
+        """Test no query returns nothing."""
         self.assertNotContains(self.get_response(''), self.title)
 
-    def test_get_without_querystring(self):
+    def test_get_without_querystring_200(self):
+        """Test GETing without query string is is OK."""
         status_code = self.client.get(reverse('recipe_search')).status_code
         self.assertEqual(status_code, 200)
 
+    def test_get_without_querystring_returns_nothing(self):
+        """Test GETing without query string contains nothing."""
+        response = self.client.get(reverse('recipe_search'))
+        self.assertNotContains(response, self.title)
+
 
 class EditViewTests(TestCase):
-    """Test editing recipes."""
+    """Test recipe updatae view recipes."""
 
     def setUp(self):
         """Create recipe to be edited."""
@@ -294,6 +308,12 @@ class EditViewTests(TestCase):
         evil_user = User(username="evil")
         evil_user.save()
         self.client.force_login(evil_user)
+        self.edit_recipe_title('bad')
+        recipe = Recipe.objects.filter(id=self.recipe.id).first()
+        self.assertEqual(recipe.title, self.recipe.title)
+
+    def test_logged_out_cannot_edit(self):
+        self.client.logout()
         self.edit_recipe_title('bad')
         recipe = Recipe.objects.filter(id=self.recipe.id).first()
         self.assertEqual(recipe.title, self.recipe.title)
@@ -355,32 +375,36 @@ class AddRecipeBookTests(TestCase):
         self.rb1.save()
         self.rb2.save()
         self.url = reverse('recipe_update_recipebooks', args=[self.recipe.id])
-        self.postData = partial(self.client.post, self.url)
+        self.post_data = partial(self.client.post, self.url)
 
     def test_add_recipe_to_book(self):
         """Test POSTing to recipe_add_recipebook."""
         self.assertEqual(self.recipe.recipebooks.count(), 0)
-        self.postData(dict(books=[self.rb1.id, self.rb2.id]))
+        self.post_data(dict(books=[self.rb1.id, self.rb2.id]))
         self.assertEqual(self.recipe.recipebooks.count(), 2)
 
     def test_get_does_nothing(self):
-        self.postData(dict(books=[self.rb1.id, self.rb2.id]))
+        """Test GETing recipebook update view does nothing."""
+        self.post_data(dict(books=[self.rb1.id, self.rb2.id]))
         count = self.recipe.recipebooks.count()
         self.client.get(self.url)
         self.assertEqual(self.recipe.recipebooks.count(), count)
 
     def test_wrong_user_does_not_update(self):
+        """Test incorrect user cannot update recipebook."""
         self.user, _ = create_recipe_and_user('bad')
         self.client.force_login(self.user)
-        self.postData(dict(books=[self.rb1.id]))
+        self.post_data(dict(books=[self.rb1.id]))
         self.assertEqual(self.rb1.recipes.count(), 0)
 
     def test_logged_out_does_not_update(self):
+        """Test logged out user cannot update recipebook."""
         self.client.logout()
-        self.postData(dict(books=[self.rb1.id]))
+        self.post_data(dict(books=[self.rb1.id]))
         self.assertEqual(self.rb1.recipes.count(), 0)
 
     def test_can_add_recipe_by_other_user(self):
+        """Test recipes by any user can be created."""
         count = self.rb1.recipes.count()
         _, other_recipe = create_recipe_and_user('someone')
         self.rb1.recipes.add(other_recipe)
@@ -389,10 +413,6 @@ class AddRecipeBookTests(TestCase):
 
 class DisplayReviewTests(TestCase):
     """Test displaying reviews on recipe page."""
-
-    def view_recipe(self):
-        url = reverse('view_recipe', args=[self.recipe.id])
-        return self.client.get(url)
 
     def setUp(self):
         """Create a review to be displayed."""
@@ -406,6 +426,11 @@ class DisplayReviewTests(TestCase):
         )
         self.review.save()
         self.response = self.view_recipe()
+
+    def view_recipe(self):
+        """Return response for view_recipe with self.recipe."""
+        url = reverse('view_recipe', args=[self.recipe.id])
+        return self.client.get(url)
 
     def test_review_fields_displayed(self):
         """Test review's fields are displayed on recipe response."""
@@ -445,7 +470,10 @@ class DisplayReviewTests(TestCase):
 
 
 class RecipeReviewsTests(TestCase):
+    """Tests for recipe review list view."""
+
     def setUp(self):
+        """Create a recipe and some reviews to be seen."""
         self.user, self.recipe = create_recipe_and_user()
         self.reviews = [
             Review(
@@ -462,29 +490,44 @@ class RecipeReviewsTests(TestCase):
         self.response = self.client.get(url)
 
     def test_has_titles(self):
+        """Test response contains expected number of recipes."""
         self.assertContains(self.response, self.reviews[0].title, 10)
 
 
 class RecipeModalFormsTests(TestCase):
+    """Tests for (hidden) modal forms."""
+
     def setUp(self):
+        """GET a recipe view to be tested."""
         self.user, self.recipe = create_recipe_and_user()
         self.client.force_login(self.user)
         url = reverse('view_recipe', args=[self.recipe.id])
         self.response = self.client.get(url)
 
-    def assert_has_form(self, url_name):
-        url = reverse(url_name, args=[self.recipe.id])
+    def assert_has_form(self, url):
+        """Assert that form in response has an action to a certain url."""
         self.assertContains(self.response, 'action="{}"'.format(url))
 
     def test_recipe_view_has_edit_form(self):
-        self.assert_has_form('edit_recipe')
+        """Test recipe view has a form for editing this recipe."""
+        url = reverse('edit_recipe', args=[self.recipe.id])
+        self.assert_has_form(url)
 
     def test_recipe_view_has_delete_form(self):
-        self.assert_has_form('delete_recipe')
+        """Test recipe view has a form for deleting this recipe."""
+        url = reverse('delete_form', args=[self.recipe.id])
+        self.assert_has_form(url)
+
+    def test_recipe_view_has_derive_recipe_form(self):
+        """Test recipe view has a form for deriving this recipe."""
+        self.assert_has_form(reverse('new_recipe'))
 
 
 class DerivedRecipeTests(TestCase):
+    """Test viewing a derived recipe."""
+
     def setUp(self):
+        """Initialize a recipe and a derivation.a"""
         self.user, self.origin_recipe = create_recipe_and_user()
         self.derived_recipe = Recipe(
             user=self.user,
@@ -497,6 +540,7 @@ class DerivedRecipeTests(TestCase):
         self.derived_recipe.save()
 
     def test_derived_recipe_view_links_origin(self):
+        """Test response for viewing a derived recipe links original."""
         origin_recipe_url = reverse(
             'view_recipe', args=[self.origin_recipe.id]
         )
@@ -507,28 +551,15 @@ class DerivedRecipeTests(TestCase):
         self.assertContains(response, origin_recipe_url)
 
     def test_derived_recipe_view_has_origin_title(self):
+        """Test response for viewing a derived recipe has original's title."""
         derived_recipe_url = reverse(
             'view_recipe', args=[self.derived_recipe.id]
         )
         response = self.client.get(derived_recipe_url)
         self.assertContains(response, self.origin_recipe.title)
 
-    def test_derive_recipe_form_in_recipe_view_logged_in(self):
-        self.client.force_login(self.user)
-        url = reverse('view_recipe', args=[self.origin_recipe.id])
-        response = self.client.get(url)
-        self.assertContains(response, 'name="origin_recipe"')
-        value_attribute = 'value="{}"'.format(self.origin_recipe.id)
-        self.assertContains(response, value_attribute)
-
-    def test_derive_recipe_form_not_in_recipe_view_not_logged_in(self):
-        url = reverse('view_recipe', args=[self.origin_recipe.id])
-        response = self.client.get(url)
-        self.assertNotContains(response, 'name="origin_recipe"')
-        value_attribute = 'value="{}"'.format(self.origin_recipe.id)
-        self.assertNotContains(response, value_attribute)
-
     def test_derive_recipe_view_has_form(self):
+        """Test view for creating derived recipes has form."""
         self.client.force_login(self.user)
         url = reverse('derive_recipe', args=[self.origin_recipe.id])
         response = self.client.get(url)
@@ -537,11 +568,13 @@ class DerivedRecipeTests(TestCase):
         self.assertContains(response, value_attribute)
 
     def test_derive_recipe_view_redirects_not_logged_in(self):
+        """Test view for creating derived recipes redirects if anonymous."""
         url = reverse('derive_recipe', args=[self.origin_recipe.id])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
 
     def test_post_derived_recipe(self):
+        """Test POSTing a derived recipe creates a derived recipe."""
         self.client.force_login(self.user)
         url = reverse('new_recipe')
         self.client.post(url, dict(
@@ -555,6 +588,7 @@ class DerivedRecipeTests(TestCase):
         self.assertEqual(posted_recipe.origin_recipe, self.origin_recipe)
 
     def test_post_derived_wrong_recipe(self):
+        """Test nonexistent origin_recipe field is ignored."""
         self.client.force_login(self.user)
         url = reverse('new_recipe')
         self.client.post(url, dict(
@@ -569,7 +603,10 @@ class DerivedRecipeTests(TestCase):
 
 
 class DerivedRecipesViewTests(TestCase):
+    """Tests for derived recipe list."""
+
     def setUp(self):
+        """Sets up a recipe and many derivations."""
         self.user, self.origin_recipe = create_recipe_and_user()
         for i in range(30):
             Recipe(
@@ -584,12 +621,15 @@ class DerivedRecipesViewTests(TestCase):
         self.response = self.client.get(url)
 
     def test_get_derived_recipes_view(self):
+        """Test GETing url for derived recipes is OK."""
         self.assertEqual(self.response.status_code, 200)
 
     def test_derived_recipes_view_has_recipes(self):
+        """Test response contains appropriate number of recipes."""
         self.assertContains(self.response, 'derived recipe', 10)
 
     def test_recipe_links_derivation_list(self):
+        """Test response for viewing recipe contains link to list."""
         view_recipe_url = reverse('view_recipe', args=[self.origin_recipe.id])
         recipe_response = self.client.get(view_recipe_url)
         derived_url = reverse('derived_recipes', args=[self.origin_recipe.id])
