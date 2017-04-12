@@ -515,7 +515,7 @@ class RecipeModalFormsTests(TestCase):
 
     def test_recipe_view_has_delete_form(self):
         """Test recipe view has a form for deleting this recipe."""
-        url = reverse('delete_form', args=[self.recipe.id])
+        url = reverse('delete_recipe', args=[self.recipe.id])
         self.assert_has_form(url)
 
     def test_recipe_view_has_derive_recipe_form(self):
