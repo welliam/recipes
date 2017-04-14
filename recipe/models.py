@@ -18,6 +18,8 @@ def create_unique_urlindex(lower_bound=100000000):
 
 @python_2_unicode_compatible
 class Recipe(models.Model):
+    """Model for recipe."""
+
     id = models.PositiveIntegerField(
         primary_key=True,
         default=create_unique_urlindex
@@ -57,6 +59,8 @@ class Recipe(models.Model):
 
 
 class RecipeForm(ModelForm):
+    """Form for creating new recipe."""
+
     class Meta:
         model = Recipe
         fields = ['title', 'description', 'ingredients', 'directions']

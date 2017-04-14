@@ -17,6 +17,8 @@ def create_unique_urlindex(lower_bound=100000000):
 
 
 class RecipeBook(models.Model):
+    """Model for collections of recipes."""
+
     id = models.PositiveIntegerField(
         primary_key=True,
         default=create_unique_urlindex
@@ -42,6 +44,8 @@ class RecipeBook(models.Model):
 
 
 class RecipeBookForm(ModelForm):
+    """Form for creating a new, empty recipebook."""
+
     class Meta:
         model = RecipeBook
         fields = ['title', 'description']

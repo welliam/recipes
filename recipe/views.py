@@ -113,6 +113,7 @@ class ReviewsListView(DetailView):
 
 
 class DeriveRecipeView(LoginRequiredMixin, TemplateView):
+    """View for rendering form for creating a recipe derived from another."""
     template_name = 'derive_recipe.html'
 
     def get_context_data(self, **kwargs):
