@@ -1,8 +1,9 @@
 from django.views.generic import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import ShoppingList
 
 
-class ShoppingListCreateView(CreateView):
+class ShoppingListCreateView(LoginRequiredMixin, CreateView):
     """View for creating shopping lists."""
     model = ShoppingList
     template_name = 'create_shopping_list.html'

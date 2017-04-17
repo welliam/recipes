@@ -17,3 +17,8 @@ class ShoppingListCreateViewTests(TestCase):
         response = self.client.get(reverse('create_shopping_list'))
         self.assertContains(response, '</form>')
         self.assertContains(response, 'method="POST"')
+
+    def test_get_create_view_logged_out_redirects(self):
+        self.client.logout()
+        status = self.client.get(reverse('create_shopping_list')).status_code
+        self.assertEqual(status, 302)
