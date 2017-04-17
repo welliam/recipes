@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^recipebook/', include('recipebook.urls')),
     url(r'^review/', include('review.urls')),
     url(r'^notifications/', include('notification.urls')),
+    url(r'^list/', include('shoppinglist.urls')),
 ]
