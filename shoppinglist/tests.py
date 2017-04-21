@@ -28,3 +28,18 @@ class ShoppingListCreateViewTests(TestCase):
         count = ShoppingList.objects.count()
         self.client.post(reverse('create_shopping_list'), dict(title='title'))
         self.assertEqual(ShoppingList.objects.count(), count + 1)
+
+
+class ShoppingListDetailView(TestCase):
+    def setUp(self):
+        self.user = User(username='friend')
+        self.user.save()
+        self.client.force_login(self.user)
+        lst = ShoppingList(user=self.user, title='this is a list')
+        lst.save()
+        url = reverse('view_shopping_list', args=[lst.id])
+        self.response = self.client.get(url)
+
+    def test_shopping_response_has_titles(self):
+        title = self.user.shoppinglists.first().title
+        self.assertContains(self.response, title)

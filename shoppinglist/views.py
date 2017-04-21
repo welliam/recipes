@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import ShoppingList
 
@@ -17,3 +17,9 @@ class ShoppingListCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('profile', args=[self.request.user.username])
+
+
+class ShoppingListDetailView(DetailView):
+    """View for viewing shopping lists."""
+    model = ShoppingList
+    template_name = 'view_shopping_list.html'
