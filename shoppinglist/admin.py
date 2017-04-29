@@ -1,8 +1,7 @@
 from django.contrib import admin
-from .models import ShoppingList, ShoppingListItem
+from .models import ShoppingListItem
 
 
-@admin.register(ShoppingList)
 @admin.register(ShoppingListItem)
 class ShoppingListAdmin(admin.ModelAdmin):
     pass

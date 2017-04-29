@@ -1,25 +1,8 @@
-from django.urls import reverse
-from django.views.generic import CreateView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import ShoppingList
+from django.views.generic import TemplateView
+from django.contrib.auth.models import User
 
 
-class ShoppingListCreateView(LoginRequiredMixin, CreateView):
-    """View for creating shopping lists."""
-    model = ShoppingList
-    template_name = 'create_shopping_list.html'
-    fields = ['title']
-
-    def form_valid(self, form):
-        """Attach user to form."""
-        form.instance.user = self.request.user
-        return super(ShoppingListCreateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse('profile', args=[self.request.user.username])
-
-
-class ShoppingListDetailView(DetailView):
+class ShoppingListDetailView(TemplateView):
     """View for viewing shopping lists."""
-    model = ShoppingList
+    model = User
     template_name = 'view_shopping_list.html'
