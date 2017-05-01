@@ -3,5 +3,8 @@
 {% block content %}
 <div class="block">
   <h3>Shopping List</h3>
+  {% for item in user.shopping_list_items.all %}
+  <div>{{item.title}}</div>
+  {% endfor %}
 </div>
 {% endblock %}
