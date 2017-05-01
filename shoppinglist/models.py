@@ -10,4 +10,4 @@ class ShoppingListItem(models.Model):
         on_delete=models.deletion.CASCADE
     )
     title = models.CharField(max_length=50)
-    done = models.BooleanField()
+    done = models.BooleanField(default=False)
